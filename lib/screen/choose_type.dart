@@ -1,3 +1,4 @@
+import 'package:datn/screen/login.dart';
 import 'package:flutter/material.dart';
 
 class ChooseTypeScreen extends StatefulWidget {
@@ -115,7 +116,9 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                 height: 40,
               ),
               OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+                },
                 icon: Icon(Icons.arrow_forward_rounded,
                     color: Theme.of(context).colorScheme.background),
                 label: Text(
