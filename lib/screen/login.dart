@@ -17,12 +17,30 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+
+  Future<User?> login() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+    User? user = null;
+    if (email != '' && password != '') {
+       user=await firebaseAuthService.signInWithEmailAndPassword(email, password);
+    }
+    if(user!= null){
+      print(user.email.toString() +' login successful');
+      SnackBar snackBar=SnackBar(content: Text('${user.email.toString()} login successful'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }else{
+      print('Some error happened');
+    }
+  }
 
   // FirebaseAuthService authService = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Login'),
       ),
@@ -74,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Theme.of(context).colorScheme.background)),
                       onPressed: () {
                         // LoginWithEmailAndPassword()
+                        login();
                       },
                       child: Padding(
                         padding:

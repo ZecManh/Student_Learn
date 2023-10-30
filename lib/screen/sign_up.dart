@@ -1,3 +1,6 @@
+import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -9,6 +12,29 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordReassignController = TextEditingController();
+  FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+
+  void _signUp() async {
+    await Firebase.initializeApp();
+    String email = emailController.text;
+    String password = passwordController.text;
+    String passwordReassign = passwordReassignController.text;
+    User? user = null;
+    if (email != '' && (password == passwordReassign)) {
+      user = await firebaseAuthService.createAccount(email, password);
+    }
+    if (user != null) {
+      print('Created account successfully');
+      SnackBar snackBar=SnackBar(content: Text('${user.email.toString()} create successful'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      print('Some error happened');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             TextField(
+              controller: emailController,
               keyboardType: TextInputType.emailAddress,
               obscureText: false,
               decoration: InputDecoration(
@@ -32,6 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 20,
             ),
             TextField(
+              controller: passwordController,
               keyboardType: TextInputType.text,
               obscureText: true,
               decoration: InputDecoration(
@@ -43,6 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 20,
             ),
             TextField(
+              controller: passwordReassignController,
               keyboardType: TextInputType.text,
               obscureText: true,
               decoration: InputDecoration(
@@ -67,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   foregroundColor: MaterialStateProperty.all(
                       Theme.of(context).colorScheme.background)),
               onPressed: () {
-                // LoginWithEmailAndPassword()
+                _signUp();
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
