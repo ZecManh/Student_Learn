@@ -77,6 +77,8 @@ flutter:
     - assets/icon/playstore_icon.png
     - assets/ic_logo_remove_bg.png
     - assets/ic_login.png
+    - assets/doraemon.png
+    - assets/bear.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

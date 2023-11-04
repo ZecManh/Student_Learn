@@ -25,6 +25,15 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
     }
   }
 
+  //pass data children to parent
+  // Future<String> getResultFromLogin() async {
+  //   return await Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const LoginScreen(),
+  //       ));
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,6 +127,15 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
               OutlinedButton.icon(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+
+                  // getResultFromLogin().then((value) {
+                  //   if (value[0] is String) {
+                  //     print('Email is ${value}');
+                  //     SnackBar snackbar =
+                  //         SnackBar(content: Text('Email is $value'));
+                  //     ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                  //   }
+                  // });
                 },
                 icon: Icon(Icons.arrow_forward_rounded,
                     color: Theme.of(context).colorScheme.background),

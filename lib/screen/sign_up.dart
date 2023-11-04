@@ -101,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Text(
-                  'Đăng nhập',
+                  'Đăng kí',
                   style: TextStyle(fontSize: 20),
                 ),
               ),

@@ -3,6 +3,8 @@ import 'package:datn/screen/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'learner/dash_board.dart';
+
 enum UserType { learner, tutor }
 
 class LoginScreen extends StatefulWidget {
@@ -24,13 +26,15 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = passwordController.text;
     User? user = null;
     if (email != '' && password != '') {
-       user=await firebaseAuthService.signInWithEmailAndPassword(email, password);
+      user =
+          await firebaseAuthService.signInWithEmailAndPassword(email, password);
     }
-    if(user!= null){
-      print(user.email.toString() +' login successful');
-      SnackBar snackBar=SnackBar(content: Text('${user.email.toString()} login successful'));
+    if (user != null) {
+      print(user.email.toString() + ' login successful');
+      SnackBar snackBar =
+          SnackBar(content: Text('${user.email.toString()} login successful'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }else{
+    } else {
       print('Some error happened');
     }
   }
@@ -39,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String myAge;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -91,8 +96,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           foregroundColor: MaterialStateProperty.all(
                               Theme.of(context).colorScheme.background)),
                       onPressed: () {
-                        // LoginWithEmailAndPassword()
+                        // Navigator.pop(context,emailController.text);
                         login();
+                        //if login successfull -> pop ...
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return DashBoardScreen();
+                        }));
                       },
                       child: Padding(
                         padding:
