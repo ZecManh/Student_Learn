@@ -1,6 +1,8 @@
 import 'package:datn/screen/login.dart';
 import 'package:flutter/material.dart';
 
+enum UserType { tutor, learner }
+
 class ChooseTypeScreen extends StatefulWidget {
   const ChooseTypeScreen({super.key});
 
@@ -11,12 +13,12 @@ class ChooseTypeScreen extends StatefulWidget {
 }
 
 class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
-  bool type = true;
+  UserType type = UserType.learner;
   Color tutorColor = Colors.white;
   Color learnerColor = Colors.white;
 
   void getColor() {
-    if (type == true) {
+    if (type == UserType.tutor) {
       tutorColor = Theme.of(context).colorScheme.primary;
       learnerColor = Theme.of(context).colorScheme.background;
     } else {
@@ -24,15 +26,6 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
       learnerColor = Theme.of(context).colorScheme.primary;
     }
   }
-
-  //pass data children to parent
-  // Future<String> getResultFromLogin() async {
-  //   return await Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => const LoginScreen(),
-  //       ));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +76,13 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                   EdgeInsets.all(20))),
                           onPressed: () {
                             setState(() {
-                              type = true;
+                              type = UserType.tutor;
                               getColor();
+
+                              SnackBar snackBar =
+                                  SnackBar(content: Text('Bạn đã chọn là người dạy'));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             });
                           },
                           icon: Image.asset('assets/ic_teacher.png', width: 50),
@@ -108,8 +106,12 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                   EdgeInsets.all(20))),
                           onPressed: () {
                             setState(() {
-                              type = false;
+                              type = UserType.learner;
                               getColor();
+                              SnackBar snackBar =
+                              SnackBar(content: Text('Bạn đã chọn là người học'));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             });
                           },
                           icon: Image.asset('assets/ic_student.png', width: 50),
@@ -126,16 +128,11 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
               ),
               OutlinedButton.icon(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
-
-                  // getResultFromLogin().then((value) {
-                  //   if (value[0] is String) {
-                  //     print('Email is ${value}');
-                  //     SnackBar snackbar =
-                  //         SnackBar(content: Text('Email is $value'));
-                  //     ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                  //   }
-                  // });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>  LoginScreen(userType: type,),
+                      ));
                 },
                 icon: Icon(Icons.arrow_forward_rounded,
                     color: Theme.of(context).colorScheme.background),
