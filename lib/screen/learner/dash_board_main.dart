@@ -50,17 +50,23 @@ class _DashBoardMainState extends State<DashBoardMain> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.qr_code),
+                      Expanded(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.qr_code),
+                        ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.message_outlined),
+                      Expanded(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.message_outlined),
+                        ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.notifications),
+                      Expanded(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.notifications),
+                        ),
                       ),
                        
                     ],
