@@ -52,7 +52,8 @@ class _DashBoardMainState extends State<DashBoardMain> {
                     children: [
                       Expanded(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                          },
                           icon: Icon(Icons.qr_code),
                         ),
                       ),
