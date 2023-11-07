@@ -52,12 +52,17 @@ class _DashBoardMainState extends State<DashBoardMain> {
                     children: [
                       IconButton(
                         onPressed: () {},
+                        icon: Icon(Icons.qr_code),
+                      ),
+                      IconButton(
+                        onPressed: () {},
                         icon: Icon(Icons.message_outlined),
                       ),
                       IconButton(
                         onPressed: () {},
                         icon: Icon(Icons.notifications),
                       ),
+                       
                     ],
                   ),
                 )
