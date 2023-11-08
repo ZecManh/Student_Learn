@@ -1,7 +1,9 @@
 import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:datn/screen/sign_up.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 import 'choose_type.dart';
 import 'learner/dash_board.dart';
@@ -22,6 +24,26 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
   bool passwordVisible = false;
+  bool passwordValid = false;
+  final _formKey = GlobalKey<FormState>();
+  final _passwordKey = GlobalKey<FlutterPwValidatorState>();
+
+  String? validateEmail(String? email) {
+    if (email == null || email.isEmpty) {
+      return 'Vui lòng nhập email!';
+    } else {
+      bool isEmailOK = EmailValidator.validate(email);
+      if (isEmailOK) {
+        return null;
+      } else {
+        return 'Email không hợp lệ! Vui lòng nhập lại';
+      }
+    }
+  }
+
+  // String? validatePassword(String? password) {
+  //
+  // }
 
   Future<User?> login() async {
     String email = emailController.text;
@@ -37,6 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
       SnackBar snackBar =
           SnackBar(content: Text('${user.email.toString()} login successful'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return DashBoardScreen();
+      }));
     } else {
       print('Some error happened');
     }
@@ -71,23 +97,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Form(
+                      key: _formKey,
                       child: Column(
                         children: [
                           TextFormField(
-                            // validator: ,
+                            validator: validateEmail,
                             controller: emailController,
                             obscureText: false,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Email',
                             ),
-                          )   ,
-
+                          ),
                           SizedBox(
                             height: 20,
                           ),
                           TextFormField(
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.visiblePassword,
                             controller: passwordController,
                             obscureText: passwordVisible,
                             decoration: InputDecoration(
@@ -108,6 +134,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
+                          FlutterPwValidator(
+                              key: _passwordKey,
+                              width: 400,
+                              height: 100,
+                              minLength: 6,
+                              numericCharCount: 1,
+                              onSuccess: () {
+                                print("MATCHED");
+                                passwordValid = true;
+                                print('password valid $passwordValid');
+                              },
+                              onFail: () {
+                                print("NOT MATCHED");
+                                passwordValid = false;
+                                print('password valid $passwordValid');
+                              },
+                              controller: passwordController)
                         ],
                       ),
                     ),
@@ -121,13 +164,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           foregroundColor: MaterialStateProperty.all(
                               Theme.of(context).colorScheme.background)),
                       onPressed: () {
-                        // Navigator.pop(context,emailController.text);
-                        login();
-                        //if login successfull -> pop ...
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DashBoardScreen();
-                        }));
+                        print('go here');
+                        FormState? emailFormState = _formKey.currentState;
+                        if (emailFormState != null) {
+                          print('go here 1');
+                          if (_formKey.currentState!.validate() &&
+                              passwordValid) {
+                            print('validate email ok');
+                            login();
+                          }
+                        }
+
+                        // FlutterPwValidatorState? passwordFormState =
+                        //     _passwordKey.currentState;
+                        // if (passwordFormState != null) {
+                        //   _passwordKey.currentState!.validate();
+                        // }
                       },
                       child: Padding(
                         padding:
@@ -147,10 +199,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           GestureDetector(
                             child: Text('Đăng kí'),
                             onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return SignUpScreen();
-                              }));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return SignUpScreen();
+                                }),
+                              );
                             },
                           ),
                           Text('Quên mật khẩu?')

@@ -13,7 +13,6 @@ class _DashBoardQrState extends State<DashBoardQr> {
   @override
   Widget build(BuildContext context) {
     print('dash board qr rebuild');
-
     return Text('qr');
   }
 }
