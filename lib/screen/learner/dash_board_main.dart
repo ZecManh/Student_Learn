@@ -1,4 +1,5 @@
 import 'package:datn/screen/qr_code/qr_screen.dart';
+import 'package:datn/screen/qr_code/qr_screen_test.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardMain extends StatefulWidget {
