@@ -22,15 +22,25 @@ class _DashBoardQrState extends State<DashBoardQr> {
 
     return SafeArea(
       child: Scaffold(
-       backgroundColor: Color(0xFFFF9000),
+       backgroundColor: Color.fromARGB(255, 221, 255, 0),
        body: Column(
          mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
          children: [
+          Text('Qr của tôi'),
+          Expanded(
+              child: Center(
+              child: QrImageView(
+              data: 'NhamDucManh-61TNB-DHTL',
+              version: QrVersions.auto,
+              size: 200.0,
+                      )),
+          ),
           Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      
                       Expanded(
                         child: IconButton(
                           onPressed: () {
@@ -45,7 +55,7 @@ class _DashBoardQrState extends State<DashBoardQr> {
                     ],
                   ),
                 ),
-         
+          Text('Tạo QR'),
           Center(
             child: QrImageView(
             data: data,
