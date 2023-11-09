@@ -31,7 +31,7 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose your type'),
+        title: Text('Bạn là ai ?'),
       ),
       body: Container(
         child: Center(

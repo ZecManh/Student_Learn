@@ -1,4 +1,5 @@
 import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:datn/screen/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class SignUpScreen extends StatefulWidget {
+  final UserType userType;
+
+  const SignUpScreen({super.key, required this.userType});
+
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SignUpScreenState();
   }
 }
@@ -65,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Sign up'),
+        title: Text(widget.userType==UserType.tutor?'Đăng kí người dạy':'Đăng kí người học'),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
@@ -227,7 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 20,
             ),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.pop(context);
               },
               child: Text(

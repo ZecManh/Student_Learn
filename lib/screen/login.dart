@@ -1,10 +1,10 @@
 import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:datn/screen/forget_password.dart';
 import 'package:datn/screen/sign_up.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
-
 import 'choose_type.dart';
 import 'learner/dash_board.dart';
 
@@ -56,15 +56,17 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     if (user != null) {
       print(user.email.toString() + ' login successful');
-      SnackBar snackBar =
-          SnackBar(content: Text('${user.email.toString()} Đăng nhập thành công'));
+      SnackBar snackBar = SnackBar(
+          content: Text('${user.email.toString()} Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return DashBoardScreen();
       }));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đăng nhập không thành công,kiểm tra lại email và mật khẩu')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Đăng nhập không thành công,kiểm tra lại email và mật khẩu')));
     }
   }
 
@@ -75,7 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(widget.userType == UserType.tutor
+            ? 'Đăng nhập người dạy'
+            : 'Đăng nhập người học'),
       ),
       body: Container(
         child: Center(
@@ -202,12 +206,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return SignUpScreen();
+                                  return SignUpScreen(
+                                    userType: widget.userType,
+                                  );
                                 }),
                               );
                             },
                           ),
-                          Text('Quên mật khẩu?')
+                          GestureDetector(
+                            child: Text('Quên mật khẩu?'),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ForgetPasswordScreen();
+                              }));
+                            },
+                          )
                         ]),
                   ],
                 ),

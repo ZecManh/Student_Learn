@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseAuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<User?> createAccount(String email, String password) async {
     try {
       UserCredential userCredential = await _auth
@@ -19,8 +21,8 @@ class FirebaseAuthService {
     return null;
   }
 
-  Future<User?> signInWithEmailAndPassword(String email,
-      String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -33,5 +35,11 @@ class FirebaseAuthService {
       }
     }
     return null;
+  }
+
+  Future resetPassword(String email, BuildContext context) async {
+    await _auth.sendPasswordResetEmail(email: email);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
   }
 }

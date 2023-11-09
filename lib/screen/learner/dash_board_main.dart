@@ -1,3 +1,5 @@
+import 'package:datn/screen/qr_code/qr_screen.dart';
+import 'package:datn/screen/qr_code/qr_screen_test.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardMain extends StatefulWidget {
@@ -53,6 +55,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                       Expanded(
                         child: IconButton(
                           onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return DashBoardQr();
+                              }));
                           },
                           icon: Icon(Icons.qr_code),
                         ),
