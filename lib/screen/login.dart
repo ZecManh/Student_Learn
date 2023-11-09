@@ -57,14 +57,14 @@ class _LoginScreenState extends State<LoginScreen> {
     if (user != null) {
       print(user.email.toString() + ' login successful');
       SnackBar snackBar =
-          SnackBar(content: Text('${user.email.toString()} login successful'));
+          SnackBar(content: Text('${user.email.toString()} Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return DashBoardScreen();
       }));
     } else {
-      print('Some error happened');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đăng nhập không thành công,kiểm tra lại email và mật khẩu')));
     }
   }
 

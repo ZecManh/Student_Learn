@@ -21,6 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool passwordValid = false;
   bool passwordReAssignValid = false;
   bool twoPasswordEqual = false;
+  bool passwordVisible = false;
+  bool passwordReAssignVisible = false;
   final _formKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FlutterPwValidatorState>();
   final _passwordReAssignKey = GlobalKey<FlutterPwValidatorState>();
@@ -36,11 +38,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (user != null) {
       print('Created account successfully');
-      SnackBar snackBar =
-          SnackBar(content: Text('${user.email.toString()} create successful'));
+      SnackBar snackBar = SnackBar(
+          content: Text('${user.email.toString()} đăng kí thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      print('Some error happened');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
     }
   }
 
@@ -89,11 +92,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
-                      obscureText: true,
+                      obscureText: passwordVisible,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Nhập mật khẩu',
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Nhập mật khẩu',
+                          suffixText: 'Ẩn/Hiện',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+                            },
+                            icon: Icon(passwordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                          )),
                     ),
                     FlutterPwValidator(
                         key: _passwordKey,
@@ -118,11 +131,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: passwordReassignController,
                       keyboardType: TextInputType.text,
-                      obscureText: true,
+                      obscureText: passwordReAssignVisible,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Nhập lại mật khẩu',
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Nhập lại mật khẩu',
+                          suffixText: 'Ẩn/Hiện',
+                          suffixIcon: IconButton(
+                            icon: Icon(passwordReAssignVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            onPressed: () {
+                              setState(() {
+                                passwordReAssignVisible =
+                                    !passwordReAssignVisible;
+                              });
+                            },
+                          )),
                     ),
                     FlutterPwValidator(
                         key: _passwordReAssignKey,
@@ -172,12 +196,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   } else {
                     twoPasswordEqual = false;
                   }
-                  if(twoPasswordEqual==false){
+                  if (!emailFormState.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('2 mật khẩu không trùng khớp'))
-                    );
-                  }
-                  if (_formKey.currentState!.validate() &&
+                        SnackBar(content: Text('Email không hợp lệ')));
+                  } else if (passwordController.text.isEmpty ||
+                      passwordReassignController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Vui lòng nhập mật khẩu')));
+                  } else if (twoPasswordEqual == false) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('2 mật khẩu không trùng khớp')));
+                  } else if (_formKey.currentState!.validate() &&
                       passwordValid &&
                       passwordReAssignValid &&
                       twoPasswordEqual) {
@@ -197,9 +226,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(
               height: 20,
             ),
-            Text(
-              'Đã có tài khoản? Đăng nhập ngay!',
-              textAlign: TextAlign.center,
+            GestureDetector(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Đã có tài khoản? Đăng nhập ngay!',
+                textAlign: TextAlign.center,
+              ),
             )
           ]),
         ),
