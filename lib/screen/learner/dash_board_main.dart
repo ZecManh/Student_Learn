@@ -1,3 +1,4 @@
+import 'package:datn/screen/learner/update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/qr_code/qr_screen_test.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,18 @@ class _DashBoardMainState extends State<DashBoardMain> {
               child: Row(children: [
                 Padding(
                   padding: EdgeInsets.all(20),
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/bear.jpg'),
-                    radius: 50,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return UpdateInfoScreen();
+                      }));
+
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('assets/bear.jpg'),
+                      radius: 50,
+                    ),
                   ),
                 ),
                 SizedBox(width: 10),
@@ -42,7 +52,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      'Vũ Minh Hiếu',
+                      'Tên bạn là gì?',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text('Người học', style: TextStyle(fontSize: 18)),
@@ -55,18 +65,12 @@ class _DashBoardMainState extends State<DashBoardMain> {
                       Expanded(
                         child: IconButton(
                           onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return DashBoardQr();
-                              }));
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return DashBoardQr();
+                            }));
                           },
                           icon: Icon(Icons.qr_code),
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.message_outlined),
                         ),
                       ),
                       Expanded(
@@ -75,7 +79,6 @@ class _DashBoardMainState extends State<DashBoardMain> {
                           icon: Icon(Icons.notifications),
                         ),
                       ),
-                       
                     ],
                   ),
                 )

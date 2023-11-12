@@ -29,10 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordKey = GlobalKey<FlutterPwValidatorState>();
 
   String? validateEmail(String? email) {
-    if (email == null || email.isEmpty) {
+    String? _email=email?.trim();
+    if (_email == null || _email.isEmpty) {
       return 'Vui lòng nhập email!';
     } else {
-      bool isEmailOK = EmailValidator.validate(email);
+      bool isEmailOK = EmailValidator.validate(_email);
       if (isEmailOK) {
         return null;
       } else {
@@ -46,8 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
   // }
 
   Future<User?> login() async {
-    String email = emailController.text;
-    String password = passwordController.text;
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
     User? user = null;
 
     if (email != '' && password != '') {
@@ -60,9 +61,14 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text('${user.email.toString()} Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
+      // Navigator.push(context, MaterialPageRoute(builder: (context) {
+      //   return DashBoardScreen();
+      // }));
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) {
         return DashBoardScreen();
-      }));
+      }), (route) => false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(

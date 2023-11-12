@@ -21,8 +21,8 @@ class FirebaseAuthService {
     return null;
   }
 
-  Future<User?> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(String email,
+      String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -40,6 +40,22 @@ class FirebaseAuthService {
   Future resetPassword(String email, BuildContext context) async {
     await _auth.sendPasswordResetEmail(email: email);
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
+        .showSnackBar(SnackBar(content: Text(
+        'Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
+  }
+
+  Future logout(BuildContext context) async {
+    await _auth.signOut();
+
+    _auth.authStateChanges()
+        .listen((user) {
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đã đăng xuất')));
+        print('User is currently signed out!');
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đăng xuất không thành công')));
+        print('User is signed in!');
+      }
+    });
   }
 }
