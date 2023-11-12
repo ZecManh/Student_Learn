@@ -149,7 +149,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                             height: 10,
                           ),
                           Text(
-                            'Khoá học mini',
+                            'Khoá học',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
