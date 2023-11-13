@@ -1,7 +1,7 @@
 import 'package:datn/screen/learner/update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
-import 'package:datn/screen/qr_code/qr_screen_test.dart';
+import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardMain extends StatefulWidget {
