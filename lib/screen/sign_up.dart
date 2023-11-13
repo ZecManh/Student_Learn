@@ -1,4 +1,5 @@
 import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:datn/firestore/firestore_service.dart';
 import 'package:datn/screen/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordKey = GlobalKey<FlutterPwValidatorState>();
   final _passwordReAssignKey = GlobalKey<FlutterPwValidatorState>();
 
+  FirestoreService firestoreService = FirestoreService();
+
   void _signUp() async {
     await Firebase.initializeApp();
     String email = emailController.text;
@@ -42,6 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (user != null) {
       print('Created account successfully');
+      firestoreService.addSignUpProfile(user.uid,user.email);
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} đăng kí thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -69,7 +73,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(widget.userType==UserType.tutor?'Đăng kí người dạy':'Đăng kí người học'),
+        title: Text(widget.userType == UserType.tutor
+            ? 'Đăng kí người dạy'
+            : 'Đăng kí người học'),
       ),
       body: Container(
         padding: EdgeInsets.all(20),

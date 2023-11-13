@@ -45,6 +45,9 @@ dependencies:
   qr_code_scanner: ^1.0.1
   flutter_barcode_scanner: ^2.0.0
   simple_barcode_scanner: ^0.0.8
+  intl: ^0.18.1
+  phone_number: ^2.0.1
+  intl_phone_number_input: ^0.7.3+1
 
 
 
