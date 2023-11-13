@@ -1,4 +1,5 @@
 import 'package:datn/screen/qr_code/qr_screen.dart';
+import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/qr_code/qr_screen_test.dart';
 import 'package:flutter/material.dart';
 
@@ -61,6 +62,17 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               }));
                           },
                           icon: Icon(Icons.qr_code),
+                        ),
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return DashBoardFaceID();
+                              }));
+                          },
+                          icon: Icon(Icons.tag_faces_rounded),
                         ),
                       ),
                       Expanded(
