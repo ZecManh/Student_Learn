@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:datn/firestore/firestore_service.dart';
 import 'package:datn/screen/choose_type.dart';
@@ -45,7 +46,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     if (user != null) {
       print('Created account successfully');
-      firestoreService.addSignUpProfile(user.uid,user.email);
+
+
+      // firestoreService.addSignUpProfile(user.uid,user.email);
+
+
+      //test
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+     await _firestore.collection('users').doc(user.uid).set({
+        'uid':user.uid,
+        'display_name':user.displayName,
+        'email':user.email,
+        'phone':user.phoneNumber,
+        'photo_url':user.photoURL
+      });
+
+
+
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} đăng kí thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:datn/screen/learner/update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
@@ -15,11 +16,18 @@ class DashBoardMain extends StatefulWidget {
 }
 
 class _DashBoardMainState extends State<DashBoardMain> {
-  FirebaseAuthService firebaseAuthService=FirebaseAuthService();
+  FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth=firebaseAuthService.auth;
-    String? displayName=auth.currentUser!.displayName;
+    FirebaseAuth auth = firebaseAuthService.auth;
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    Stream<DocumentSnapshot> userDocument = firebaseFirestore
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .snapshots();
+    // String? displayName=firebaseFirestore.collection('users').doc('${auth!.currentUser!.uid}').get('display_name');
+
     print('dash board main rebuild');
 
     return Container(
@@ -33,72 +41,98 @@ class _DashBoardMainState extends State<DashBoardMain> {
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
             child: IntrinsicHeight(
-              child: Row(children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
                           MaterialPageRoute(builder: (context) {
-                        return const UpdateInfoScreen();
-                      }));
-
-                    },
-                    child: const CircleAvatar(
-                      backgroundImage: AssetImage('assets/bear.jpg'),
-                      radius: 50,
+                            return const UpdateInfoScreen();
+                          }),
+                        );
+                      },
+                      child: const CircleAvatar(
+                        backgroundImage: AssetImage('assets/bear.jpg'),
+                        radius: 50,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text(
-                      displayName ?? 'Tên bạn là gì',
-                      style: TextStyle(fontSize: 20),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            'Vũ Minh Hiếu',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              iconSize: 30,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              style: ButtonStyle().copyWith(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .background)),
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const DashBoardQr();
+                                }));
+                              },
+                              icon: const Icon(Icons.qr_code),
+                            ),
+                            IconButton(
+                              iconSize: 30,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              style: ButtonStyle().copyWith(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .background)),
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return const DashBoardFaceID();
+                                }));
+                              },
+                              icon: const Icon(Icons.tag_faces_rounded),
+                            ),
+                            IconButton(
+                              iconSize: 30,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              style: ButtonStyle().copyWith(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .background)),
+                              onPressed: () {},
+                              icon: const Icon(Icons.notifications),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Text('Người học', style: TextStyle(fontSize: 18)),
-                  ],
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return const DashBoardQr();
-                            }));
-                          },
-                          icon: const Icon(Icons.qr_code),
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const DashBoardFaceID();
-                              }));
-                          },
-                          icon: const Icon(Icons.tag_faces_rounded),
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.notifications),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ]),
+                  )
+                ],
+              ),
             ),
           ),
           const SizedBox(

@@ -7,7 +7,7 @@ class FirestoreService {
     Map<String, Object?> data = {'user_id': userId, 'email': email};
 
     //chua xu ly error
-    await _firestore.collection('Users').add(data).then((value) => print(value));
+    await _firestore.collection('users').add(data).then((value) => print(value));
   }
   // Future addSignUpProfile( String email) async {
   //   Map<String, Object> data = {'email': email};
