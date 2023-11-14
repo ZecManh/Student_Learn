@@ -92,8 +92,8 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               onPressed: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const DashBoardQr();
-                                }));
+                                      return const DashBoardQr();
+                                    }));
                               },
                               icon: const Icon(Icons.qr_code),
                             ),
@@ -109,8 +109,8 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               onPressed: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const DashBoardFaceID();
-                                }));
+                                      return const DashBoardFaceID();
+                                    }));
                               },
                               icon: const Icon(Icons.tag_faces_rounded),
                             ),
