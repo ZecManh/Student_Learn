@@ -28,8 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FlutterPwValidatorState>();
 
+
   String? validateEmail(String? email) {
-    String? _email=email?.trim();
+    String? _email = email?.trim();
     if (_email == null || _email.isEmpty) {
       return 'Vui lòng nhập email!';
     } else {
@@ -42,21 +43,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // String? validatePassword(String? password) {
-  //
-  // }
 
-  Future<User?> login() async {
+  Future login() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-    User? user = null;
-
+    User? user;
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (email != '' && password != '') {
       user =
-          await firebaseAuthService.signInWithEmailAndPassword(email, password);
+      await firebaseAuthService.signInWithEmailAndPassword(email, password);
     }
     if (user != null) {
       print(user.email.toString() + ' login successful');
+      // await prefs.setString('email', user.email!);
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -67,10 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {
-        return DashBoardScreen();
-      }), (route) => false);
+            return const DashBoardScreen();
+          }), (route) => false);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'Đăng nhập không thành công,kiểm tra lại email và mật khẩu')));
     }
@@ -96,13 +95,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 widget.userType == UserType.tutor
                     ? 'Dạy tốt cùng Tlu Tutor'
                     : 'Học tốt cùng Tlu Tutor',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -114,12 +113,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: validateEmail,
                             controller: emailController,
                             obscureText: false,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Email',
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           TextFormField(
@@ -127,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: passwordController,
                             obscureText: passwordVisible,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               labelText: 'Password',
                               suffixText: 'Ẩn/Hiện Mật Khẩu',
                               suffixIcon: IconButton(
@@ -164,15 +163,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     OutlinedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.primary),
+                              Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary),
                           foregroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.background)),
+                              Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .background)),
                       onPressed: () {
                         print('go here');
                         FormState? emailFormState = _formKey.currentState;
@@ -191,23 +196,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         //   _passwordKey.currentState!.validate();
                         // }
                       },
-                      child: Padding(
+                      child: const Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Text(
                           'Đăng nhập',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            child: Text('Đăng kí'),
+                            child: const Text('Đăng kí'),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -220,12 +225,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           GestureDetector(
-                            child: Text('Quên mật khẩu?'),
+                            child: const Text('Quên mật khẩu?'),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return ForgetPasswordScreen();
-                              }));
+                                    return ForgetPasswordScreen();
+                                  }));
                             },
                           )
                         ]),

@@ -1,10 +1,13 @@
-import 'package:datn/widget/outlined_button.dart';
+import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
 
 class UpdateInfoScreen extends StatefulWidget {
+  const UpdateInfoScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _UpdateInfoScreenState();
@@ -16,8 +19,9 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
-  bool isEdit =false;
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  bool isEdit = false;
+  FirebaseAuthService authService=FirebaseAuthService();
   @override
   void dispose() {
     // TODO: implement dispose
@@ -29,21 +33,37 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth=authService.auth;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Thông tin chung'),
+        title: const Text('Thông tin chung'),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: Center(
           child: Column(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: AssetImage('assets/bear.jpg'),
                 radius: 50,
               ),
-              SizedBox(
+              const SizedBox(
+                height: 20,
+              ),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: OutlinedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        isEdit = !isEdit;
+                        print(isEdit);
+                      });
+                    },
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Sửaa')),
+              ),
+              const SizedBox(
                 height: 20,
               ),
               Form(
@@ -51,20 +71,22 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    OutlinedButton.icon(onPressed: (){}, icon: Icon(isEdit?Icons.edit:Icons.edit), label: Text('Sửa')),
                     TextFormField(
+                      readOnly: !isEdit,
                       keyboardType: TextInputType.name,
                       controller: nameController,
                       obscureText: false,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        filled: isEdit,
+                        border: const OutlineInputBorder(),
                         labelText: 'Họ và tên',
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
+                      readOnly: !isEdit,
                       validator: (String? phoneNumber) {
                         if (phoneNumber == null || phoneNumber.isEmpty) {
                           return null;
@@ -85,30 +107,33 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
                       keyboardType: TextInputType.phone,
                       obscureText: false,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        filled: isEdit,
+                        border: const OutlineInputBorder(),
                         labelText: 'Số điện thoại',
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
+                      initialValue: auth.currentUser?.email,
                       readOnly: true,
                       keyboardType: TextInputType.emailAddress,
                       obscureText: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Địa chỉ email',
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Text('Giới tính'),
-                    SizedBox(
+                    const Text('Giới tính'),
+                    const SizedBox(
                       height: 10,
                     ),
                     DropdownMenu<String>(
+                      enabled: isEdit,
                       initialSelection: dropDownGender,
                       onSelected: (String? gender) {
                         setState(() {
@@ -116,61 +141,69 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
                         });
                       },
                       dropdownMenuEntries: genders
-                          .map((value) => DropdownMenuEntry<String>(
+                          .map((value) =>
+                          DropdownMenuEntry<String>(
                               value: value, label: value))
                           .toList(),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
                       // validator: validateEmail,
-                      controller: dateController,
-                      readOnly: true,
-                      keyboardType: TextInputType.datetime,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Năm sinh',
-                      ),
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1950),
-                            lastDate: DateTime.now());
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          setState(() {
-                            dateController.text = formattedDate;
-                          });
+                        controller: dateController,
+                        readOnly: true,
+                        keyboardType: TextInputType.datetime,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          filled: isEdit,
+                          border: const OutlineInputBorder(),
+                          labelText: 'Năm sinh',
+                        ),
+                        onTap:!isEdit?null:
+                            () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime.now());
+                          if (pickedDate != null) {
+                            String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                            setState(() {
+                              dateController.text = formattedDate;
+                            });
+                          }
                         }
-                      },
+
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    MyOutlinedButton(
-                        callback: () {
-                          print('cap nhat thong tin');
-
-                          if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Cập nhật thành công'),
-                              ),
-                            );
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Cập nhật thất bại'),
-                              ),
-                            );
-                          }
-                          Form.of(context).validate();
-                        },
-                        content: 'Cập nhật')
+                    OutlinedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary),
+                          foregroundColor: MaterialStateProperty.all(
+                              Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .background)),
+                      onPressed: isEdit ? () async {
+                        await auth.currentUser!.updateDisplayName(nameController.text);
+                      }:null,
+                      child: const Padding(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: Text(
+                          'Cập nhật',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

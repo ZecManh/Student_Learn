@@ -1,6 +1,4 @@
 import 'package:datn/screen/choose_type.dart';
-import 'package:datn/screen/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../auth/firebase_auth_service.dart';
@@ -27,10 +25,10 @@ class _DashBoardOtherState extends State<DashBoardOther> {
               FirebaseAuthService auth=FirebaseAuthService();
               auth.logout(context);
               Navigator.push(context, MaterialPageRoute(builder: (context){
-                return ChooseTypeScreen();
+                return const ChooseTypeScreen();
               }));
             },
-            child: Text('Đăng xuất'),
+            child: const Text('Đăng xuất'),
           ),
         ],
       ),

@@ -50,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           content: Text('${user.email.toString()} đăng kí thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
     }
   }
@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             : 'Đăng kí người học'),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Center(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -91,12 +91,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       obscureText: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Nhập email',
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -104,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.text,
                       obscureText: passwordVisible,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Nhập mật khẩu',
                           suffixText: 'Ẩn/Hiện',
                           suffixIcon: IconButton(
@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           print('password valid $passwordValid');
                         },
                         controller: passwordController),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -143,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.text,
                       obscureText: passwordReAssignVisible,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Nhập lại mật khẩu',
                           suffixText: 'Ẩn/Hiện',
                           suffixIcon: IconButton(
@@ -179,14 +179,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: passwordReassignController)
                   ],
                 )),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               'Khi đăng nhập hoặc đăng kí,tôi đã đồng ý với Điều khoản và Chính sách bảo mật',
               textAlign: TextAlign.center,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             OutlinedButton(
@@ -208,14 +208,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
                   if (!emailFormState.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Email không hợp lệ')));
+                        const SnackBar(content: Text('Email không hợp lệ')));
                   } else if (passwordController.text.isEmpty ||
                       passwordReassignController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Vui lòng nhập mật khẩu')));
+                        const SnackBar(content: Text('Vui lòng nhập mật khẩu')));
                   } else if (twoPasswordEqual == false) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('2 mật khẩu không trùng khớp')));
+                        const SnackBar(content: Text('2 mật khẩu không trùng khớp')));
                   } else if (_formKey.currentState!.validate() &&
                       passwordValid &&
                       passwordReAssignValid &&
@@ -225,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
                 }
               },
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Text(
                   'Đăng kí',
@@ -233,14 +233,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Text(
+              child: const Text(
                 'Đã có tài khoản? Đăng nhập ngay!',
                 textAlign: TextAlign.center,
               ),

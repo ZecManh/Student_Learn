@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardFaceID extends StatefulWidget {
@@ -19,7 +16,7 @@ class _DashBoardFaceIDState extends State<DashBoardFaceID> {
     print('dash board qr rebuild');
 
     return SafeArea(
-      child: Scaffold(),
+      child: const Scaffold(),
     );
   }
 }

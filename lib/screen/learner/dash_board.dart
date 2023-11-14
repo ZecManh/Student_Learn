@@ -15,9 +15,9 @@ class DashBoardScreen extends StatefulWidget {
 class _DashBoardScreenState extends State<DashBoardScreen> {
   int currentPageIndex = 0;
   final List<Widget> _children = [
-    DashBoardMain(),
-    DashBoardLearning(),
-    DashBoardOther()
+    const DashBoardMain(),
+    const DashBoardLearning(),
+    const DashBoardOther()
   ];
 
   @override
@@ -32,7 +32,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             });
           },
           selectedIndex: currentPageIndex,
-          destinations: [
+          destinations: const [
             NavigationDestination(
                 icon: Icon(Icons.home_outlined), label: 'Trang chủ'),
             NavigationDestination(
@@ -42,7 +42,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           ],
         ),
         appBar: AppBar(
-          title: Text('Learner Screen'),
+          title: const Text('Learner Screen'),
         ),
         body: _children[currentPageIndex]);
   }

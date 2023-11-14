@@ -53,9 +53,9 @@ class _TluTutorState extends State<TluTutor> {
               shape: const RoundedRectangleBorder(),
               textStyle: const TextStyle(fontSize: 20)),
         ),
-        cardTheme: CardTheme().copyWith(
+        cardTheme: const CardTheme().copyWith(
           color: kColorScheme.primaryContainer,
-          margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8)
+          margin: const EdgeInsets.symmetric(horizontal: 16,vertical: 8)
         ),
       ),
       themeMode: ThemeMode.light,

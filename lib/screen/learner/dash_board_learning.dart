@@ -14,6 +14,6 @@ class _DashBoardLearningState extends State<DashBoardLearning> {
   Widget build(BuildContext context) {
     print('dash board learning rebuild');
 
-    return Text('leaning');
+    return const Text('leaning');
   }
 }

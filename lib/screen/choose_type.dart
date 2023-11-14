@@ -31,20 +31,20 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bạn là ai ?'),
+        title: const Text('Bạn là ai ?'),
       ),
       body: Container(
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
-              Image(
+              const Image(
                 image: AssetImage('assets/ic_logo_remove_bg.png'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Text(
@@ -54,17 +54,17 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Card(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(40),
                           ),
                           side: BorderSide(color: tutorColor),
@@ -73,20 +73,20 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                         child: TextButton.icon(
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
-                                  EdgeInsets.all(20))),
+                                  const EdgeInsets.all(20))),
                           onPressed: () {
                             setState(() {
                               type = UserType.tutor;
                               getColor();
 
                               SnackBar snackBar =
-                                  SnackBar(content: Text('Bạn đã chọn là người dạy'));
+                                  const SnackBar(content: Text('Bạn đã chọn là người dạy'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             });
                           },
                           icon: Image.asset('assets/ic_teacher.png', width: 50),
-                          label: Text(
+                          label: const Text(
                             'Tôi là người dạy',
                             style: TextStyle(fontSize: 20),
                           ),
@@ -94,7 +94,7 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                       ),
                       Card(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(40),
                           ),
                           side: BorderSide(color: learnerColor),
@@ -103,19 +103,19 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                         child: TextButton.icon(
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
-                                  EdgeInsets.all(20))),
+                                  const EdgeInsets.all(20))),
                           onPressed: () {
                             setState(() {
                               type = UserType.learner;
                               getColor();
                               SnackBar snackBar =
-                              SnackBar(content: Text('Bạn đã chọn là người học'));
+                              const SnackBar(content: Text('Bạn đã chọn là người học'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             });
                           },
                           icon: Image.asset('assets/ic_student.png', width: 50),
-                          label: Text(
+                          label: const Text(
                             'Tôi là người học',
                             style: TextStyle(fontSize: 20),
                           ),
@@ -123,7 +123,7 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                       )
                     ]),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               OutlinedButton.icon(

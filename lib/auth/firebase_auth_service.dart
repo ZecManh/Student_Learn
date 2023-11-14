@@ -2,7 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FirebaseAuthService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    get auth {
+    return _auth;
+  }
 
   Future<User?> createAccount(String email, String password) async {
     try {
@@ -46,7 +50,7 @@ class FirebaseAuthService {
 
   Future resetPassword(String email, BuildContext context) async {
     await _auth.sendPasswordResetEmail(email: email);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
             'Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
   }
@@ -57,11 +61,11 @@ class FirebaseAuthService {
     _auth.authStateChanges().listen((user) {
       if (user == null) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Đã đăng xuất')));
+            .showSnackBar(const SnackBar(content: Text('Đã đăng xuất')));
         print('User is currently signed out!');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Đăng xuất không thành công')));
+            const SnackBar(content: Text('Đăng xuất không thành công')));
         print('User is signed in!');
       }
     });

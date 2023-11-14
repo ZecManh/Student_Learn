@@ -1,9 +1,6 @@
-import 'dart:io';
 
 import 'package:datn/screen/qr_code/qr_screen_test.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 class DashBoardQr extends StatefulWidget {
   const DashBoardQr({super.key});
@@ -22,12 +19,12 @@ class _DashBoardQrState extends State<DashBoardQr> {
 
     return SafeArea(
       child: Scaffold(
-       backgroundColor: Color.fromARGB(255, 221, 255, 0),
+       backgroundColor: const Color.fromARGB(255, 221, 255, 0),
        body: Column(
          mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
          children: [
-          Text('Qr của tôi'),
+          const Text('Qr của tôi'),
           Expanded(
               child: Center(
               child: QrImageView(
@@ -46,23 +43,23 @@ class _DashBoardQrState extends State<DashBoardQr> {
                           onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return DashBoardQrScanner();
+                                return const DashBoardQrScanner();
                               }));
                           },
-                          icon: Text('Camera Scanner'),
+                          icon: const Text('Camera Scanner'),
                         ),
                       ),
                     ],
                   ),
                 ),
-          Text('Tạo QR'),
+          const Text('Tạo QR'),
           Center(
             child: QrImageView(
             data: data,
             version: QrVersions.auto,
             size: 200.0,
           )),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
@@ -76,10 +73,10 @@ class _DashBoardQrState extends State<DashBoardQr> {
                 });
               },
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
               ),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Mời nhập dữ liệu",
                 filled: true,
                 // fillColor: AppStyle.textInputColor,

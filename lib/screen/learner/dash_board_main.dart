@@ -1,7 +1,8 @@
+import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:datn/screen/learner/update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
-import 'package:datn/screen/qr_code/qr_screen_test.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardMain extends StatefulWidget {
@@ -14,8 +15,11 @@ class DashBoardMain extends StatefulWidget {
 }
 
 class _DashBoardMainState extends State<DashBoardMain> {
+  FirebaseAuthService firebaseAuthService=FirebaseAuthService();
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth=firebaseAuthService.auth;
+    String? displayName=auth.currentUser!.displayName;
     print('dash board main rebuild');
 
     return Container(
@@ -25,35 +29,35 @@ class _DashBoardMainState extends State<DashBoardMain> {
           Container(
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
             child: IntrinsicHeight(
               child: Row(children: [
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return UpdateInfoScreen();
+                        return const UpdateInfoScreen();
                       }));
 
                     },
-                    child: CircleAvatar(
+                    child: const CircleAvatar(
                       backgroundImage: AssetImage('assets/bear.jpg'),
                       radius: 50,
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      'Tên bạn là gì?',
+                      displayName ?? 'Tên bạn là gì',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text('Người học', style: TextStyle(fontSize: 18)),
@@ -68,10 +72,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return DashBoardQr();
+                              return const DashBoardQr();
                             }));
                           },
-                          icon: Icon(Icons.qr_code),
+                          icon: const Icon(Icons.qr_code),
                         ),
                       ),
                       Expanded(
@@ -79,16 +83,16 @@ class _DashBoardMainState extends State<DashBoardMain> {
                           onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return DashBoardFaceID();
+                                return const DashBoardFaceID();
                               }));
                           },
-                          icon: Icon(Icons.tag_faces_rounded),
+                          icon: const Icon(Icons.tag_faces_rounded),
                         ),
                       ),
                       Expanded(
                         child: IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.notifications),
+                          icon: const Icon(Icons.notifications),
                         ),
                       ),
                     ],
@@ -97,7 +101,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
               ]),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Card(
@@ -106,18 +110,18 @@ class _DashBoardMainState extends State<DashBoardMain> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
                               ),
                             ),
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsets.all(18),
                               child: Icon(
                                 Icons.person_add_alt,
@@ -125,10 +129,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             'Tìm gia sư',
                             style: TextStyle(fontSize: 16),
                           )
@@ -138,18 +142,18 @@ class _DashBoardMainState extends State<DashBoardMain> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
                               ),
                             ),
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsets.all(18),
                               child: Icon(
                                 Icons.menu_book,
@@ -157,10 +161,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             'Khoá học',
                             style: TextStyle(fontSize: 16),
                           )
@@ -170,18 +174,18 @@ class _DashBoardMainState extends State<DashBoardMain> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
                               ),
                             ),
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsets.all(18),
                               child: Icon(
                                 Icons.message_outlined,
@@ -189,10 +193,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             'Hỗ trợ',
                             style: TextStyle(fontSize: 16),
                           )
@@ -203,24 +207,24 @@ class _DashBoardMainState extends State<DashBoardMain> {
                 ],
               ),
             ),
-            margin: EdgeInsets.all(10),
-            shape: RoundedRectangleBorder(
+            margin: const EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text(
+                  const Text(
                     'Gia sư phù hợp với bạn',
                     style: TextStyle(fontSize: 20),
                   ),
@@ -233,7 +237,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                   ),
                 ]),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
         ],
