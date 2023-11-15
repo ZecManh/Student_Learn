@@ -1,7 +1,9 @@
 import 'package:datn/screen/learner/dash_board_learning.dart';
 import 'package:datn/screen/learner/dash_board_main.dart';
 import 'package:datn/screen/learner/dash_board_other.dart';
+import 'package:datn/viewmodel/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({super.key});
@@ -19,6 +21,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     const DashBoardLearning(),
     const DashBoardOther()
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

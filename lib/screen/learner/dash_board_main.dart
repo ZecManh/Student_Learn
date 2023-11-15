@@ -3,8 +3,10 @@ import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:datn/screen/learner/update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/viewmodel/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashBoardMain extends StatefulWidget {
   const DashBoardMain({super.key});
@@ -19,24 +21,32 @@ class _DashBoardMainState extends State<DashBoardMain> {
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<UserModel>(context, listen: false).init();
+  }
+
+  @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = firebaseAuthService.auth;
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    Stream<DocumentSnapshot> userDocument = firebaseFirestore
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .snapshots();
-    // String? displayName=firebaseFirestore.collection('users').doc('${auth!.currentUser!.uid}').get('display_name');
 
     print('dash board main rebuild');
 
     return Container(
-      color: Theme.of(context).colorScheme.background,
+      color: Theme
+          .of(context)
+          .colorScheme
+          .background,
       child: Column(
         children: [
           Container(
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .primaryContainer,
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
@@ -51,7 +61,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
-                            return const UpdateInfoScreen();
+                            return UpdateInfoScreen();
                           }),
                         );
                       },
@@ -67,12 +77,24 @@ class _DashBoardMainState extends State<DashBoardMain> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Vũ Minh Hiếu',
-                            style: TextStyle(fontSize: 24),
-                          ),
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(horizontal: 20),
+                        //   child: Text('ok',
+                        //         style: TextStyle(fontSize: 24),
+                        //       )
+                        // ),
+                        Consumer<UserModel>(
+                          builder: (BuildContext context, UserModel value,
+                              Widget? child) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: (value.currentUser.displayName != '')
+                                  ? Text(value.currentUser.displayName,
+                                style: TextStyle(fontSize: 24),)
+                                  : Text(
+                                  'Tên bạn là gì?',style: TextStyle(fontSize:
+                                  24),),);
+                          },
                         ),
                         SizedBox(
                           height: 20,
@@ -86,7 +108,8 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                   vertical: 10, horizontal: 10),
                               style: ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context)
+                                      Theme
+                                          .of(context)
                                           .colorScheme
                                           .background)),
                               onPressed: () {
@@ -103,7 +126,8 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                   vertical: 10, horizontal: 10),
                               style: ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context)
+                                      Theme
+                                          .of(context)
                                           .colorScheme
                                           .background)),
                               onPressed: () {
@@ -120,7 +144,8 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                   vertical: 10, horizontal: 10),
                               style: ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context)
+                                      Theme
+                                          .of(context)
                                           .colorScheme
                                           .background)),
                               onPressed: () {},
@@ -149,7 +174,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -181,7 +209,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -213,7 +244,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -267,7 +301,10 @@ class _DashBoardMainState extends State<DashBoardMain> {
                     'Xem tất cả',
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).colorScheme.primary),
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary),
                   ),
                 ]),
           ),

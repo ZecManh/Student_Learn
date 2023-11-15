@@ -47,21 +47,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (user != null) {
       print('Created account successfully');
 
-
       // firestoreService.addSignUpProfile(user.uid,user.email);
-
 
       //test
       final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-     await _firestore.collection('users').doc(user.uid).set({
-        'uid':user.uid,
-        'display_name':user.displayName,
-        'email':user.email,
-        'phone':user.phoneNumber,
-        'photo_url':user.photoURL
+      await _firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'display_name': user.displayName ?? '',
+        'email': user.email ?? '',
+        'phone': user.phoneNumber ?? '',
+        'photo_url': user.photoURL ?? '',
+        'born': '',
+        'gender': ''
       });
-
-
 
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} đăng kí thành công'));
@@ -228,11 +226,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SnackBar(content: Text('Email không hợp lệ')));
                   } else if (passwordController.text.isEmpty ||
                       passwordReassignController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Vui lòng nhập mật khẩu')));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Vui lòng nhập mật khẩu')));
                   } else if (twoPasswordEqual == false) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('2 mật khẩu không trùng khớp')));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('2 mật khẩu không trùng khớp')));
                   } else if (_formKey.currentState!.validate() &&
                       passwordValid &&
                       passwordReAssignValid &&

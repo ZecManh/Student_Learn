@@ -1,10 +1,12 @@
 import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:datn/screen/forget_password.dart';
 import 'package:datn/screen/sign_up.dart';
+import 'package:datn/viewmodel/user_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import 'package:provider/provider.dart';
 import 'choose_type.dart';
 import 'learner/dash_board.dart';
 
@@ -28,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FlutterPwValidatorState>();
 
-
   String? validateEmail(String? email) {
     String? _email = email?.trim();
     if (_email == null || _email.isEmpty) {
@@ -43,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-
   Future login() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (email != '' && password != '') {
       user =
-      await firebaseAuthService.signInWithEmailAndPassword(email, password);
+          await firebaseAuthService.signInWithEmailAndPassword(email, password);
     }
     if (user != null) {
       print(user.email.toString() + ' login successful');
@@ -64,10 +64,19 @@ class _LoginScreenState extends State<LoginScreen> {
       //   return DashBoardScreen();
       // }));
 
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(builder: (context) {
+      //   return const DashBoardScreen();
+      // }), (route) => false);
+
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {
-            return const DashBoardScreen();
-          }), (route) => false);
+        return ChangeNotifierProvider<UserModel>(
+            create: (BuildContext context) {
+              return UserModel();
+            },
+            child: const DashBoardScreen());
+      }), (route) => false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
@@ -169,15 +178,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     OutlinedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary),
+                              Theme.of(context).colorScheme.primary),
                           foregroundColor: MaterialStateProperty.all(
-                              Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .background)),
+                              Theme.of(context).colorScheme.background)),
                       onPressed: () {
                         print('go here');
                         FormState? emailFormState = _formKey.currentState;
@@ -198,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: const Padding(
                         padding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Text(
                           'Đăng nhập',
                           style: TextStyle(fontSize: 20),
@@ -229,8 +232,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                    return ForgetPasswordScreen();
-                                  }));
+                                return ForgetPasswordScreen();
+                              }));
                             },
                           )
                         ]),

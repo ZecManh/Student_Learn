@@ -9,10 +9,4 @@ class FirestoreService {
     //chua xu ly error
     await _firestore.collection('users').add(data).then((value) => print(value));
   }
-  // Future addSignUpProfile( String email) async {
-  //   Map<String, Object> data = {'email': email};
-  //
-  //   //chua xu ly error
-  //   await _firestore.collection('Users').add(data).then((value) => print(value));
-  // }
 }
