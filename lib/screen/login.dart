@@ -1,12 +1,10 @@
-import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:datn/model/user.dart';
 import 'package:datn/screen/forget_password.dart';
 import 'package:datn/screen/sign_up.dart';
-import 'package:datn/viewmodel/user_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
-import 'package:provider/provider.dart';
+import '../database/auth/firebase_auth_service.dart';
 import 'choose_type.dart';
 import 'learner/dash_board.dart';
 
@@ -47,44 +45,30 @@ class _LoginScreenState extends State<LoginScreen> {
   Future login() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-    User? user;
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User? user = null;
     if (email != '' && password != '') {
       user =
           await firebaseAuthService.signInWithEmailAndPassword(email, password);
     }
     if (user != null) {
       print(user.email.toString() + ' login successful');
-      // await prefs.setString('email', user.email!);
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-      // Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   return DashBoardScreen();
-      // }));
-
-      // Navigator.of(context).pushAndRemoveUntil(
-      //     MaterialPageRoute(builder: (context) {
-      //   return const DashBoardScreen();
-      // }), (route) => false);
-
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {
-        return ChangeNotifierProvider<UserModel>(
-            create: (BuildContext context) {
-              return UserModel();
-            },
-            child: const DashBoardScreen());
+        return const DashBoardScreen();
       }), (route) => false);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Đăng nhập không thành công,kiểm tra lại email và mật khẩu')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Đăng nhập không thành công,kiểm tra lại email và mật khẩu'),
+        ),
+      );
     }
   }
-
-  // FirebaseAuthService authService = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -185,19 +169,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         print('go here');
                         FormState? emailFormState = _formKey.currentState;
                         if (emailFormState != null) {
-                          print('go here 1');
                           if (_formKey.currentState!.validate() &&
                               passwordValid) {
-                            print('validate email ok');
                             login();
                           }
                         }
-
-                        // FlutterPwValidatorState? passwordFormState =
-                        //     _passwordKey.currentState;
-                        // if (passwordFormState != null) {
-                        //   _passwordKey.currentState!.validate();
-                        // }
                       },
                       child: const Padding(
                         padding:

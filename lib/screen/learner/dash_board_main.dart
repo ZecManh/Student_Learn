@@ -1,12 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/auth/firebase_auth_service.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
-import 'package:datn/viewmodel/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:datn/model/user.dart' as model_user;
+
+import '../../database/auth/firebase_auth_service.dart';
 
 class DashBoardMain extends StatefulWidget {
   const DashBoardMain({super.key});
@@ -22,31 +23,26 @@ class _DashBoardMainState extends State<DashBoardMain> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Provider.of<UserModel>(context, listen: false).init();
   }
 
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = firebaseAuthService.auth;
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
+    print("current user id " + auth.currentUser!.uid);
+    // print('current display name ' + auth.currentUser!.displayName);
+    FirestoreService firestoreService = FirestoreService();
+    FirebaseAuthService firebaseAuthModel =
+        Provider.of<FirebaseAuthService>(context);
     print('dash board main rebuild');
 
     return Container(
-      color: Theme
-          .of(context)
-          .colorScheme
-          .background,
+      color: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
           Container(
             decoration: BoxDecoration(
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .primaryContainer,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
@@ -77,25 +73,26 @@ class _DashBoardMainState extends State<DashBoardMain> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 20),
-                        //   child: Text('ok',
-                        //         style: TextStyle(fontSize: 24),
-                        //       )
-                        // ),
-                        Consumer<UserModel>(
-                          builder: (BuildContext context, UserModel value,
-                              Widget? child) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: (value.currentUser.displayName != '')
-                                  ? Text(value.currentUser.displayName,
-                                style: TextStyle(fontSize: 24),)
-                                  : Text(
-                                  'Tên bạn là gì?',style: TextStyle(fontSize:
-                                  24),),);
-                          },
-                        ),
+                        StreamBuilder<model_user.User?>(
+                            stream:
+                                firestoreService.user(auth.currentUser!.uid),
+                            builder: (context,
+                                AsyncSnapshot<model_user.User?> snapshot) {
+                              {
+                                model_user.User? user = snapshot.data;
+                                if (user != null) {
+                                  return Text(
+                                    snapshot.data!.displayName,
+                                    style: TextStyle(fontSize: 24),
+                                  );
+                                }else{
+                                  return Text(
+                                    'Loading',
+                                    style: TextStyle(fontSize: 24),
+                                  );
+                                }
+                              }
+                            }),
                         SizedBox(
                           height: 20,
                         ),
@@ -108,15 +105,14 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                   vertical: 10, horizontal: 10),
                               style: ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Theme
-                                          .of(context)
+                                      Theme.of(context)
                                           .colorScheme
                                           .background)),
                               onPressed: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return const DashBoardQr();
-                                    }));
+                                  return const DashBoardQr();
+                                }));
                               },
                               icon: const Icon(Icons.qr_code),
                             ),
@@ -126,15 +122,14 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                   vertical: 10, horizontal: 10),
                               style: ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Theme
-                                          .of(context)
+                                      Theme.of(context)
                                           .colorScheme
                                           .background)),
                               onPressed: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return const DashBoardFaceID();
-                                    }));
+                                  return const DashBoardFaceID();
+                                }));
                               },
                               icon: const Icon(Icons.tag_faces_rounded),
                             ),
@@ -144,8 +139,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                   vertical: 10, horizontal: 10),
                               style: ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Theme
-                                          .of(context)
+                                      Theme.of(context)
                                           .colorScheme
                                           .background)),
                               onPressed: () {},
@@ -174,10 +168,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary,
+                              color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -209,10 +200,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary,
+                              color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -244,10 +232,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary,
+                              color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -301,10 +286,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                     'Xem tất cả',
                     style: TextStyle(
                         fontSize: 15,
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
                 ]),
           ),

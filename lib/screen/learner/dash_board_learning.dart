@@ -12,8 +12,6 @@ class DashBoardLearning extends StatefulWidget {
 class _DashBoardLearningState extends State<DashBoardLearning> {
   @override
   Widget build(BuildContext context) {
-    print('dash board learning rebuild');
-
-    return const Text('leaning');
+    return const Text('learning');
   }
 }

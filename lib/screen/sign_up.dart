@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/auth/firebase_auth_service.dart';
-import 'package:datn/firestore/firestore_service.dart';
+import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/model/user.dart';
 import 'package:datn/screen/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+
+import '../database/firestore/firestore_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   final UserType userType;
@@ -40,25 +41,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String email = emailController.text;
     String password = passwordController.text;
     String passwordReassign = passwordReassignController.text;
-    User? user = null;
+    User? user ;
     if (email != '' && (password == passwordReassign)) {
-      user = await firebaseAuthService.createAccount(email, password);
+      user = await firebaseAuthService.createUserWithEmailAndPassword(
+          email, password);
     }
     if (user != null) {
-      print('Created account successfully');
-
-      // firestoreService.addSignUpProfile(user.uid,user.email);
-
-      //test
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      await _firestore.collection('users').doc(user.uid).set({
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      await firestore.collection('users').doc(user.uid).set({
         'uid': user.uid,
-        'display_name': user.displayName ?? '',
-        'email': user.email ?? '',
-        'phone': user.phoneNumber ?? '',
-        'photo_url': user.photoURL ?? '',
-        'born': '',
-        'gender': ''
+        'display_name': user.displayName,
+        'email': user.email,
+        'phone': user.phone,
+        'photo_url': user.photoUrl,
+        'born': user.born,
+        'gender': user.gender
       });
 
       SnackBar snackBar = SnackBar(
@@ -140,14 +137,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         minLength: 6,
                         numericCharCount: 1,
                         onSuccess: () {
-                          print("MATCHED");
                           passwordValid = true;
-                          print('password valid $passwordValid');
                         },
                         onFail: () {
-                          print("NOT MATCHED");
                           passwordValid = false;
-                          print('password valid $passwordValid');
                         },
                         controller: passwordController),
                     const SizedBox(
@@ -180,16 +173,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         minLength: 6,
                         numericCharCount: 1,
                         onSuccess: () {
-                          print("MATCHED");
                           passwordReAssignValid = true;
-                          print(
-                              'password reassign valid $passwordReAssignValid');
                         },
                         onFail: () {
-                          print("NOT MATCHED");
                           passwordReAssignValid = false;
-                          print(
-                              'password reassign valid $passwordReAssignValid');
+
                         },
                         controller: passwordReassignController)
                   ],
@@ -211,10 +199,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   foregroundColor: MaterialStateProperty.all(
                       Theme.of(context).colorScheme.background)),
               onPressed: () {
-                print('go here');
                 FormState? emailFormState = _formKey.currentState;
                 if (emailFormState != null) {
-                  print('go here 1');
                   if (passwordController.text ==
                       passwordReassignController.text) {
                     twoPasswordEqual = true;
@@ -235,7 +221,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       passwordValid &&
                       passwordReAssignValid &&
                       twoPasswordEqual) {
-                    print('validate email ok');
                     _signUp();
                   }
                 }
