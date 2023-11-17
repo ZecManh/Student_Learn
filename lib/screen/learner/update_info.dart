@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
@@ -26,6 +29,11 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
   FirebaseAuthService authService = FirebaseAuthService();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
+  ImagePicker imagePicker = ImagePicker();
+  XFile? returnImage;
+  File? selectedImage;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -45,22 +53,42 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
           final data = snapshot.data() as Map<String, dynamic>;
 
           String? displayName = data['display_name'] as String?;
-          nameController.text = displayName??'';
+          nameController.text = displayName ?? '';
 
           print('display name $displayName');
 
-          String? phoneNumber=data['phone'] as String?;
-          phoneController.text=phoneNumber??'';
+          String? phoneNumber = data['phone'] as String?;
+          phoneController.text = phoneNumber ?? '';
 
-          String? dateOfBirth=data['born'] as String?;
-          dateController.text=dateOfBirth??'';
+          String? dateOfBirth = data['born'] as String?;
+          dateController.text = dateOfBirth ?? '';
 
-          String? gender=data['gender'] as String?;
-          dropDownGender= gender??genders.first;
+          String? gender = data['gender'] as String?;
+          dropDownGender = gender ?? genders.first;
         }
       },
       onError: (e) => print("Error getting document: $e"),
     );
+  }
+
+  Future uploadImage() async {
+    // Reference imageReference =
+    //     storage.ref('user_images/' + auth.currentUser!.uid);
+    Reference imageReference =
+        storage.ref('user_images/${auth.currentUser!.uid}/avatar');
+
+    returnImage = await imagePicker.pickImage(source: ImageSource.gallery);
+    if(returnImage!=null){
+      setState(() {
+        selectedImage = File(returnImage!.path);
+        print('return image path $returnImage');
+        print('selectedImage $selectedImage');
+      });
+        print('put image $selectedImage');
+        imageReference.child(returnImage!.name).putFile(selectedImage!);
+    }
+
+
   }
 
   @override
@@ -76,9 +104,15 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
         child: Center(
           child: Column(
             children: [
-              const CircleAvatar(
-                backgroundImage: AssetImage('assets/bear.jpg'),
-                radius: 50,
+              GestureDetector(
+                onTap: uploadImage,
+                child: (selectedImage != null)
+                    ? CircleAvatar(
+                        backgroundImage: FileImage(selectedImage!), radius: 50)
+                    : CircleAvatar(
+                        backgroundImage: AssetImage('assets/bear.jpg'),
+                        radius: 50,
+                      ),
               ),
               const SizedBox(
                 height: 20,
@@ -171,7 +205,6 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
                         setState(() {
                           dropDownGender = gender!;
                           print('set state drop down gender $dropDownGender');
-
                         });
                       },
                       dropdownMenuEntries: genders
@@ -221,20 +254,19 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
                               Theme.of(context).colorScheme.background)),
                       onPressed: isEdit
                           ? () async {
-                        print(phoneController.text);
-                        print('dropdown gender $dropDownGender');
+                              print(phoneController.text);
+                              print('dropdown gender $dropDownGender');
                               await firestore
                                   .collection('users')
                                   .doc(auth.currentUser!.uid)
                                   .set({
                                 'display_name': nameController.text,
-                                'phone':phoneController.text,
-                                'born':dateController.text,
-                                'gender':dropDownGender
+                                'phone': phoneController.text,
+                                'born': dateController.text,
+                                'gender': dropDownGender
                               }, SetOptions(merge: true)).catchError((error) {
                                 print(error);
                               });
-
                             }
                           : null,
                       child: const Padding(
