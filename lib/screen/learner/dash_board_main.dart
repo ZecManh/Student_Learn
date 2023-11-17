@@ -61,10 +61,28 @@ class _DashBoardMainState extends State<DashBoardMain> {
                           }),
                         );
                       },
-                      child: const CircleAvatar(
-                        backgroundImage: AssetImage('assets/bear.jpg'),
-                        radius: 50,
-                      ),
+                      child:
+                      StreamBuilder<model_user.User>(
+                          stream: firestoreService.user(auth.currentUser!.uid),
+                          builder: (context,
+                              AsyncSnapshot<model_user.User> snapshot) {
+                            model_user.User? user = snapshot.data;
+                            if (user != null) {
+                              return CircleAvatar(
+                                  backgroundImage: NetworkImage(user.photoUrl),
+                                  radius: 50);
+                            } else {
+                              print('image null');
+                              return CircleAvatar(
+                                backgroundImage: AssetImage('assets/bear.jpg'),
+                                radius: 50,
+                              );
+                            }
+                          }),
+                      // const CircleAvatar(
+                      //   backgroundImage: AssetImage('assets/bear.jpg'),
+                      //   radius: 50,
+                      // ),
                     ),
                   ),
                   const SizedBox(width: 10),

@@ -95,8 +95,6 @@ class _UpdateInfoScreenState extends State<UpdateInfoScreen> {
         print('Image URL ' + imageUrl);
         firestoreService.updateImageUrl(auth.currentUser!.uid, imageUrl);
         //store imageUrl to firestore
-
-
       } catch (error) {
         print(error);
       }
