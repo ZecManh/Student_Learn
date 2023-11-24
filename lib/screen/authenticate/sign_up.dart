@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/auth/firebase_auth_service.dart';
 import 'package:datn/model/user.dart';
-import 'package:datn/screen/choose_type.dart';
+import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
-import '../database/firestore/firestore_service.dart';
+import '../../database/firestore/firestore_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   final UserType userType;

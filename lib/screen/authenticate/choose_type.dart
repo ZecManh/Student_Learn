@@ -1,5 +1,8 @@
-import 'package:datn/screen/login.dart';
+import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'login.dart';
 
 enum UserType { tutor, learner }
 
@@ -13,17 +16,38 @@ class ChooseTypeScreen extends StatefulWidget {
 }
 
 class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
-  UserType type = UserType.learner;
+  late UserTypeModel userTypeModel;
+  late UserType type;
   Color tutorColor = Colors.white;
   Color learnerColor = Colors.white;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userTypeModel = Provider.of(context, listen: false);
+    type = userTypeModel.userType;
+  }
+
   void getColor() {
     if (type == UserType.tutor) {
-      tutorColor = Theme.of(context).colorScheme.primary;
-      learnerColor = Theme.of(context).colorScheme.background;
+      tutorColor = Theme
+          .of(context)
+          .colorScheme
+          .primary;
+      learnerColor = Theme
+          .of(context)
+          .colorScheme
+          .background;
     } else {
-      tutorColor = Theme.of(context).colorScheme.background;
-      learnerColor = Theme.of(context).colorScheme.primary;
+      tutorColor = Theme
+          .of(context)
+          .colorScheme
+          .background;
+      learnerColor = Theme
+          .of(context)
+          .colorScheme
+          .primary;
     }
   }
 
@@ -50,7 +74,10 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
               Text(
                 'Bạn là ai ?',
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .primary,
                     fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
@@ -69,7 +96,10 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                           ),
                           side: BorderSide(color: tutorColor),
                         ),
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .primaryContainer,
                         child: TextButton.icon(
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
@@ -78,9 +108,8 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                             setState(() {
                               type = UserType.tutor;
                               getColor();
-
-                              SnackBar snackBar =
-                                  const SnackBar(content: Text('Bạn đã chọn là người dạy'));
+                              SnackBar snackBar = const SnackBar(
+                                  content: Text('Bạn đã chọn là người dạy'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             });
@@ -99,7 +128,10 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                           ),
                           side: BorderSide(color: learnerColor),
                         ),
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .primaryContainer,
                         child: TextButton.icon(
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
@@ -108,8 +140,8 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                             setState(() {
                               type = UserType.learner;
                               getColor();
-                              SnackBar snackBar =
-                              const SnackBar(content: Text('Bạn đã chọn là người học'));
+                              SnackBar snackBar = const SnackBar(
+                                  content: Text('Bạn đã chọn là người học'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             });
@@ -131,20 +163,32 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  LoginScreen(userType: type,),
+                        builder: (context) =>
+                            LoginScreen(
+                              userType: type,
+                            ),
                       ));
                 },
                 icon: Icon(Icons.arrow_forward_rounded,
-                    color: Theme.of(context).colorScheme.background),
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .background),
                 label: Text(
                   'Tiếp theo',
                   style: TextStyle(
                       fontSize: 16,
-                      color: Theme.of(context).colorScheme.background),
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .background),
                 ),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.primary)),
+                        Theme
+                            .of(context)
+                            .colorScheme
+                            .primary)),
               ),
             ],
           ),

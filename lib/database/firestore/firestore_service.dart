@@ -23,6 +23,12 @@ class FirestoreService extends ChangeNotifier {
     return docRef.snapshots().map((json) => User.fromJson(json.data() as Map));
   }
 
+  // Stream<User>? user(String userId) {
+  //   DocumentReference docRef = _firestore.collection('users').doc(userId);
+  //   final snapshot = docRef.snapshots();
+  //   return docRef.snapshots().map((json) => User.fromJson(json.data() as Map));
+  // }
+
   Future updateInfo(String userId, String displayName, String phone,
       String born, String gender) async {
     await firestore.collection('users').doc(userId).set({

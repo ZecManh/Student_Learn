@@ -1,4 +1,5 @@
 class User {
+
   User(
       {this.uid = '',
       this.photoUrl = '',
@@ -35,5 +36,10 @@ class User {
       'display_name': displayName,
       'born': born
     };
+  }
+
+  @override
+  String toString() {
+    return 'User{uid: $uid, photoUrl: $photoUrl, phone: $phone, gender: $gender, email: $email, displayName: $displayName, born: $born}';
   }
 }

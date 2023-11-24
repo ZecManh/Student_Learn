@@ -1,8 +1,7 @@
-import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-import '../database/auth/firebase_auth_service.dart';
+import '../../database/auth/firebase_auth_service.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -22,7 +21,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     if (email == null || email.isEmpty) {
       return 'Vui lòng nhập email!';
     } else {
-      bool isEmailOK = EmailValidator.validate(email);
+      bool isEmailOK = EmailValidator.validate(email.trim());
       if (isEmailOK) {
         return null;
       } else {
@@ -33,7 +32,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
   }

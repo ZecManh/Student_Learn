@@ -6,19 +6,28 @@ import 'package:flutter/material.dart';
 class FirebaseAuthService extends ChangeNotifier{
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
+  String? uid;
+  String? email;
   get auth=>_firebaseAuth;
   User? userFromFirebase(firebase_auth.User? user) {
     if (user == null) {
       return null;
     } else
-      {return User(uid: user.uid, email: user.email!);}
+      {
+        uid=user.uid;
+        email=user.email;
+        return User(uid: user.uid, email: user.email!);}
   }
 
+  //dung kieu stream builder
   Stream<User?>? get user {
     return _firebaseAuth
         .authStateChanges()
-        .map((event) => userFromFirebase(event));
+        .map((user) => userFromFirebase(user));
   }
+
+  bool get isSignedIn=>_firebaseAuth.currentUser!=null;
+
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
@@ -43,5 +52,6 @@ class FirebaseAuthService extends ChangeNotifier{
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
             'Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
+    Navigator.of(context).pop();
   }
 }

@@ -1,7 +1,9 @@
 import 'package:datn/database/firestore/firestore_service.dart';
-import 'package:datn/screen/learner/update_info.dart';
+import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/tutor/tutor_info.dart';
+import 'package:datn/screen/tutor/tutor_update_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,17 +11,19 @@ import 'package:datn/model/user.dart' as model_user;
 
 import '../../database/auth/firebase_auth_service.dart';
 
-class DashBoardMain extends StatefulWidget {
-  const DashBoardMain({super.key});
+class DashBoardTutorMain extends StatefulWidget {
+  const DashBoardTutorMain({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _DashBoardMainState();
+    return _DashBoardTutorMainState();
   }
 }
 
-class _DashBoardMainState extends State<DashBoardMain> {
+class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+  late TextEditingController nameController;
+  late TextEditingController ageController;
 
   @override
   void initState() {
@@ -28,10 +32,14 @@ class _DashBoardMainState extends State<DashBoardMain> {
 
   @override
   Widget build(BuildContext context) {
+    model_user.User user = Provider.of<model_user.User>(context);
+    nameController = TextEditingController(text: user.displayName);
+    ageController = TextEditingController(text: user.email);
+
     FirebaseAuth auth = firebaseAuthService.auth;
     print("current user id " + auth.currentUser!.uid);
     // print('current display name ' + auth.currentUser!.displayName);
-    FirestoreService firestoreService = FirestoreService();
+    FirestoreService firestoreService = Provider.of<FirestoreService>(context);
     FirebaseAuthService firebaseAuthModel =
         Provider.of<FirebaseAuthService>(context);
     print('dash board main rebuild');
@@ -57,12 +65,16 @@ class _DashBoardMainState extends State<DashBoardMain> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
-                            return UpdateInfoScreen();
+                            return Provider.value(
+                                value: user,
+                                // child: UpdateInfoTutor()
+                              child: TutorInfo(),
+                            )
+                            ;
                           }),
                         );
                       },
-                      child:
-                      StreamBuilder<model_user.User>(
+                      child: StreamBuilder<model_user.User>(
                           stream: firestoreService.user(auth.currentUser!.uid),
                           builder: (context,
                               AsyncSnapshot<model_user.User> snapshot) {
@@ -79,10 +91,6 @@ class _DashBoardMainState extends State<DashBoardMain> {
                               );
                             }
                           }),
-                      // const CircleAvatar(
-                      //   backgroundImage: AssetImage('assets/bear.jpg'),
-                      //   radius: 50,
-                      // ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -103,7 +111,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
                                     snapshot.data!.displayName,
                                     style: TextStyle(fontSize: 24),
                                   );
-                                }else{
+                                } else {
                                   return Text(
                                     'Loading',
                                     style: TextStyle(fontSize: 24),
@@ -311,6 +319,7 @@ class _DashBoardMainState extends State<DashBoardMain> {
           const SizedBox(
             height: 20,
           ),
+
         ],
       ),
     );
