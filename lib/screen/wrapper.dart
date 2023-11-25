@@ -5,30 +5,54 @@ import 'package:datn/screen/tutor/dash_board_tutor.dart';
 import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/auth/firebase_auth_service.dart';
 import '../model/user.dart';
 
 // lang nghe authStateChange lang nghe khi signout
-class Wrapper extends StatelessWidget {
+class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
+
+  @override
+  State<Wrapper> createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+  String _type = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserType();
+  }
+
+  Future loadUserType() async {
+    final pref = await SharedPreferences.getInstance();
+    String userType =
+        pref.getString('userType')!;
+    setState(() {
+      _type = userType;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final firebaseAuthService = Provider.of<FirebaseAuthService>(context);
-    UserTypeModel userTypeModel = Provider.of<UserTypeModel>(context);
+    print("wrapper rebuild with type ${_type}");
     return StreamBuilder<User?>(
         stream: firebaseAuthService.user,
         builder: (context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final User? user = snapshot.data;
-            // return user == null ? Authenticate() : DashBoardLearner();
             if (user == null) {
               return Authenticate();
             } else {
-              if (userTypeModel.userType == UserType.learner) {
+              if (_type == 'learner') {
+                print("wrapper to learner");
                 return DashBoardLearner();
               } else {
+                print("wrapper to tutor");
                 return DashBoardTutor();
               }
             }
@@ -42,29 +66,3 @@ class Wrapper extends StatelessWidget {
         });
   }
 }
-
-//khong hoat dong khi sign out
-// class Wrapper extends StatelessWidget {
-//   const Wrapper({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final authNotifier = Provider.of<FirebaseAuthService>(context);
-//     return (authNotifier.isSignedIn != true)
-//         ? Authenticate()
-//         : DashBoardScreen();
-//   }
-// }
-
-//khong hoat dong khi signOut
-// class Wrapper extends StatelessWidget {
-//   const Wrapper({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer<FirebaseAuthService>(builder: (context, auth, child) {
-//       print("isSignedIn ${auth.isSignedIn}");
-//       return auth.isSignedIn ? DashBoardScreen() : Authenticate();
-//     });
-//   }
-// }

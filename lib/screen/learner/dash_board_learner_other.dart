@@ -1,4 +1,4 @@
-import 'package:datn/screen/authenticate/choose_type.dart';
+import 'package:datn/screen/wrapper.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
@@ -20,13 +20,13 @@ class _DashBoardLearnerOtherState extends State<DashBoardLearnerOther> {
         child: Column(
           children: [
             OutlinedButton(
-              onPressed: () {
+              onPressed: () async {
                 FirebaseAuthService auth = FirebaseAuthService();
-                auth.signOut();
-                // Navigator.pushAndRemoveUntil(context,
-                //     MaterialPageRoute(builder: (context) {
-                //   return const ChooseTypeScreen();
-                // }), (route) => false);
+               await auth.signOut();
+                Navigator.pushAndRemoveUntil(context,
+                    MaterialPageRoute(builder: (context) {
+                  return const Wrapper();
+                }), (route) => false);
               },
               child: const Text('Đăng xuất'),
             ),

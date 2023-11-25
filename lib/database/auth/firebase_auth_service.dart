@@ -3,20 +3,23 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 import 'package:flutter/material.dart';
 
-class FirebaseAuthService extends ChangeNotifier{
-  final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
+class FirebaseAuthService extends ChangeNotifier {
+  final firebase_auth.FirebaseAuth _firebaseAuth =
+      firebase_auth.FirebaseAuth.instance;
 
   String? uid;
   String? email;
-  get auth=>_firebaseAuth;
+
+  get auth => _firebaseAuth;
+
   User? userFromFirebase(firebase_auth.User? user) {
     if (user == null) {
       return null;
-    } else
-      {
-        uid=user.uid;
-        email=user.email;
-        return User(uid: user.uid, email: user.email!);}
+    } else {
+      uid = user.uid;
+      email = user.email;
+      return User(uid: user.uid, email: user.email!);
+    }
   }
 
   //dung kieu stream builder
@@ -26,8 +29,7 @@ class FirebaseAuthService extends ChangeNotifier{
         .map((user) => userFromFirebase(user));
   }
 
-  bool get isSignedIn=>_firebaseAuth.currentUser!=null;
-
+  bool get isSignedIn => _firebaseAuth.currentUser != null;
 
   Future<User?> signInWithEmailAndPassword(
       String email, String password) async {
@@ -44,7 +46,14 @@ class FirebaseAuthService extends ChangeNotifier{
   }
 
   Future<void> signOut() async {
-   return await _firebaseAuth.signOut();
+    print("user sign out");
+    await _firebaseAuth.signOut();
+    // if (_firebaseAuth.currentUser == null) {
+    //   print("user null");
+    // } else {
+    //   print("user != null");
+    // }
+    // notifyListeners();
   }
 
   Future<void> resetPassword(String email, BuildContext context) async {

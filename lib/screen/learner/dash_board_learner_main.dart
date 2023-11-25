@@ -2,6 +2,7 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/viewmodel/user_type.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     model_user.User user = Provider.of<model_user.User>(context);
     nameController = TextEditingController(text: user.displayName);
     ageController = TextEditingController(text: user.email);
+    // UserTypeModel userTypeModel = Provider.of<UserTypeModel>(context);
 
     FirebaseAuth auth = firebaseAuthService.auth;
     print("current user id " + auth.currentUser!.uid);
@@ -317,7 +319,6 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
           const SizedBox(
             height: 20,
           ),
-
         ],
       ),
     );

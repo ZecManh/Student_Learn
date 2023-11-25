@@ -36,7 +36,7 @@ class _TluTutorState extends State<TluTutor> {
         ChangeNotifierProvider<FirestoreService>(
             create: (_) => FirestoreService()),
         ChangeNotifierProvider<UserTypeModel>(
-          create: (context) => UserTypeModel(),
+          create: (_) => UserTypeModel(),
         )
       ],
       child: MaterialApp(

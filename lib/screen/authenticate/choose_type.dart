@@ -1,6 +1,7 @@
 import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
 
@@ -16,182 +17,174 @@ class ChooseTypeScreen extends StatefulWidget {
 }
 
 class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
-  late UserTypeModel userTypeModel;
-  late UserType type;
   Color tutorColor = Colors.white;
   Color learnerColor = Colors.white;
+  late String userType;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    userTypeModel = Provider.of(context, listen: false);
-    type = userTypeModel.userType;
+    loadUserType();
   }
 
-  void getColor() {
-    if (type == UserType.tutor) {
-      tutorColor = Theme
-          .of(context)
-          .colorScheme
-          .primary;
-      learnerColor = Theme
-          .of(context)
-          .colorScheme
-          .background;
-    } else {
-      tutorColor = Theme
-          .of(context)
-          .colorScheme
-          .background;
-      learnerColor = Theme
-          .of(context)
-          .colorScheme
-          .primary;
-    }
+  Future loadUserType() async {
+    final pref = await SharedPreferences.getInstance();
+    String? type = pref.getString('userType')??'tutor';
+    setState(() {
+      userType=type;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bạn là ai ?'),
-      ),
-      body: Container(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-              const Image(
-                image: AssetImage('assets/ic_logo_remove_bg.png'),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Text(
-                'Bạn là ai ?',
-                style: TextStyle(
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 50),
+    return ChangeNotifierProvider<UserTypeModel>(
+      create: (BuildContext context) {
+        return UserTypeModel();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Bạn là ai ?'),
+        ),
+        body: Consumer<UserTypeModel>(
+          builder: (context, UserTypeModel value, child) {
+            return Container(
+              child: Center(
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(40),
-                          ),
-                          side: BorderSide(color: tutorColor),
-                        ),
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .primaryContainer,
-                        child: TextButton.icon(
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.all(20))),
-                          onPressed: () {
-                            setState(() {
-                              type = UserType.tutor;
-                              getColor();
-                              SnackBar snackBar = const SnackBar(
-                                  content: Text('Bạn đã chọn là người dạy'));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            });
-                          },
-                          icon: Image.asset('assets/ic_teacher.png', width: 50),
-                          label: const Text(
-                            'Tôi là người dạy',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(40),
-                          ),
-                          side: BorderSide(color: learnerColor),
-                        ),
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .primaryContainer,
-                        child: TextButton.icon(
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.all(20))),
-                          onPressed: () {
-                            setState(() {
-                              type = UserType.learner;
-                              getColor();
-                              SnackBar snackBar = const SnackBar(
-                                  content: Text('Bạn đã chọn là người học'));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            });
-                          },
-                          icon: Image.asset('assets/ic_student.png', width: 50),
-                          label: const Text(
-                            'Tôi là người học',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      )
-                    ]),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              OutlinedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            LoginScreen(
-                              userType: type,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    const Image(
+                      image: AssetImage('assets/ic_logo_remove_bg.png'),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Text(
+                      'Bạn là ai ?',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(40),
+                                  ),
+                                  // side: BorderSide(color: tutorColor),
+                                  side: (value.userType == UserType.tutor)
+                                      ? BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary)
+                                      : BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background)),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                              child: TextButton.icon(
+                                style: ButtonStyle(
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            const EdgeInsets.all(20))),
+                                onPressed: () async {
+                                  value.changeUserType(UserType.tutor);
+                                  SharedPreferences pref =
+                                      await SharedPreferences.getInstance();
+                                  pref.setString('userType', 'tutor');
+                                  print('change pref type tutor');
+                                },
+                                icon: Image.asset('assets/ic_teacher.png',
+                                    width: 50),
+                                label: const Text(
+                                  'Tôi là người dạy',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
                             ),
-                      ));
-                },
-                icon: Icon(Icons.arrow_forward_rounded,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .background),
-                label: Text(
-                  'Tiếp theo',
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .background),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(40),
+                                ),
+                                // side: BorderSide(color: learnerColor),
+                                side: (value.userType == UserType.learner)
+                                    ? BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary)
+                                    : BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background),
+                              ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                              child: TextButton.icon(
+                                style: ButtonStyle(
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            const EdgeInsets.all(20))),
+                                onPressed: () async {
+                                  value.changeUserType(UserType.learner);
+                                  SharedPreferences pref =
+                                      await SharedPreferences.getInstance();
+                                  pref.setString('userType', 'learner');
+                                  print('change pref type learner');
+                                },
+                                icon: Image.asset('assets/ic_student.png',
+                                    width: 50),
+                                label: const Text(
+                                  'Tôi là người học',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            )
+                          ]),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(
+                                userType: value.userType,
+                              ),
+                            ));
+                      },
+                      icon: Icon(Icons.arrow_forward_rounded,
+                          color: Theme.of(context).colorScheme.background),
+                      label: Text(
+                        'Tiếp theo',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.background),
+                      ),
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.primary)),
+                    ),
+                  ],
                 ),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme
-                            .of(context)
-                            .colorScheme
-                            .primary)),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

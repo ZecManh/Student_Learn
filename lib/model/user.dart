@@ -7,7 +7,7 @@ class User {
       this.gender = '',
       this.email = '',
       this.displayName = '',
-      this.born = ''});
+      this.born = '',});
 
   String uid;
   String photoUrl;
