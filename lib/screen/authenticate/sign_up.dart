@@ -1,11 +1,13 @@
-import 'package:datn/auth/firebase_auth_service.dart';
-import 'package:datn/firestore/firestore_service.dart';
-import 'package:datn/screen/choose_type.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/model/user.dart';
+import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+
+import '../../database/firestore/firestore_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   final UserType userType;
@@ -39,18 +41,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String email = emailController.text;
     String password = passwordController.text;
     String passwordReassign = passwordReassignController.text;
-    User? user = null;
+    User? user ;
     if (email != '' && (password == passwordReassign)) {
-      user = await firebaseAuthService.createAccount(email, password);
+      user = await firebaseAuthService.createUserWithEmailAndPassword(
+          email, password);
     }
     if (user != null) {
-      print('Created account successfully');
-      firestoreService.addSignUpProfile(user.uid,user.email);
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      await firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'display_name': user.displayName,
+        'email': user.email,
+        'phone': user.phone,
+        'photo_url': user.photoUrl,
+        'born': user.born,
+        'gender': user.gender
+      });
+
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} đăng kí thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
     }
   }
@@ -78,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             : 'Đăng kí người học'),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Center(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -91,12 +103,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       obscureText: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Nhập email',
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -104,7 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.text,
                       obscureText: passwordVisible,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Nhập mật khẩu',
                           suffixText: 'Ẩn/Hiện',
                           suffixIcon: IconButton(
@@ -125,17 +137,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         minLength: 6,
                         numericCharCount: 1,
                         onSuccess: () {
-                          print("MATCHED");
                           passwordValid = true;
-                          print('password valid $passwordValid');
                         },
                         onFail: () {
-                          print("NOT MATCHED");
                           passwordValid = false;
-                          print('password valid $passwordValid');
                         },
                         controller: passwordController),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -143,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.text,
                       obscureText: passwordReAssignVisible,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Nhập lại mật khẩu',
                           suffixText: 'Ẩn/Hiện',
                           suffixIcon: IconButton(
@@ -165,28 +173,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         minLength: 6,
                         numericCharCount: 1,
                         onSuccess: () {
-                          print("MATCHED");
                           passwordReAssignValid = true;
-                          print(
-                              'password reassign valid $passwordReAssignValid');
                         },
                         onFail: () {
-                          print("NOT MATCHED");
                           passwordReAssignValid = false;
-                          print(
-                              'password reassign valid $passwordReAssignValid');
+
                         },
                         controller: passwordReassignController)
                   ],
                 )),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               'Khi đăng nhập hoặc đăng kí,tôi đã đồng ý với Điều khoản và Chính sách bảo mật',
               textAlign: TextAlign.center,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             OutlinedButton(
@@ -196,10 +199,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   foregroundColor: MaterialStateProperty.all(
                       Theme.of(context).colorScheme.background)),
               onPressed: () {
-                print('go here');
                 FormState? emailFormState = _formKey.currentState;
                 if (emailFormState != null) {
-                  print('go here 1');
                   if (passwordController.text ==
                       passwordReassignController.text) {
                     twoPasswordEqual = true;
@@ -208,24 +209,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
                   if (!emailFormState.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Email không hợp lệ')));
+                        const SnackBar(content: Text('Email không hợp lệ')));
                   } else if (passwordController.text.isEmpty ||
                       passwordReassignController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Vui lòng nhập mật khẩu')));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Vui lòng nhập mật khẩu')));
                   } else if (twoPasswordEqual == false) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('2 mật khẩu không trùng khớp')));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('2 mật khẩu không trùng khớp')));
                   } else if (_formKey.currentState!.validate() &&
                       passwordValid &&
                       passwordReAssignValid &&
                       twoPasswordEqual) {
-                    print('validate email ok');
                     _signUp();
                   }
                 }
               },
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Text(
                   'Đăng kí',
@@ -233,14 +233,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Text(
+              child: const Text(
                 'Đã có tài khoản? Đăng nhập ngay!',
                 textAlign: TextAlign.center,
               ),

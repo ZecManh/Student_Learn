@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 class DashBoardQrScanner extends StatefulWidget {
   const DashBoardQrScanner({super.key});
 
@@ -56,7 +54,7 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
                           'Data: ${result!.code}'),
                     ],
                   )
-                  : Text('Scan a code'),
+                  : const Text('Scan a code'),
             ),
           )
         ],

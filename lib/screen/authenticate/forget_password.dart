@@ -1,9 +1,10 @@
-import 'package:datn/auth/firebase_auth_service.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+import '../../database/auth/firebase_auth_service.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
+  const ForgetPasswordScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -12,15 +13,15 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  final _formEmailKey=GlobalKey<FormState>();
-  FirebaseAuthService firebaseAuthService=FirebaseAuthService();
-  TextEditingController _emailController = TextEditingController();
+  final _formEmailKey = GlobalKey<FormState>();
+  FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+  final TextEditingController _emailController = TextEditingController();
 
   String? validateEmail(String? email) {
     if (email == null || email.isEmpty) {
       return 'Vui lòng nhập email!';
     } else {
-      bool isEmailOK = EmailValidator.validate(email);
+      bool isEmailOK = EmailValidator.validate(email.trim());
       if (isEmailOK) {
         return null;
       } else {
@@ -29,10 +30,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     }
   }
 
-
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
   }
@@ -41,50 +40,52 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quên mật khẩu'),
+        title: const Text('Quên mật khẩu'),
       ),
       body: Container(
         child: Center(
           child: Column(
             children: [
               Image.asset('assets/ic_logo_remove_bg.png'),
-              Text(
+              const Text(
                 'Nhập email của bạn để khôi phục mật khẩu',
                 style: TextStyle(fontSize: 20),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Form(
-                  key: _formEmailKey,
+                    key: _formEmailKey,
                     child: TextFormField(
-                  validator: validateEmail,
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Email'),
-                  obscureText: false,
-                  // validator: ,
-                )),
+                      validator: validateEmail,
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Email'),
+                      obscureText: false,
+                      // validator: ,
+                    )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       OutlinedButton(
                           onPressed: () {
-                            FormState? emailFormState=_formEmailKey.currentState;
-                            if(emailFormState!.validate()){
+                            FormState? emailFormState =
+                                _formEmailKey.currentState;
+                            if (emailFormState!.validate()) {
                               print('validate email ok');
-                              firebaseAuthService.resetPassword(_emailController.text.trim(), context);
+                              firebaseAuthService.resetPassword(
+                                  _emailController.text.trim(), context);
                             }
                           },
-                          child: Padding(
+                          child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
                             child: Text(
@@ -105,5 +106,4 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       ),
     );
   }
-
 }

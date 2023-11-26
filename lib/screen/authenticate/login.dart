@@ -1,12 +1,15 @@
-import 'package:datn/auth/firebase_auth_service.dart';
-import 'package:datn/screen/forget_password.dart';
-import 'package:datn/screen/sign_up.dart';
+
+import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/model/user.dart';
+import 'package:datn/screen/authenticate/forget_password.dart';
+import 'package:datn/screen/authenticate/sign_up.dart';
+import 'package:datn/screen/learner/dash_board_learner.dart';
+import 'package:datn/screen/tutor/dash_board_tutor.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+import '../shared/loading.dart';
 import 'choose_type.dart';
-import 'learner/dash_board.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.userType});
@@ -29,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordKey = GlobalKey<FlutterPwValidatorState>();
 
   String? validateEmail(String? email) {
-    String? _email=email?.trim();
+    String? _email = email?.trim();
     if (_email == null || _email.isEmpty) {
       return 'Vui lòng nhập email!';
     } else {
@@ -42,41 +45,45 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // String? validatePassword(String? password) {
-  //
-  // }
+  // bool loading=false;
 
-  Future<User?> login() async {
+  Future login() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-    User? user = null;
 
+    User? user = null;
     if (email != '' && password != '') {
       user =
-          await firebaseAuthService.signInWithEmailAndPassword(email, password);
+      await firebaseAuthService.signInWithEmailAndPassword(email, password);
     }
     if (user != null) {
-      print(user.email.toString() + ' login successful');
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      if(widget.userType==UserType.learner){
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+              return const DashBoardLearner();
+            }), (route) => false);
+      }else{
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) {
+              return const DashBoardTutor();
+            }), (route) => false);
+      }
 
-      // Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   return DashBoardScreen();
-      // }));
 
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-        return DashBoardScreen();
-      }), (route) => false);
+
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Đăng nhập không thành công,kiểm tra lại email và mật khẩu')));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+          Text('Đăng nhập không thành công,kiểm tra lại email và mật khẩu'),
+        ),
+      );
     }
   }
-
-  // FirebaseAuthService authService = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 widget.userType == UserType.tutor
                     ? 'Dạy tốt cùng Tlu Tutor'
                     : 'Học tốt cùng Tlu Tutor',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -114,12 +121,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: validateEmail,
                             controller: emailController,
                             obscureText: false,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Email',
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           TextFormField(
@@ -127,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: passwordController,
                             obscureText: passwordVisible,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               labelText: 'Password',
                               suffixText: 'Ẩn/Hiện Mật Khẩu',
                               suffixIcon: IconButton(
@@ -164,50 +171,48 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     OutlinedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.primary),
+                              Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary),
                           foregroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.background)),
+                              Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .background)),
                       onPressed: () {
                         print('go here');
                         FormState? emailFormState = _formKey.currentState;
                         if (emailFormState != null) {
-                          print('go here 1');
                           if (_formKey.currentState!.validate() &&
                               passwordValid) {
-                            print('validate email ok');
                             login();
                           }
                         }
-
-                        // FlutterPwValidatorState? passwordFormState =
-                        //     _passwordKey.currentState;
-                        // if (passwordFormState != null) {
-                        //   _passwordKey.currentState!.validate();
-                        // }
                       },
-                      child: Padding(
+                      child: const Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Text(
                           'Đăng nhập',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            child: Text('Đăng kí'),
+                            child: const Text('Đăng kí'),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -220,12 +225,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           GestureDetector(
-                            child: Text('Quên mật khẩu?'),
+                            child: const Text('Quên mật khẩu?'),
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return ForgetPasswordScreen();
-                              }));
+                                    return ForgetPasswordScreen();
+                                  }));
                             },
                           )
                         ]),

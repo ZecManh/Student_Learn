@@ -16,10 +16,10 @@ class MyOutlinedButton extends StatelessWidget {
       onPressed: callback,
       child: Padding(
         padding:
-        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Text(
           content,
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20),
         ),
       ),
     );
