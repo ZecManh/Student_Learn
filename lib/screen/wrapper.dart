@@ -39,7 +39,6 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     final firebaseAuthService = Provider.of<FirebaseAuthService>(context);
-    print("wrapper rebuild with type ${_type}");
     return StreamBuilder<User?>(
         stream: firebaseAuthService.user,
         builder: (context, AsyncSnapshot<User?> snapshot) {
