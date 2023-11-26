@@ -19,21 +19,13 @@ class ChooseTypeScreen extends StatefulWidget {
 class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
   Color tutorColor = Colors.white;
   Color learnerColor = Colors.white;
-  late String userType;
 
   @override
   void initState() {
     super.initState();
-    loadUserType();
   }
 
-  Future loadUserType() async {
-    final pref = await SharedPreferences.getInstance();
-    String? type = pref.getString('userType')??'tutor';
-    setState(() {
-      userType=type;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +95,9 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                   value.changeUserType(UserType.tutor);
                                   SharedPreferences pref =
                                       await SharedPreferences.getInstance();
-                                  pref.setString('userType', 'tutor');
+                                  setState(() {
+                                    pref.setString('userType', 'tutor');
+                                  });
                                   print('change pref type tutor');
                                 },
                                 icon: Image.asset('assets/ic_teacher.png',
@@ -142,7 +136,9 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                   value.changeUserType(UserType.learner);
                                   SharedPreferences pref =
                                       await SharedPreferences.getInstance();
-                                  pref.setString('userType', 'learner');
+                                  setState(() {
+                                    pref.setString('userType', 'learner');
+                                  });
                                   print('change pref type learner');
                                 },
                                 icon: Image.asset('assets/ic_student.png',
