@@ -221,7 +221,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
                           Container(

@@ -885,6 +885,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+  timetable_view:
+    dependency: "direct main"
+    description:
+      name: timetable_view
+      sha256: db4852792203d2386cb5108868ddc97055fb00614d8db658d18a73bc294a0d24
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   typed_data:
     dependency: transitive
     description:
