@@ -111,14 +111,22 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                   children: [
                                     Text(
                                       'Đã xác minh',
-                                      style: TextStyle(color: Theme.of(context).colorScheme.secondary,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           fontSize: 20,
                                           fontStyle: FontStyle.italic),
                                     ),
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Icon(Icons.verified_outlined,color: Theme.of(context).colorScheme.secondary,)
+                                    Icon(
+                                      Icons.verified_outlined,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    )
                                   ]),
                             ),
                           ),
@@ -375,24 +383,43 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                     ),
                     color: Theme.of(context).colorScheme.background,
                     child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 20,
                         ),
                         Center(
                           child: Text(
-                            'Kinh nghiệm',
+                            'Khu vực dạy kèm tại nhà',
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Icon(Icons.person_2_outlined))
+                            Card(
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Từ Liêm',
+                                      style: TextStyle(fontSize: 14),
+                                    ))),
+                            Card(
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Đống Đa',
+                                      style: TextStyle(fontSize: 14),
+                                    ))),
+                            Card(
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Hà Đông',
+                                      style: TextStyle(fontSize: 14),
+                                    )))
                           ],
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -412,50 +439,19 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                         ),
                         Center(
                           child: Text(
-                            'Kinh nghiệm',
+                            'Dạy online',
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-                        Row(
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Icon(Icons.person_2_outlined))
-                          ],
-                        ),
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              'Tôi có thể dạy 1 kèm 1 online qua Zoom , Google meet',
+                              style: TextStyle(fontSize: 16),
+                            ))
                       ],
                     ),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                          style: BorderStyle.solid,
-                          color: Theme.of(context).colorScheme.primary),
-                    ),
-                    color: Theme.of(context).colorScheme.background,
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Text(
-                            'Kinh nghiệm',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Icon(Icons.person_2_outlined))
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),

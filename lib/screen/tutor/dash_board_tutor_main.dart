@@ -203,7 +203,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             child: const Padding(
                               padding: EdgeInsets.all(18),
                               child: Icon(
-                                Icons.person_add_alt,
+                                Icons.add_outlined,
                                 color: Colors.white,
                               ),
                             ),
@@ -212,7 +212,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Tìm gia sư',
+                            'Tạo lớp dạy',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -221,7 +221,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
                           Container(
@@ -235,7 +235,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             child: const Padding(
                               padding: EdgeInsets.all(18),
                               child: Icon(
-                                Icons.menu_book,
+                                Icons.mark_email_unread_outlined,
                                 color: Colors.white,
                               ),
                             ),
@@ -244,7 +244,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Khoá học',
+                            'Lời mời dạy',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -304,7 +304,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   const Text(
-                    'Gia sư phù hợp với bạn',
+                    'Lớp đang dạy',
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
