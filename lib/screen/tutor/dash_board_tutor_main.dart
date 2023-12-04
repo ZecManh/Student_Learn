@@ -212,7 +212,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Tạo lớp dạy',
+                            'Tạo lớp',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -244,7 +244,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Lời mời dạy',
+                            'Lời mời',
                             style: TextStyle(fontSize: 16),
                           )
                         ],

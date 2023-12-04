@@ -34,7 +34,8 @@ class User {
       'gender': gender,
       'email': email,
       'display_name': displayName,
-      'born': born
+      'born': born,
+
     };
   }
 
