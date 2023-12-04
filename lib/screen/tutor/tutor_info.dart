@@ -39,15 +39,9 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Text('Về tôi', style: TextStyle(fontSize: 20))),
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Text('Lịch dạy', style: TextStyle(fontSize: 20))),
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Text('Đánh giá', style: TextStyle(fontSize: 20))),
+            Padding(padding: EdgeInsets.only(bottom: 5),child: Icon(Icons.person_3_outlined)),
+            Padding(padding:EdgeInsets.only(bottom: 5) ,child: Icon(Icons.calendar_month_outlined)),
+            Padding(padding: EdgeInsets.only(bottom: 5),child: Icon(Icons.rate_review_outlined),)
           ],
         ),
       ),
@@ -82,10 +76,13 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                   ),
                                 ]),
                           ),
-                          Center(
-                            child: Text(
-                              'Vũ Minh Hiếu',
-                              style: TextStyle(fontSize: 24),
+                          Padding(padding: EdgeInsets.only(right: 20,left: 20),
+                            child: Center(
+                              child: Text(
+                                'Vũ Minh Hiếu',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 24),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -283,9 +280,11 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                'Công nghệ thông tin',
-                                style: TextStyle(fontSize: 20),
+                              Expanded(
+                                child: Text(
+                                  'Công nghệ thông tin',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                             ],
                           ),
@@ -309,9 +308,11 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                '61THNB',
-                                style: TextStyle(fontSize: 20),
+                              Expanded(
+                                child: Text(
+                                  '61THNB',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                             ],
                           ),
