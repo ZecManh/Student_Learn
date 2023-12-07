@@ -23,14 +23,8 @@ class FirestoreService extends ChangeNotifier {
     return docRef.snapshots().map((json) => User.fromJson(json.data() as Map));
   }
 
-  // Stream<User>? user(String userId) {
-  //   DocumentReference docRef = _firestore.collection('users').doc(userId);
-  //   final snapshot = docRef.snapshots();
-  //   return docRef.snapshots().map((json) => User.fromJson(json.data() as Map));
-  // }
-
   Future updateInfo(String userId, String displayName, String phone,
-      String born, String gender) async {
+      Timestamp born, String gender) async {
     await firestore.collection('users').doc(userId).set({
       'display_name': displayName,
       'phone': phone,
@@ -38,6 +32,15 @@ class FirestoreService extends ChangeNotifier {
       'gender': gender
     }, SetOptions(merge: true)).catchError((error) {
       print('FIRESTORE UPLOAD' + error);
+    });
+  }
+
+  Future updateName(String userId, String displayName) async {
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .set({'display_name': displayName}, SetOptions(merge: true)).catchError((error){
+      print('FIRESTORE UPLOAD DISPLAYNAME' + error);
     });
   }
 

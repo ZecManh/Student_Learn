@@ -829,6 +829,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slug_it:
+    dependency: transitive
+    description:
+      name: slug_it
+      sha256: "191fa19a2b1cbb7bdc6dacaa9796799bd41309d680e0249c853c63e96b3bf6e1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   source_span:
     dependency: transitive
     description:
@@ -909,6 +917,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  vn_provinces:
+    dependency: "direct main"
+    description:
+      name: vn_provinces
+      sha256: "0e06296f5ba3225ff7f6783c07e1342c8629a06cd81ff3b2ac035a3be5f84901"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   web:
     dependency: transitive
     description:

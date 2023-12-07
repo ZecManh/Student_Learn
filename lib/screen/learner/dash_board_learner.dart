@@ -38,14 +38,7 @@ class _DashBoardLearnerState extends State<DashBoardLearner> {
       providers: [
         StreamProvider<model_user.User>(
           create: (_) => firestoreService.user(auth.currentUser!.uid),
-          initialData: model_user.User(
-              email: 'default email',
-              uid: 'default uid',
-              born: 'default born',
-              phone: 'default phone',
-              photoUrl: 'default photoUrl',
-              displayName: 'default display name',
-              gender: 'default gender'),
+          initialData: model_user.User(),
         )
       ],
       child: Scaffold(

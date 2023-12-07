@@ -1,4 +1,3 @@
-
 import 'package:datn/database/auth/firebase_auth_service.dart';
 import 'package:datn/model/user.dart';
 import 'package:datn/screen/authenticate/forget_password.dart';
@@ -51,35 +50,30 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    User? user = null;
-    if (email != '' && password != '') {
-      user =
-      await firebaseAuthService.signInWithEmailAndPassword(email, password);
-    }
-    if (user != null) {
-      SnackBar snackBar = SnackBar(
-          content: Text('${user.email.toString()} Đăng nhập thành công'));
+    // User? user = null;
+    // user =
+    bool isLoginOK =
+        await firebaseAuthService.signInWithEmailAndPassword(email, password);
+    print("message from UI + $isLoginOK");
+    if (isLoginOK == true) {
+      SnackBar snackBar = SnackBar(content: Text('Đăng nhập thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      if(widget.userType==UserType.learner){
+      if (widget.userType == UserType.learner) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-              return const DashBoardLearner();
-            }), (route) => false);
-      }else{
+          return const DashBoardLearner();
+        }), (route) => false);
+      } else {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
-              return const DashBoardTutor();
-            }), (route) => false);
+          return const DashBoardTutor();
+        }), (route) => false);
       }
-
-
-
     } else {
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content:
-          Text('Đăng nhập không thành công,kiểm tra lại email và mật khẩu'),
+              Text('Đăng nhập không thành công,kiểm tra lại email và mật khẩu'),
         ),
       );
     }
@@ -177,15 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     OutlinedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                              Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary),
+                              Theme.of(context).colorScheme.primary),
                           foregroundColor: MaterialStateProperty.all(
-                              Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .background)),
+                              Theme.of(context).colorScheme.background)),
                       onPressed: () {
                         print('go here');
                         FormState? emailFormState = _formKey.currentState;
@@ -198,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: const Padding(
                         padding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Text(
                           'Đăng nhập',
                           style: TextStyle(fontSize: 20),
@@ -229,8 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                    return ForgetPasswordScreen();
-                                  }));
+                                return ForgetPasswordScreen();
+                              }));
                             },
                           )
                         ]),

@@ -28,14 +28,15 @@ class FirebaseAuthService extends ChangeNotifier {
         .authStateChanges()
         .map((user) => userFromFirebase(user));
   }
-
-  bool get isSignedIn => _firebaseAuth.currentUser != null;
-
-  Future<User?> signInWithEmailAndPassword(
+  Future<bool> signInWithEmailAndPassword(
       String email, String password) async {
-    firebase_auth.UserCredential userCredential = await _firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
-    return userFromFirebase(userCredential.user);
+    try {
+      firebase_auth.UserCredential userCredential = await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+      return true;
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      return false;
+    }
   }
 
   Future<User?> createUserWithEmailAndPassword(
@@ -46,14 +47,7 @@ class FirebaseAuthService extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    print("user sign out");
     await _firebaseAuth.signOut();
-    // if (_firebaseAuth.currentUser == null) {
-    //   print("user null");
-    // } else {
-    //   print("user != null");
-    // }
-    // notifyListeners();
   }
 
   Future<void> resetPassword(String email, BuildContext context) async {

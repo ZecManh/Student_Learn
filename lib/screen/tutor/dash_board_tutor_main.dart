@@ -2,8 +2,8 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
-import 'package:datn/screen/tutor/tutor_info.dart';
-import 'package:datn/screen/tutor/tutor_update_info.dart';
+import 'package:datn/screen/tutor/update/tutor_info.dart';
+import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,11 +66,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                           context,
                           MaterialPageRoute(builder: (context) {
                             return Provider.value(
-                                value: user,
-                                // child: UpdateInfoTutor()
+                              value: user,
+                              // child: UpdateInfoTutor()
                               child: TutorInfo(),
-                            )
-                            ;
+                            );
                           }),
                         );
                       },
@@ -81,7 +80,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             model_user.User? user = snapshot.data;
                             if (user != null) {
                               return CircleAvatar(
-                                  backgroundImage: NetworkImage(user.photoUrl),
+                                  backgroundImage: (user.photoUrl != null)
+                                      ? NetworkImage(user.photoUrl!)
+                                      : AssetImage('assets/bear.jpg')
+                                          as ImageProvider,
                                   radius: 50);
                             } else {
                               print('image null');
@@ -108,7 +110,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                 model_user.User? user = snapshot.data;
                                 if (user != null) {
                                   return Text(
-                                    snapshot.data!.displayName,
+                                    (snapshot.data!.displayName != null)
+                                        ? snapshot.data!.displayName!
+                                        : 'Tên bạn là gì?',
                                     style: TextStyle(fontSize: 24),
                                   );
                                 } else {
@@ -319,7 +323,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
           const SizedBox(
             height: 20,
           ),
-
         ],
       ),
     );
