@@ -50,12 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       await firestore.collection('users').doc(user.uid).set({
         'uid': user.uid,
-        'display_name': user.displayName,
         'email': user.email,
-        'phone': user.phone,
-        'photo_url': user.photoUrl,
-        'born': user.born,
-        'gender': user.gender
       });
 
       SnackBar snackBar = SnackBar(

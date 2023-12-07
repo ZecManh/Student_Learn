@@ -1,21 +1,23 @@
+import 'package:datn/screen/learner/dash_board_learner.dart';
+import 'package:datn/screen/tutor/dash_board_tutor.dart';
 import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'choose_type.dart';
 import 'login.dart';
 
-enum UserType { tutor, learner }
 
-class ChooseTypeScreen extends StatefulWidget {
-  const ChooseTypeScreen({super.key});
+class ChooseTypeAfterLogin extends StatefulWidget {
+  const ChooseTypeAfterLogin({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _ChooseTypeScreenState();
+    return _ChooseTypeAfterLoginState();
   }
 }
 
-class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
+class _ChooseTypeAfterLoginState extends State<ChooseTypeAfterLogin> {
   Color tutorColor = Colors.white;
   Color learnerColor = Colors.white;
 
@@ -23,9 +25,6 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
   void initState() {
     super.initState();
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UserTypeModel>(
@@ -88,11 +87,12 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                             const EdgeInsets.all(20))),
                                 onPressed: () async {
                                   value.changeUserType(UserType.tutor);
+
                                 },
                                 icon: Image.asset('assets/ic_teacher.png',
                                     width: 50),
                                 label: const Text(
-                                  'Tôi là người dạy',
+                                  'Người dạy',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
@@ -102,7 +102,6 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(40),
                                 ),
-                                // side: BorderSide(color: learnerColor),
                                 side: (value.userType == UserType.learner)
                                     ? BorderSide(
                                         color: Theme.of(context)
@@ -127,7 +126,7 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                                 icon: Image.asset('assets/ic_student.png',
                                     width: 50),
                                 label: const Text(
-                                  'Tôi là người học',
+                                  'Người học',
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
@@ -139,13 +138,20 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginScreen(
-                                userType: value.userType,
-                              ),
-                            ));
+                        if(value.userType==UserType.tutor){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashBoardTutor(),
+                              ));
+                        }else{
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashBoardLearner(),
+                              ));
+                        }
+
                       },
                       icon: Icon(Icons.arrow_forward_rounded,
                           color: Theme.of(context).colorScheme.background),

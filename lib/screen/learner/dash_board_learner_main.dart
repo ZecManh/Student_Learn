@@ -34,16 +34,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     model_user.User user = Provider.of<model_user.User>(context);
     nameController = TextEditingController(text: user.displayName);
     ageController = TextEditingController(text: user.email);
-    // UserTypeModel userTypeModel = Provider.of<UserTypeModel>(context);
 
     FirebaseAuth auth = firebaseAuthService.auth;
-    print("current user id " + auth.currentUser!.uid);
-    // print('current display name ' + auth.currentUser!.displayName);
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
     FirebaseAuthService firebaseAuthModel =
         Provider.of<FirebaseAuthService>(context);
-    print('dash board main rebuild');
-
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
@@ -76,8 +71,12 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               AsyncSnapshot<model_user.User> snapshot) {
                             model_user.User? user = snapshot.data;
                             if (user != null) {
+                              print(user.toString());
                               return CircleAvatar(
-                                  backgroundImage: NetworkImage(user.photoUrl),
+                                  backgroundImage: (user.photoUrl != null)
+                                      ? NetworkImage(user.photoUrl!)
+                                      : AssetImage('assets/bear.jpg')
+                                          as ImageProvider,
                                   radius: 50);
                             } else {
                               print('image null');
@@ -87,10 +86,6 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               );
                             }
                           }),
-                      // const CircleAvatar(
-                      //   backgroundImage: AssetImage('assets/bear.jpg'),
-                      //   radius: 50,
-                      // ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -107,10 +102,12 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               {
                                 model_user.User? user = snapshot.data;
                                 if (user != null) {
-                                  return Text(
-                                    snapshot.data!.displayName,
-                                    style: TextStyle(fontSize: 24),
-                                  );
+                                  return (snapshot.data!.displayName != null)
+                                      ? Text(
+                                          snapshot.data!.displayName!,
+                                          style: TextStyle(fontSize: 24),
+                                        )
+                                      : Text('Tên bạn là gì?');
                                 } else {
                                   return Text(
                                     'Loading',
