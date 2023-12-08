@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/model/user.dart';
+import 'package:datn/model/user/adress.dart';
+import 'package:datn/model/user/user.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreService extends ChangeNotifier {
@@ -39,7 +40,8 @@ class FirestoreService extends ChangeNotifier {
     await firestore
         .collection('users')
         .doc(userId)
-        .set({'display_name': displayName}, SetOptions(merge: true)).catchError((error){
+        .set({'display_name': displayName}, SetOptions(merge: true)).catchError(
+            (error) {
       print('FIRESTORE UPLOAD DISPLAYNAME' + error);
     });
   }
@@ -49,7 +51,17 @@ class FirestoreService extends ChangeNotifier {
         .collection('users')
         .doc(userId)
         .set({'photo_url': url}, SetOptions(merge: true)).catchError((error) {
-      print('FIRESTORE UPDATE' + error);
+      print('FIRESTORE UPDATE IMAGE URL' + error);
+    });
+  }
+
+  Future updateAddress(String userId, Address address) async {
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .set({'address': address.toJson()}, SetOptions(merge: true)).catchError(
+            (error) {
+      print('FIRESTORE UPDATE ADDRESS' + error);
     });
   }
 }

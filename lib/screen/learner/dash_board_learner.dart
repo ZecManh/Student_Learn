@@ -1,4 +1,4 @@
-import 'package:datn/model/user.dart' as model_user;
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/learner/dash_board_learner_learning.dart';
 import 'package:datn/screen/learner/dash_board_learner_main.dart';
 import 'package:datn/screen/learner/dash_board_learner_other.dart';

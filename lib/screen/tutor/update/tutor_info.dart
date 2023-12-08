@@ -1,4 +1,4 @@
-import 'package:datn/model/user.dart';
+import 'package:datn/model/user/user.dart';
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:datn/screen/widget/mini_card.dart';
 import 'package:flutter/material.dart';
@@ -39,12 +39,14 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
         actions: [
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: IconButton(onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return UpdateInfoTutor() ;
-                    }) );
-              }, icon: const Icon(Icons.edit)))
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return UpdateInfoTutor();
+                    }));
+                  },
+                  icon: const Icon(Icons.edit)))
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -80,7 +82,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                     ),
                     child: Column(
                       children: [
-                         Padding(
+                        Padding(
                           padding: EdgeInsets.all(20),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +90,8 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                 CircleAvatar(
                                     backgroundImage: (user.photoUrl != null)
                                         ? NetworkImage(user.photoUrl!)
-                                        : AssetImage('assets/bear.jpg') as ImageProvider,
+                                        : AssetImage('assets/bear.jpg')
+                                            as ImageProvider,
                                     radius: 80),
                               ]),
                         ),
@@ -319,7 +322,18 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               child: (user.address != null)
                                   ? Text(
                                       textAlign: TextAlign.start,
-                                      user.address!,
+                                      // (user.address!.ward!+' , '+user.address!.district! +' , '+user.address!.province!),
+                                      ((user.address!.ward != null
+                                              ? (user.address!.ward! + ' , ')
+                                              : '') +
+                                          (user.address!.district != null
+                                              ? (user.address!.district! +
+                                                  ' , ')
+                                              : '') +
+                                          (user.address!.province != null
+                                              ? (user.address!.province!
+                                                  )
+                                              : '')),
                                       style: TextStyle(fontSize: 20),
                                     )
                                   : Text(
@@ -504,17 +518,20 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                       ),
                       Padding(
                           padding: EdgeInsets.all(10),
-                          child:
-                          (user.teachMethod!=null)?
-                              Wrap(children: [
-                                ...user.teachMethod!.map((item) =>MiniCard(cardName: item)),
-                              ],):Text(
-                            'Chưa cập nhật',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Theme.of(context).colorScheme.error),
-                          )
-                        )
+                          child: (user.teachMethod != null)
+                              ? Wrap(
+                                  children: [
+                                    ...user.teachMethod!.map(
+                                        (item) => MiniCard(cardName: item)),
+                                  ],
+                                )
+                              : Text(
+                                  'Chưa cập nhật',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color:
+                                          Theme.of(context).colorScheme.error),
+                                ))
                     ],
                   ),
                 ),

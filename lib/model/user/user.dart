@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/user/adress.dart';
 import 'package:intl/intl.dart';
 
 class User {
@@ -20,7 +21,7 @@ class User {
       this.teachAddress});
 
   String? uid;
-  String? address;
+  Address? address;
   DateTime? born;
   String? department;
   String? displayName;
@@ -43,7 +44,7 @@ class User {
 
   factory User.fromJson(Map<dynamic, dynamic> json) => User(
       uid: json['uid'],
-      address: json['address'],
+      address: Address.fromJson(json['address']),
       born:
           (json['born'] != null) ? (json['born']! as Timestamp).toDate() : null,
       department: json['department'],
@@ -68,7 +69,7 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'address': address,
+      'address': address?.toJson(),
       'born': born != null ? Timestamp.fromDate(born!) : null,
       'department': department,
       'display_name': displayName,

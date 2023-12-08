@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:datn/model/user.dart' as model_user;
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:provider/provider.dart';
 import 'package:vn_provinces/province.dart';
 import 'package:vn_provinces/vn_provinces.dart';

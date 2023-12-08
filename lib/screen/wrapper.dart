@@ -3,7 +3,7 @@ import 'package:datn/screen/authenticate/choose_type_after_login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../database/auth/firebase_auth_service.dart';
-import '../model/user.dart';
+import '../model/user/user.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
