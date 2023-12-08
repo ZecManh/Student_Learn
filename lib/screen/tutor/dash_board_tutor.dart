@@ -1,4 +1,4 @@
-import 'package:datn/model/user.dart' as model_user;
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -42,4 +42,9 @@ class Province {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Province{name: $name, code: $code, divisionType: $divisionType, codename: $codename, phoneCode: $phoneCode, districts: $districts}';
+  }
 }

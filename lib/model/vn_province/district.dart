@@ -42,4 +42,9 @@ class Districts {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Districts{name: $name, code: $code, divisionType: $divisionType, codename: $codename, provinceCode: $provinceCode, wards: $wards}';
+  }
 }

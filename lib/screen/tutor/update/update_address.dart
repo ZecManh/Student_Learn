@@ -1,14 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:datn/model/user/adress.dart';
+import 'package:datn/model/vn_province/district.dart';
+import 'package:datn/model/vn_province/ward.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:datn/model/user.dart' as model_user;
+import 'package:datn/model/user/user.dart' as model_user;
+import 'package:http/http.dart' as http;
+import '../../../model/vn_province/province.dart';
+import 'dart:convert' as convert;
 
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
 
 class UpdateAddress extends StatefulWidget {
+  const UpdateAddress({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -22,23 +30,31 @@ class _UpdateAddressState extends State<UpdateAddress> {
   late TextEditingController dateController;
   late TextEditingController emailController;
   String dropDownGender = genders.first;
+  List<Province> provinces = [];
+  List<Districts> districts=[];
+  List<Wards> wards=[];
+  Province? dropDownProvince;
+  Districts? dropDownDistrict;
+  Wards? dropDownWards;
 
   @override
   void initState() {
     super.initState();
     initInfo();
-
+    getProvince();
   }
 
-  initInfo(){
-    model_user.User sendUser=Provider.of<model_user.User>(context,listen:false);
+  initInfo() {
+    model_user.User sendUser =
+        Provider.of<model_user.User>(context, listen: false);
     nameController = TextEditingController(
         text: (sendUser.displayName != null)
             ? (sendUser.displayName!)
             : ('Vui lòng cập nhật'));
     phoneController = TextEditingController(
-        text:
-        (sendUser.phone != null) ? (sendUser.phone!) : ('Vui lòng cập nhật'));
+        text: (sendUser.phone != null)
+            ? (sendUser.phone!)
+            : ('Vui lòng cập nhật'));
     emailController = TextEditingController(text: sendUser.email!);
     dateController = TextEditingController(
         text: (sendUser.born != null)
@@ -46,6 +62,71 @@ class _UpdateAddressState extends State<UpdateAddress> {
             : 'Vui lòng cập nhật');
     dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
   }
+
+  Future getProvince() async {
+    final url = Uri.https('provinces.open-api.vn', '/api/p/');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      // var jsonResponse = convert.jsonDecode(response.body) as List<dynamic>;
+      // print('number of item response' + jsonResponse.length.toString());
+      // List<Province> provinceFromJson = [];
+      // provinceFromJson = jsonResponse.map((e) {
+      //   return Province.fromJson(e);
+      // }).toList();
+      // provinceFromJson.forEach((element) {
+      //   print(element.toString());
+      // });
+      //doan nay loi utf8
+
+      // var decoded=utf8.decode(response.body.codeUnits);
+      // print("decoded "+decoded);
+      //doan nay ok https://stackoverflow.com/questions/51101471/how-can-i-convert-string-to-utf8-in-dart
+      //https://copyprogramming.com/howto/utf-8-encoding-in-api-result-dart-flutter
+      //utf8 for http request flutter
+
+      var json = convert.utf8.decoder
+          .convert(response.body.codeUnits); //convert to utf8
+      var jsonResponse =
+          convert.jsonDecode(json) as List<dynamic>; //json utf8 -> List
+      List<Province> provinceFromJson = [];
+      provinceFromJson = jsonResponse.map((e) {
+        //list<dynamic> -> list<Province>
+        return Province.fromJson(e);
+      }).toList();
+      provinceFromJson.forEach((element) {
+        print(element.toString());
+      });
+      setState(() {
+        provinces = List.from(provinceFromJson);
+        dropDownProvince = provinces.first;
+      });
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future getDistrictByProvince(int code) async{
+    final url=Uri.https('provinces.open-api.vn','/api/p/$code/',{'depth':'3',});
+    print("url "+url.toString());
+    var response=await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonDecoded=convert.utf8.decoder.convert(response.body.codeUnits);
+      var jsonResponse=convert.jsonDecode(jsonDecoded) as Map<String,dynamic>;
+      Province province=Province.fromJson(jsonResponse);
+      print(province.toString());
+      setState(() {
+        districts=List.from(province.districts!);
+        dropDownDistrict=districts[0];
+      });
+    }{
+
+    }
+  }
+
+  void getWardByProvince(int code) {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     FirestoreService firestoreService = FirestoreService();
@@ -65,158 +146,139 @@ class _UpdateAddressState extends State<UpdateAddress> {
               title: Text('Thông tin địa chỉ'),
             ),
             body: SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                    child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-
-                        TextFormField(
-                          keyboardType: TextInputType.name,
-                          controller: nameController,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.background,
-                            border: const OutlineInputBorder(),
-                            labelText: 'Tỉnh thành',
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child:  Row(
+                      children: [ Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text('Tỉnh / Thành Phố',style: TextStyle(fontSize: 20),),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              DropdownMenu<Province>(
+                                  width: MediaQuery.of(context).size.width-60,
+                                  initialSelection: dropDownProvince,
+                                  onSelected: (Province? newProvince) {
+                                    setState(() {
+                                      dropDownProvince = newProvince!;
+                                      print(newProvince.toString());
+                                      getDistrictByProvince(newProvince.code!);
+                                    });
+                                  },
+                                  dropdownMenuEntries: provinces.map((item) {
+                                    return DropdownMenuEntry<Province>(
+                                        value: item!,
+                                        label: item.name!,
+                                        style: ButtonStyle(
+                                            textStyle: MaterialStateProperty.all(
+                                                TextStyle(color: Colors.white))));
+                                  }).toList()),
+                              SizedBox(height: 20,),
+                              Text('Quận / Huyện',style: TextStyle(fontSize: 20),),
+                             SizedBox(height: 10,),
+                             DropdownMenu<Districts>(
+                                    width: MediaQuery.of(context).size.width-60,
+                                    initialSelection: dropDownDistrict,
+                                    onSelected: (Districts? newDistricts) {
+                                      setState(() {
+                                        dropDownDistrict = newDistricts!;
+                                        wards=newDistricts.wards!;
+                                        print(newDistricts.toString());
+                                      });
+                                    },
+                                    dropdownMenuEntries:
+                                    districts.map((item){
+                                      return DropdownMenuEntry<Districts>(value: item!, label: item.name!,style:ButtonStyle(
+                                                    textStyle: MaterialStateProperty.all(
+                                                        TextStyle(color: Colors.white))));
+                                    }).toList()),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text('Phường / Xã',style: TextStyle(fontSize: 20),),
+                              SizedBox(height: 10,),
+                              DropdownMenu<Wards>(
+                                  width: MediaQuery.of(context).size.width-60,
+                                  initialSelection: dropDownWards,
+                                  onSelected: (Wards? newWards) {
+                                    setState(() {
+                                      dropDownWards = newWards!;
+                                      print(newWards.toString());
+                                    });
+                                  },
+                                  dropdownMenuEntries:
+                                  wards.map((item){
+                                    return DropdownMenuEntry<Wards>(value: item!, label: item.name!,style:ButtonStyle(
+                                        textStyle: MaterialStateProperty.all(
+                                            TextStyle(color: Colors.white))));
+                                  }).toList()),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Center(
+                                child: OutlinedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(
+                                          Theme.of(context).colorScheme.primary),
+                                      foregroundColor: MaterialStateProperty.all(
+                                          Theme.of(context).colorScheme.background)),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Xác nhận'),
+                                            content: Text(
+                                                'Bạn chắc chắn với sự thay đổi này?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context, 'Cancel'),
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  Address address=Address();
+                                                  address.province=dropDownProvince?.name;
+                                                  address.district=dropDownDistrict?.name;
+                                                  address.ward=dropDownWards?.name;
+                                                  firestoreService.updateAddress(auth.currentUser!.uid, address);
+                                                  Navigator.pop(context, 'OK');
+                                                },
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Text(
+                                      'Cập nhật',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              // ...provinces
+                              //     .map((e) => Text((e.name != null) ? e.name! : ''))
+                              //     .toList()
+                            ],
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          keyboardType: TextInputType.name,
-                          controller: phoneController,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.background,
-                            border: const OutlineInputBorder(),
-                            labelText: 'Quận,Huyện',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          enabled: false,
-                          keyboardType: TextInputType.name,
-                          controller: emailController,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.background,
-                            border: const OutlineInputBorder(),
-                            labelText: 'Địa chỉ email',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        DropdownMenu<String>(
-                          menuStyle: MenuStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.background)),
-                          initialSelection: dropDownGender,
-                          onSelected: (String? gender) {
-                            dropDownGender = gender!;
-                          },
-                          dropdownMenuEntries: genders
-                              .map(
-                                (value) {
-                                  return DropdownMenuEntry<String>(
-                                      value: value, label: value);
-                                }
-                              )
-                              .toList(),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                            controller: dateController,
-                            readOnly: true,
-                            keyboardType: TextInputType.datetime,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor:
-                                  Theme.of(context).colorScheme.background,
-                              border: const OutlineInputBorder(),
-                              labelText: 'Sinh nhật',
-                            ),
-                            onTap: () async {
-                              DateTime? pickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1950),
-                                  lastDate: DateTime.now());
-                              if (pickedDate != null) {
-                                String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(pickedDate);
-                                dateController.text = formattedDate;
-                              }
-                            }),
-                        SizedBox(height: 20,),
-                        OutlinedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.primary),
-                              foregroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).colorScheme.background)),
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Xác nhận'),
-                                    content: Text(
-                                        'Bạn chắc chắn với sự thay đổi này?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          DateTime date = DateTime.parse(
-                                              dateController.text);
-                                          firestoreService.updateInfo(
-                                              auth.currentUser!.uid,
-                                              nameController.text,
-                                              phoneController.text,
-                                              Timestamp.fromDate(date),
-                                              dropDownGender);
-                                          Navigator.pop(context, 'OK');
-                                        },
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Text(
-                              'Cập nhật',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
+                      ]
                     ),
-                  ),
-                )),
+                ),
               ),
             ),
           );

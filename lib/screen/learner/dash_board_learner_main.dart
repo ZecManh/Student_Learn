@@ -6,7 +6,7 @@ import 'package:datn/viewmodel/user_type.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:datn/model/user.dart' as model_user;
+import 'package:datn/model/user/user.dart' as model_user;
 
 import '../../database/auth/firebase_auth_service.dart';
 

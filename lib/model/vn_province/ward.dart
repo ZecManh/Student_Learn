@@ -29,4 +29,9 @@ class Wards {
     data['district_code'] = districtCode;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Wards{name: $name, code: $code, divisionType: $divisionType, codename: $codename, districtCode: $districtCode}';
+  }
 }
