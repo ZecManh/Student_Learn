@@ -7,6 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:datn/screen/qr_code/qr_screen_generate.dart';
+import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
@@ -132,10 +135,42 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                           .colorScheme
                                           .background)),
                               onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const DashBoardQr();
-                                }));
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => SimpleDialog(
+                                          contentPadding:
+                                              const EdgeInsets.all(20.0),
+                                          children: [
+                                            Center(
+                                                child: Text('Mã QR của tôi')),
+                                            Center(
+                                                child: QrImageView(
+                                              data: 'NhamDucManh-61TNB-DHTL',
+                                              version: QrVersions.auto,
+                                              size: 200.0,
+                                            )),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return const DashBoardQrScanner();
+                                                }));
+                                              },
+                                              icon: const Text('Quét Mã QR'),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return DashBoardQrGenerate();
+                                                }));
+                                              },
+                                              icon: Text('Tạo Mã QR'),
+                                            ),
+                                          ],
+                                        ));
                               },
                               icon: const Icon(Icons.qr_code),
                             ),
