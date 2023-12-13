@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
-import 'package:datn/model/user/adress.dart';
-import 'package:datn/model/vn_province/district.dart';
-import 'package:datn/model/vn_province/ward.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:http/http.dart' as http;
-import '../../../model/vn_province/province.dart';
 import 'dart:convert' as convert;
+
+import '../../../model/user/user.dart';
+import '../../../model/vn_province/district.dart';
+import '../../../model/vn_province/province.dart';
+import '../../../model/vn_province/ward.dart';
 
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
 
@@ -58,7 +59,8 @@ class _UpdateAddressState extends State<UpdateAddress> {
     emailController = TextEditingController(text: sendUser.email!);
     dateController = TextEditingController(
         text: (sendUser.born != null)
-            ? (DateFormat('yyyy-MM-dd').format(sendUser.born!))
+            // ? (DateFormat('yyyy-MM-dd').format(sendUser.born!))
+            ? sendUser.born
             : 'Vui lòng cập nhật');
     dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
   }
@@ -248,7 +250,7 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                                   address.province=dropDownProvince?.name;
                                                   address.district=dropDownDistrict?.name;
                                                   address.ward=dropDownWards?.name;
-                                                  firestoreService.updateAddress(auth.currentUser!.uid, address);
+                                                  firestoreService.updateAddress(auth.currentUser!.uid, address as model_user.Address);
                                                   Navigator.pop(context, 'OK');
                                                 },
                                                 child: const Text('OK'),

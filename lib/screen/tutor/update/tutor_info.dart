@@ -278,11 +278,8 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             ),
                             (user.born != null)
                                 ? Expanded(
-                                    child: Text(
+                                    child: Text(user.born!,
                                       textAlign: TextAlign.start,
-                                      (DateTime.timestamp().year -
-                                              user.born!.year)
-                                          .toString(),
                                       style: TextStyle(fontSize: 20),
                                     ),
                                   )
@@ -361,9 +358,9 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             ),
                             Text('Trường : ', style: TextStyle(fontSize: 20)),
                             Expanded(
-                              child: (user.university != null)
+                              child: (user.education?.university != null)
                                   ? Text(
-                                      user.university!,
+                                      user.education!.university!,
                                       style: TextStyle(fontSize: 20),
                                     )
                                   : Text('Chưa cập nhật',
@@ -396,9 +393,9 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               width: 10,
                             ),
                             Expanded(
-                              child: (user.university != null)
+                              child: (user.education?.university != null)
                                   ? Text(
-                                      user.university!,
+                                      user.education!.university!,
                                       style: TextStyle(fontSize: 20),
                                     )
                                   : Text('Chưa cập nhât',
@@ -417,85 +414,85 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: BorderSide(
-                        style: BorderStyle.solid,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                  color: Theme.of(context).colorScheme.background,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                        child: Text(
-                          'Môn dạy kèm',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      (user.subjects != null)
-                          ? Wrap(
-                              children: [
-                                ...user.subjects!.map((subjectName) =>
-                                    MiniCard(cardName: subjectName))
-                                // for (String subject in user.subjects!) ...[SubjectCard(subjectName: subject)]
-                              ],
-                            )
-                          : Center(
-                              child: Text(
-                                'Chưa cập nhật',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).colorScheme.error),
-                              ),
-                            ),
-                      SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  ),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: BorderSide(
-                        style: BorderStyle.solid,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                  color: Theme.of(context).colorScheme.background,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                        child: Text(
-                          'Khu vực dạy kèm tại nhà',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      (user.teachAddress != null)
-                          ? Wrap(
-                              children: [
-                                ...user.teachAddress!
-                                    .map((item) => MiniCard(cardName: item))
-                              ],
-                            )
-                          : Text(
-                              'Chưa cập nhật',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Theme.of(context).colorScheme.error),
-                            ),
-                    ],
-                  ),
-                ),
+                // Card(
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(20),
+                //     side: BorderSide(
+                //         style: BorderStyle.solid,
+                //         color: Theme.of(context).colorScheme.primary),
+                //   ),
+                //   color: Theme.of(context).colorScheme.background,
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //       Center(
+                //         child: Text(
+                //           'Môn dạy kèm',
+                //           style: TextStyle(fontSize: 20),
+                //         ),
+                //       ),
+                //       SizedBox(height: 10),
+                //       (user.subjects != null)
+                //           ? Wrap(
+                //               children: [
+                //                 ...user.subjects!.map((subjectName) =>
+                //                     MiniCard(cardName: subjectName))
+                //                 // for (String subject in user.subjects!) ...[SubjectCard(subjectName: subject)]
+                //               ],
+                //             )
+                //           : Center(
+                //               child: Text(
+                //                 'Chưa cập nhật',
+                //                 style: TextStyle(
+                //                     fontSize: 20,
+                //                     color: Theme.of(context).colorScheme.error),
+                //               ),
+                //             ),
+                //       SizedBox(
+                //         height: 10,
+                //       )
+                //     ],
+                //   ),
+                // ),
+                // Card(
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(20),
+                //     side: BorderSide(
+                //         style: BorderStyle.solid,
+                //         color: Theme.of(context).colorScheme.primary),
+                //   ),
+                //   color: Theme.of(context).colorScheme.background,
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //       Center(
+                //         child: Text(
+                //           'Khu vực dạy kèm tại nhà',
+                //           style: TextStyle(fontSize: 20),
+                //         ),
+                //       ),
+                //       (user.teachAddress != null)
+                //           ? Wrap(
+                //               children: [
+                //                 ...user.teachAddress!
+                //                     .map((item) => MiniCard(cardName: item))
+                //               ],
+                //             )
+                //           : Text(
+                //               'Chưa cập nhật',
+                //               style: TextStyle(
+                //                   fontSize: 20,
+                //                   color: Theme.of(context).colorScheme.error),
+                //             ),
+                //     ],
+                //   ),
+                // ),
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -516,22 +513,22 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      Padding(
-                          padding: EdgeInsets.all(10),
-                          child: (user.teachMethod != null)
-                              ? Wrap(
-                                  children: [
-                                    ...user.teachMethod!.map(
-                                        (item) => MiniCard(cardName: item)),
-                                  ],
-                                )
-                              : Text(
-                                  'Chưa cập nhật',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color:
-                                          Theme.of(context).colorScheme.error),
-                                ))
+                      // Padding(
+                      //     padding: EdgeInsets.all(10),
+                      //     child: (user.teachMethod != null)
+                      //         ? Wrap(
+                      //             children: [
+                      //               ...user.teachMethod!.map(
+                      //                   (item) => MiniCard(cardName: item)),
+                      //             ],
+                      //           )
+                      //         : Text(
+                      //             'Chưa cập nhật',
+                      //             style: TextStyle(
+                      //                 fontSize: 20,
+                      //                 color:
+                      //                     Theme.of(context).colorScheme.error),
+                      //           ))
                     ],
                   ),
                 ),

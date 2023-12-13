@@ -39,7 +39,7 @@ class _DashBoardLearnerState extends State<DashBoardLearner> {
         StreamProvider<model_user.User>(
           create: (_) => firestoreService.user(auth.currentUser!.uid),
           initialData: model_user.User(),
-        )
+        ),
       ],
       child: Scaffold(
           resizeToAvoidBottomInset: false,

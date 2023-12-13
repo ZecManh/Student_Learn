@@ -10,8 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:provider/provider.dart';
-import 'package:vn_provinces/province.dart';
-import 'package:vn_provinces/vn_provinces.dart';
 import '../../database/auth/firebase_auth_service.dart';
 
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
@@ -63,7 +61,8 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
     nameController = TextEditingController(text: userInit.displayName);
     dateController = TextEditingController(
         text: (userInit.born != null)
-            ? model_user.User.convertDateTime(userInit.born!)
+            // ? model_user.User.convertDateTime(userInit.born!)
+            ? userInit.born
             : '');
     phoneController = TextEditingController(text: userInit.phone);
   }

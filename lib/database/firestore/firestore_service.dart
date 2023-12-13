@@ -1,5 +1,5 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/model/user/adress.dart';
 import 'package:datn/model/user/user.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +22,11 @@ class FirestoreService extends ChangeNotifier {
     DocumentReference docRef = _firestore.collection('users').doc(userId);
     final snapshot = docRef.snapshots();
     return docRef.snapshots().map((json) => User.fromJson(json.data() as Map));
+  }
+  Stream<Map<dynamic,dynamic>>? userMap(String userId) {
+    DocumentReference docRef = _firestore.collection('users').doc(userId);
+    final snapshot = docRef.snapshots();
+    return docRef.snapshots().map((json) => json as Map);
   }
 
   Future updateInfo(String userId, String displayName, String phone,
@@ -55,7 +60,7 @@ class FirestoreService extends ChangeNotifier {
     });
   }
 
-  Future updateAddress(String userId, Address address) async {
+  Future updateAddress(String userId,Address  address) async {
     await firestore
         .collection('users')
         .doc(userId)

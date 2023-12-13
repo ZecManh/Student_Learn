@@ -1,88 +1,155 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/model/user/adress.dart';
-import 'package:intl/intl.dart';
-
 class User {
-  User(
-      {this.uid,
-      this.address,
-      this.born,
-      this.department,
-      this.displayName,
-      this.email,
-      this.experience,
-      this.gender,
-      this.teachMethod,
-      this.phone,
-      this.photoUrl,
-      this.university,
-      this.verify,
-      this.subjects,
-      this.teachAddress});
-
-  String? uid;
   Address? address;
-  DateTime? born;
-  String? department;
+  String? born;
   String? displayName;
+  Education? education;
   String? email;
-  String? experience;
   String? gender;
-  List<String>? teachMethod;
   String? phone;
   String? photoUrl;
-  String? university;
-  bool? verify;
   List<String>? subjects;
   List<String>? teachAddress;
+  List<String>? teachMethod;
+  String? uid;
+  bool? verify;
+  String? experience;
 
-  static String convertDateTime(DateTime oldDateTime) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    String formattedDateTime = formatter.format(oldDateTime);
-    return formattedDateTime;
+  User(
+      {this.address,
+        this.born,
+        this.displayName,
+        this.education,
+        this.email,
+        this.gender,
+        this.phone,
+        this.photoUrl,
+        this.subjects,
+        this.teachAddress,
+        this.teachMethod,
+        this.uid,
+        this.verify,
+        this.experience});
+
+  User.fromJson(Map<dynamic, dynamic> json) {
+    address =
+    json['address'] != null ? Address.fromJson(json['address']) : null;
+    born = json['born'];
+    displayName = json['display_name'];
+    education = json['education'] != null
+        ?  Education.fromJson(json['education'])
+        : null;
+    email = json['email'];
+    gender = json['gender'];
+    phone = json['phone'];
+    photoUrl = json['photo_url'];
+    subjects = (json['subjects']!=null)?json['subjects'].cast<String>():null;
+    teachAddress =(json['teach_address']!=null)?json['teach_address'].cast<String>():null;
+    teachMethod =(json['teach_method']!=null)?json['teach_method'].cast<String>():null;
+    uid = json['uid'];
+    verify = json['verify'];
+    experience = json['experience'];
+
+    print("JSON" + json.toString());
+    print("TO STRING "+toString());
+
+    // address =
+    // json['address'] != null ? Address.fromJson(json['address']) : null;
+    // born = json['born']?? null;
+    // displayName = json['display_name']??null;
+    // education = json['education'] != null
+    //     ?  Education.fromJson(json['education'])
+    //     : null;
+    // email = json['email']??null;
+    // gender = json['gender']??null;
+    // phone = json['phone']??null;
+    // photoUrl = json['photo_url']??null;
+    // subjects = json['subjects']??null;
+    // teachAddress = json['teach_address']??null;
+    // teachMethod = json['teach_method']??null;
+    // uid = json['uid']??null;
+    // verify = json['verify']??null;
+    // experience = json['experience']??null;
   }
 
-  factory User.fromJson(Map<dynamic, dynamic> json) => User(
-      uid: json['uid'],
-      address: Address.fromJson(json['address']),
-      born:
-          (json['born'] != null) ? (json['born']! as Timestamp).toDate() : null,
-      department: json['department'],
-      displayName: json['display_name'],
-      email: json['email'],
-      experience: json['experience'],
-      gender: json['gender'],
-      teachMethod: (json['teach_method'] as List)
-          .map((method) => method as String)
-          .toList(),
-      phone: json['phone'],
-      photoUrl: json['photo_url'],
-      university: json['university'],
-      verify: json['verify'],
-      // subjects: json['subjects']
-      subjects:
-          (json['subjects'] as List).map((item) => item as String).toList(),
-      teachAddress: (json['teach_address'] as List)
-          .map((item) => item as String)
-          .toList());
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data =  Map<String, dynamic>();
+    if (this.address != null) {
+      data['address'] = this.address!.toJson();
+    }
+    data['born'] = this.born;
+    data['display_name'] = this.displayName;
+    if (this.education != null) {
+      data['education'] = this.education!.toJson();
+    }
+    data['email'] = this.email;
+    data['gender'] = this.gender;
+    data['phone'] = this.phone;
+    data['photo_url'] = this.photoUrl;
+    data['subjects'] = this.subjects;
+    data['teach_address'] = this.teachAddress;
+    data['teach_method'] = this.teachMethod;
+    data['uid'] = this.uid;
+    data['verify'] = this.verify;
+    data['experience'] = this.experience;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'User{address: $address, born: $born, displayName: $displayName, education: $education, email: $email, gender: $gender, phone: $phone, photoUrl: $photoUrl, subjects: $subjects, teachAddress: $teachAddress, teachMethod: $teachMethod, uid: $uid, verify: $verify, experience: $experience}';
+  }
+}
+
+class Address {
+  String? province;
+  String? district;
+  String? ward;
+
+  Address({this.province, this.district, this.ward});
+
+  Address.fromJson(Map<String, dynamic> json) {
+    province = json['province'];
+    district = json['district'];
+    ward = json['ward'];
+  }
 
   Map<String, dynamic> toJson() {
-    return {
-      'uid': uid,
-      'address': address?.toJson(),
-      'born': born != null ? Timestamp.fromDate(born!) : null,
-      'department': department,
-      'display_name': displayName,
-      'email': email,
-      'experience': experience,
-      'gender': gender,
-      'online_teach': teachMethod,
-      'phone': phone,
-      'photo_url': photoUrl,
-      'university': university,
-      'verify': verify,
-      'subjects': subjects,
-      'teach_address': teachAddress
-    };
+    final Map<String, dynamic> data =  Map<String, dynamic>();
+    data['province'] = this.province;
+    data['district'] = this.district;
+    data['ward'] = this.ward;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'Address{province: $province, district: $district, ward: $ward}';
+  }
+}
+
+class Education {
+  String? major;
+  String? university;
+  String? year;
+
+  Education({this.major, this.university, this.year});
+
+  Education.fromJson(Map<String, dynamic> json) {
+    major = json['major'];
+    university = json['university'];
+    year = json['year'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data =  Map<String, dynamic>();
+    data['major'] = this.major;
+    data['university'] = this.university;
+    data['year'] = this.year;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'Education{major: $major, university: $university, year: $year}';
   }
 }
