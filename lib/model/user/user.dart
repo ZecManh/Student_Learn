@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
   Address? address;
-  String? born;
+  Timestamp? born;
   String? displayName;
   Education? education;
   String? email;
@@ -33,7 +35,7 @@ class User {
   User.fromJson(Map<dynamic, dynamic> json) {
     address =
     json['address'] != null ? Address.fromJson(json['address']) : null;
-    born = json['born'];
+    born = json['born']!=null?(json['born']):null;
     displayName = json['display_name'];
     education = json['education'] != null
         ?  Education.fromJson(json['education'])

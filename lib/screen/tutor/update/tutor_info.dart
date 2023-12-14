@@ -278,7 +278,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             ),
                             (user.born != null)
                                 ? Expanded(
-                                    child: Text(user.born!,
+                                    child: Text(user.born.toString()!,
                                       textAlign: TextAlign.start,
                                       style: TextStyle(fontSize: 20),
                                     ),
