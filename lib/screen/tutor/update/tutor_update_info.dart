@@ -61,7 +61,7 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                                       MaterialPageRoute(builder: (context) {
                                         return Provider(
                                             create: (context) => user,
-                                            builder: (context, child) => UpdateAddress());
+                                            builder: (context, child) => UpdateInfoTutor());
                                       }));
                                 },
                                 child: Icon(Icons.person_2_rounded,
