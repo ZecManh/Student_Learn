@@ -280,7 +280,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             (user.born != null)
                                 ? Expanded(
                                     child: Text(
-                                      '',
+                                      (int.parse(DateFormat('yyyy').format(user.born!.toDate()))-int.parse(DateFormat('yyyy').format(DateTime.now()))).toString(),
                                       textAlign: TextAlign.start,
                                       style: TextStyle(fontSize: 20),
                                     ),
