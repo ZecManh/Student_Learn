@@ -1,7 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:datn/screen/learner/dash_board_learner_other.dart';
+import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+// import 'package:random_string/random_string.dart';
 class DashBoardQrGenerate extends StatefulWidget {
   const DashBoardQrGenerate({super.key});
 
@@ -12,56 +17,54 @@ class DashBoardQrGenerate extends StatefulWidget {
 }
 
 class _DashBoardQrGenerateState extends State<DashBoardQrGenerate> {
-  String data = "";
+  String _randomData = '';
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? controller;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     print('dash board qr rebuild');
 
-    return SafeArea(
-      child: Scaffold(
+     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Qr Generate'),
+        title: Text('Random QR Code Scanner'),
       ),
-       body: Column(
-         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-         children: [
-          Text('Tạo QR'),
-          Center(
-            child: QrImageView(
-            data: data,
-            version: QrVersions.auto,
-            size: 200.0,
-          )),
-          SizedBox(
-            height: 24,
-          ),
-          Container(
-            width: 300.0,
-            margin: const EdgeInsets.only(bottom: 20.0),
-            child: TextField(
-              //we will generate a new qr code when the input value change
-              onChanged: (value) {
-                setState(() {
-                  data = value;
-                });
-              },
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-              decoration: InputDecoration(
-                hintText: "Mời nhập dữ liệu",
-                filled: true,
-                // fillColor: AppStyle.textInputColor,
-                border: InputBorder.none,
-              ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            QrImageView(
+              data: _randomData,
+              size: 200.0,
             ),
-          ),
-         ],
-       ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: generateRandomQRCode,
+              child: Text('Tạo QR Code Ngẫu Nhiên'),
+            ),
+            SizedBox(height: 20.0),
+      
+          ],
+        ),
       ),
     );
   }
-}
+   void generateRandomQRCode() {
+    setState(() {
+      _randomData = generateRandomString(10);
+    });
+  }
 
+  String generateRandomString(int length) {
+    const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return String.fromCharCodes(
+      Iterable.generate(
+        length,
+        (_) => charset.codeUnitAt(random.nextInt(charset.length)),
+      ),
+    );
+  }
+   
+}
