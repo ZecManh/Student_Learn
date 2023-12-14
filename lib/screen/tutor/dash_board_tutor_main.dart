@@ -1,6 +1,5 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
-import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
@@ -8,6 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:datn/screen/qr_code/qr_screen_generate.dart';
+import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
@@ -35,7 +37,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     model_user.User user = Provider.of<model_user.User>(context);
     nameController = TextEditingController(text: user.displayName);
     ageController = TextEditingController(text: user.email);
-
+    
     FirebaseAuth auth = firebaseAuthService.auth;
     print("current user id " + auth.currentUser!.uid);
     // print('current display name ' + auth.currentUser!.displayName);
@@ -139,10 +141,42 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                           .colorScheme
                                           .background)),
                               onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const DashBoardQr();
-                                }));
+                               showDialog(
+                                    context: context,
+                                    builder: (context) => SimpleDialog(
+                                          contentPadding:
+                                              const EdgeInsets.all(20.0),
+                                          children: [
+                                            Center(
+                                                child: Text('Mã QR của tôi')),
+                                            Center(
+                                                child: QrImageView(
+                                              data: user.displayName != null?user.displayName!:'chuacapnhat',
+                                              version: QrVersions.auto,
+                                              size: 200.0,
+                                            )),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return const DashBoardQrScanner();
+                                                }));
+                                              },
+                                              icon: const Text('Quét Mã QR'),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return DashBoardQrGenerate();
+                                                }));
+                                              },
+                                              icon: Text('Tạo Mã QR'),
+                                            ),
+                                          ],
+                                        ));
                               },
                               icon: const Icon(Icons.qr_code),
                             ),
