@@ -2,6 +2,7 @@ import 'package:datn/model/user/user.dart';
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:datn/screen/widget/mini_card.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TutorInfo extends StatefulWidget {
@@ -278,7 +279,8 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             ),
                             (user.born != null)
                                 ? Expanded(
-                                    child: Text(user.born.toString()!,
+                                    child: Text(
+                                      '',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(fontSize: 20),
                                     ),
@@ -328,8 +330,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                                   ' , ')
                                               : '') +
                                           (user.address!.province != null
-                                              ? (user.address!.province!
-                                                  )
+                                              ? (user.address!.province!)
                                               : '')),
                                       style: TextStyle(fontSize: 20),
                                     )
@@ -513,22 +514,22 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      // Padding(
-                      //     padding: EdgeInsets.all(10),
-                      //     child: (user.teachMethod != null)
-                      //         ? Wrap(
-                      //             children: [
-                      //               ...user.teachMethod!.map(
-                      //                   (item) => MiniCard(cardName: item)),
-                      //             ],
-                      //           )
-                      //         : Text(
-                      //             'Chưa cập nhật',
-                      //             style: TextStyle(
-                      //                 fontSize: 20,
-                      //                 color:
-                      //                     Theme.of(context).colorScheme.error),
-                      //           ))
+                      Padding(
+                          padding: EdgeInsets.all(10),
+                          child: (user.teachMethod != null)
+                              ? Wrap(
+                                  children: [
+                                    ...user.teachMethod!.map(
+                                        (item) => MiniCard(cardName: item)),
+                                  ],
+                                )
+                              : Text(
+                                  'Chưa cập nhật',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color:
+                                          Theme.of(context).colorScheme.error),
+                                ))
                     ],
                   ),
                 ),

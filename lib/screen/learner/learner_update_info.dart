@@ -62,7 +62,7 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
     dateController = TextEditingController(
         text: (userInit.born != null)
             // ? model_user.User.convertDateTime(userInit.born!)
-            ? userInit.born.toString()
+            ? DateFormat('yyyy-MM-dd').format(userInit.born!.toDate())
             : '');
     phoneController = TextEditingController(text: userInit.phone);
   }
