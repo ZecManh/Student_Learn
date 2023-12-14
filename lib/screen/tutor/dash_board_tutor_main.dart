@@ -75,26 +75,30 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                           }),
                         );
                       },
-                      child: StreamBuilder<model_user.User>(
-                          stream: firestoreService.user(auth.currentUser!.uid),
-                          builder: (context,
-                              AsyncSnapshot<model_user.User> snapshot) {
-                            model_user.User? user = snapshot.data;
-                            if (user != null) {
-                              return CircleAvatar(
-                                  backgroundImage: (user.photoUrl != null)
-                                      ? NetworkImage(user.photoUrl!)
-                                      : AssetImage('assets/bear.jpg')
-                                          as ImageProvider,
-                                  radius: 50);
-                            } else {
-                              print('image null');
-                              return CircleAvatar(
-                                backgroundImage: AssetImage('assets/bear.jpg'),
-                                radius: 50,
-                              );
-                            }
-                          }),
+                      child:
+                          StreamBuilder<model_user.User>(
+                              stream: firestoreService.user(auth.currentUser!.uid),
+                              builder: (context,
+                                  // AsyncSnapshot<model_user.User> snapshot) {
+                                  AsyncSnapshot<model_user.User> snapshot) {
+                                var data=snapshot.data;
+                                model_user.User? user = snapshot.data;
+                                if (user != null) {
+                                  return CircleAvatar(
+                                      backgroundImage: (user.photoUrl != null)
+                                          ? NetworkImage(user.photoUrl!)
+                                          : AssetImage('assets/bear.jpg')
+                                              as ImageProvider,
+                                      radius: 50);
+                                } else {
+                                  print('image null');
+                                  return CircleAvatar(
+                                    backgroundImage: AssetImage('assets/bear.jpg'),
+                                    radius: 50,
+                                  );
+                                }
+                              })
+
                     ),
                   ),
                   const SizedBox(width: 10),

@@ -47,7 +47,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
     emailController = TextEditingController(text: sendUser.email!);
     dateController = TextEditingController(
         text: (sendUser.born != null)
-            ? (DateFormat('yyyy-MM-dd').format(sendUser.born!))
+            // ? (DateFormat('yyyy-MM-dd').format(sendUser.born!))
+        ?sendUser.born
             : 'Vui lòng cập nhật');
     dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
   }

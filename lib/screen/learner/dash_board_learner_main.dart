@@ -1,7 +1,6 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
-import 'package:datn/viewmodel/user_type.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,8 +38,6 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
-    FirebaseAuthService firebaseAuthModel =
-        Provider.of<FirebaseAuthService>(context);
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
