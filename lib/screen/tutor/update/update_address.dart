@@ -60,7 +60,7 @@ class _UpdateAddressState extends State<UpdateAddress> {
     dateController = TextEditingController(
         text: (sendUser.born != null)
             // ? (DateFormat('yyyy-MM-dd').format(sendUser.born!))
-            ? sendUser.born
+            ? sendUser.born.toString()
             : 'Vui lòng cập nhật');
     dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
   }
