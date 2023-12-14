@@ -1,5 +1,7 @@
 import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:datn/screen/tutor/update/updateTeachSubject.dart';
 import 'package:datn/screen/tutor/update/update_address.dart';
+import 'package:datn/screen/tutor/update/update_education.dart';
 import 'package:datn/screen/tutor/update/update_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +150,14 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return Provider(
+                                create: (context) => user,
+                                builder: (context, child) => UpdateEducation());
+                          }));
+                    },
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Card(
@@ -159,7 +168,14 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           child: Row(
                             children: [
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return Provider(
+                                            create: (context) => user,
+                                            builder: (context, child) => UpdateEducation());
+                                      }));
+                                },
                                 child: Icon(Icons.school,
                                     color: Theme.of(context)
                                         .colorScheme
@@ -189,7 +205,14 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return Provider(
+                                create: (context) => user,
+                                builder: (context, child) => UpdateTeachSubject());
+                          }));
+                    },
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Card(
@@ -200,7 +223,14 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           child: Row(
                             children: [
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return Provider(
+                                            create: (context) => user,
+                                            builder: (context, child) => UpdateTeachSubject());
+                                      }));
+                                },
                                 child: Icon(Icons.subject,
                                     color: Theme.of(context)
                                         .colorScheme

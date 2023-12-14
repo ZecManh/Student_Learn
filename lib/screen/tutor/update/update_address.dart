@@ -13,8 +13,6 @@ import '../../../model/vn_province/district.dart';
 import '../../../model/vn_province/province.dart';
 import '../../../model/vn_province/ward.dart';
 
-List<String> genders = ['Nam', 'Nữ', 'Khác'];
-
 class UpdateAddress extends StatefulWidget {
   const UpdateAddress({super.key});
 
@@ -26,11 +24,6 @@ class UpdateAddress extends StatefulWidget {
 }
 
 class _UpdateAddressState extends State<UpdateAddress> {
-  late TextEditingController nameController;
-  late TextEditingController phoneController;
-  late TextEditingController dateController;
-  late TextEditingController emailController;
-  String dropDownGender = genders.first;
   List<Province> provinces = [];
   List<Districts> districts=[];
   List<Wards> wards=[];
@@ -48,21 +41,6 @@ class _UpdateAddressState extends State<UpdateAddress> {
   initInfo() {
     model_user.User sendUser =
         Provider.of<model_user.User>(context, listen: false);
-    nameController = TextEditingController(
-        text: (sendUser.displayName != null)
-            ? (sendUser.displayName!)
-            : ('Vui lòng cập nhật'));
-    phoneController = TextEditingController(
-        text: (sendUser.phone != null)
-            ? (sendUser.phone!)
-            : ('Vui lòng cập nhật'));
-    emailController = TextEditingController(text: sendUser.email!);
-    dateController = TextEditingController(
-        text: (sendUser.born != null)
-            // ? (DateFormat('yyyy-MM-dd').format(sendUser.born!))
-            ? sendUser.born.toString()
-            : 'Vui lòng cập nhật');
-    dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
   }
 
   Future getProvince() async {
