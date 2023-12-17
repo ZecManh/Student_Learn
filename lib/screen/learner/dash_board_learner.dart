@@ -34,6 +34,7 @@ class _DashBoardLearnerState extends State<DashBoardLearner> {
   Widget build(BuildContext context) {
     FirestoreService firestoreService = FirestoreService();
     FirebaseAuth auth = FirebaseAuth.instance;
+    firestoreService.getSubjectRequest();
     return MultiProvider(
       providers: [
         StreamProvider<model_user.User>(

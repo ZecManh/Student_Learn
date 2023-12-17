@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/model/user/user.dart' as user_model ;
+import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreService extends ChangeNotifier {
+  static String USER_DOC = "users";
+  static String SUBJECT_REQUEST_DOC = "subject_request";
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   get firestore => _firestore;
@@ -21,7 +23,9 @@ class FirestoreService extends ChangeNotifier {
   Stream<user_model.User>? user(String userId) {
     DocumentReference docRef = _firestore.collection('users').doc(userId);
     final snapshot = docRef.snapshots();
-    return docRef.snapshots().map((json) => user_model.User.fromJson(json.data() as Map));
+    return docRef
+        .snapshots()
+        .map((json) => user_model.User.fromJson(json.data() as Map));
   }
 
   Stream<Map<dynamic, dynamic>>? userMap(String userId) {
@@ -30,9 +34,12 @@ class FirestoreService extends ChangeNotifier {
     return docRef.snapshots().map((json) => json as Map);
   }
 
-  Future updateInfo(String displayName, String phone,
-      Timestamp born, String gender) async {
-    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+  Future updateInfo(
+      String displayName, String phone, Timestamp born, String gender) async {
+    await firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
       'display_name': displayName,
       'phone': phone,
       'born': born,
@@ -72,27 +79,70 @@ class FirestoreService extends ChangeNotifier {
   }
 
   void updateEducation(user_model.Education education) async {
-    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(
-        {'education': education.toJson()},
-        SetOptions(merge: true)).catchError((error) {
+    await firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({'education': education.toJson()},
+            SetOptions(merge: true)).catchError((error) {
       print('FIRESTORE UPDATE EDUCATION' + error);
     });
   }
 
   void updateSubject(List<String> subject) async {
-    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(
-        {'subjects': subject},
-        SetOptions(merge: true)).catchError((error) {
+    await firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({'subjects': subject}, SetOptions(merge: true)).catchError(
+            (error) {
       print('FIRESTORE UPDATE SUBJECTS' + error);
     });
   }
 
   void updateExperience(String experience) async {
-    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(
-        {'experience': experience},
-        SetOptions(merge: true)).catchError((error) {
+    await firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({'experience': experience}, SetOptions(merge: true)).catchError(
+            (error) {
       print('FIRESTORE UPDATE EXPERIENCE' + error);
     });
   }
 
+  void getSubjectRequest() async {
+    print("GET SUBJECT REQUEST");
+    // final query = firestore
+    //     .collection(SUBJECT_REQUEST_DOC)
+    //     .where("learner_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+    //     .get()
+    //     .then((querySnapshot) {
+    //   print("Successfully completed");
+    //   //test
+    //
+    //   print("QUERY SNAPSHOT " + querySnapshot.toString());
+    //   print("QUERY SNAPSHOT DOCS " + querySnapshot.doc.toString());
+    //
+    //   //test
+    //   for (var docSnapshot in querySnapshot.docs) {
+    //     print('${docSnapshot.id} => ${docSnapshot.data().toString()}');
+    //   }
+
+      try {
+        // Query documents where the 'userName' field is equal to the provided username
+        QuerySnapshot querySnapshot = await firestore
+            .collection('subject_requests') // Replace with your actual collection name
+            .where('learner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        // Loop through the query results
+        for (QueryDocumentSnapshot document in querySnapshot.docs) {
+          // Access the data of the matching document
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          print('Document ID: ${document.id}, Data: $data');
+          print('Document ID: ${document.id}, Data: $data');
+        }
+      } catch (e) {
+        print('Error querying Firestore: $e');
+      }
+
+  }
 }

@@ -58,8 +58,8 @@ class User {
     experience = json['experience'];
 
 
-    print("JSON" + json.toString());
-    print("TO STRING " + toString());
+    // print("JSON" + json.toString());
+    // print("TO STRING " + toString());
   }
 
   Map<String, dynamic> toJson() {
