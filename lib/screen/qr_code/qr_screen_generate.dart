@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:math';
-
-import 'package:datn/screen/learner/dash_board_learner_other.dart';
-import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 // import 'package:random_string/random_string.dart';
 class DashBoardQrGenerate extends StatefulWidget {
   const DashBoardQrGenerate({super.key});
@@ -25,7 +23,7 @@ class _DashBoardQrGenerateState extends State<DashBoardQrGenerate> {
   Widget build(BuildContext context) {
     print('dash board qr rebuild');
 
-     return Scaffold(
+    return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
         title: Text('Random QR Code Scanner'),
@@ -44,13 +42,13 @@ class _DashBoardQrGenerateState extends State<DashBoardQrGenerate> {
               child: Text('Tạo QR Code Ngẫu Nhiên'),
             ),
             SizedBox(height: 20.0),
-      
           ],
         ),
       ),
     );
   }
-   void generateRandomQRCode() {
+
+  void generateRandomQRCode() {
     setState(() {
       _randomData = generateRandomString(10);
     });
@@ -66,5 +64,4 @@ class _DashBoardQrGenerateState extends State<DashBoardQrGenerate> {
       ),
     );
   }
-   
 }

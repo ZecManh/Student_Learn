@@ -1,6 +1,7 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/qr_code/qr_scan.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -133,31 +134,37 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               onPressed: () {
                                 showDialog(
                                     context: context,
-                                    builder: (context) => SimpleDialog(
-                                          contentPadding:
-                                              const EdgeInsets.all(10.0),
-                                          children: [
-                                            
-                                            Center(
-                                                child: Text('Mã QR của tôi')),
-                                            Center(
+                                    builder: (context) {
+                                      var info =
+                                          '\nName : ${user.displayName!}\nSố điện thoại : ${user.phone!}\nEmail : ${user.email!}';
+                                      return SimpleDialog(
+                                        contentPadding:
+                                            const EdgeInsets.all(10.0),
+                                        children: [
+                                          Center(child: Text('Mã QR của tôi')),
+                                          Center(
                                               child: QrImageView(
-                                              data: user.displayName != null?user.displayName!:'chuacapnhat',
-                                              version: QrVersions.auto,
-                                              size: 200.0,
-                                            )),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return const DashBoardQrScanner();
-                                                }));
-                                              },
-                                              icon: const Text('Quét Mã QR'),
-                                            ),
-                                          ],
-                                        ));
+                                            data: user.displayName != null &&
+                                                    user.phone != null &&
+                                                    user.email != null
+                                                ? info
+                                                : 'Qrcode sẽ chứa thông tin(Tên-SDT-Email) khi bạn điền đầy đủ thông tin',
+                                            version: QrVersions.auto,
+                                            size: 200.0,
+                                          )),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return const DashBoardQrScanner();
+                                              }));
+                                            },
+                                            icon: const Text('Quét Mã QR'),
+                                          ),
+                                        ],
+                                      );
+                                    });
                               },
                               icon: const Icon(Icons.qr_code),
                             ),

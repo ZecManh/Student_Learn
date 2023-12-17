@@ -10,6 +10,7 @@ import 'package:datn/model/user/user.dart' as model_user;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
+import 'package:datn/screen/qr_code/qr_scan.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
@@ -37,7 +38,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     model_user.User user = Provider.of<model_user.User>(context);
     nameController = TextEditingController(text: user.displayName);
     ageController = TextEditingController(text: user.email);
-    
+
     FirebaseAuth auth = firebaseAuthService.auth;
     print("current user id " + auth.currentUser!.uid);
     // print('current display name ' + auth.currentUser!.displayName);
@@ -63,43 +64,42 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return Provider.value(
-                              value: user,
-                              // child: UpdateInfoTutor()
-                              child: TutorInfo(),
-                            );
-                          }),
-                        );
-                      },
-                      child:
-                          StreamBuilder<model_user.User>(
-                              stream: firestoreService.user(auth.currentUser!.uid),
-                              builder: (context,
-                                  // AsyncSnapshot<model_user.User> snapshot) {
-                                  AsyncSnapshot<model_user.User> snapshot) {
-                                var data=snapshot.data;
-                                model_user.User? user = snapshot.data;
-                                if (user != null) {
-                                  return CircleAvatar(
-                                      backgroundImage: (user.photoUrl != null)
-                                          ? NetworkImage(user.photoUrl!)
-                                          : AssetImage('assets/bear.jpg')
-                                              as ImageProvider,
-                                      radius: 50);
-                                } else {
-                                  print('image null');
-                                  return CircleAvatar(
-                                    backgroundImage: AssetImage('assets/bear.jpg'),
-                                    radius: 50,
-                                  );
-                                }
-                              })
-
-                    ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return Provider.value(
+                                value: user,
+                                // child: UpdateInfoTutor()
+                                child: TutorInfo(),
+                              );
+                            }),
+                          );
+                        },
+                        child: StreamBuilder<model_user.User>(
+                            stream:
+                                firestoreService.user(auth.currentUser!.uid),
+                            builder: (context,
+                                // AsyncSnapshot<model_user.User> snapshot) {
+                                AsyncSnapshot<model_user.User> snapshot) {
+                              var data = snapshot.data;
+                              model_user.User? user = snapshot.data;
+                              if (user != null) {
+                                return CircleAvatar(
+                                    backgroundImage: (user.photoUrl != null)
+                                        ? NetworkImage(user.photoUrl!)
+                                        : AssetImage('assets/bear.jpg')
+                                            as ImageProvider,
+                                    radius: 50);
+                              } else {
+                                print('image null');
+                                return CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('assets/bear.jpg'),
+                                  radius: 50,
+                                );
+                              }
+                            })),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -145,42 +145,49 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                           .colorScheme
                                           .background)),
                               onPressed: () {
-                               showDialog(
+                                showDialog(
                                     context: context,
-                                    builder: (context) => SimpleDialog(
-                                          contentPadding:
-                                              const EdgeInsets.all(20.0),
-                                          children: [
-                                            Center(
-                                                child: Text('Mã QR của tôi')),
-                                            Center(
-                                                child: QrImageView(
-                                              data: user.displayName != null?user.displayName!:'chuacapnhat',
-                                              version: QrVersions.auto,
-                                              size: 200.0,
-                                            )),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return const DashBoardQrScanner();
-                                                }));
-                                              },
-                                              icon: const Text('Quét Mã QR'),
-                                            ),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return DashBoardQrGenerate();
-                                                }));
-                                              },
-                                              icon: Text('Tạo Mã QR'),
-                                            ),
-                                          ],
-                                        ));
+                                    builder: (context) {
+                                      var info =
+                                          '\nName : ${user.displayName!}\nSố điện thoại : ${user.phone!}\nEmail : ${user.email!}';
+                                      return SimpleDialog(
+                                        contentPadding:
+                                            const EdgeInsets.all(20.0),
+                                        children: [
+                                          Center(child: Text('Mã QR của tôi')),
+                                          Center(
+                                              child: QrImageView(
+                                            data: user.displayName != null &&
+                                                    user.phone != null &&
+                                                    user.email != null
+                                                ? info
+                                                : 'Qrcode sẽ chứa thông tin(Tên-SDT-Email) khi bạn điền đầy đủ thông tin',
+                                            version: QrVersions.auto,
+                                            size: 200.0,
+                                          )),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return const DashBoardQrScanner();
+                                              }));
+                                            },
+                                            icon: const Text('Quét Mã QR'),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return DashBoardQrGenerate();
+                                              }));
+                                            },
+                                            icon: Text('Tạo Mã QR'),
+                                          ),
+                                        ],
+                                      );
+                                    });
                               },
                               icon: const Icon(Icons.qr_code),
                             ),

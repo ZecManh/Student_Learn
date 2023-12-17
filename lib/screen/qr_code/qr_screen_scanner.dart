@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
 class DashBoardQrScanner extends StatefulWidget {
   const DashBoardQrScanner({super.key});
 
@@ -16,8 +17,6 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
   Barcode? result;
   QRViewController? controller;
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
@@ -48,12 +47,10 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
             child: Center(
               child: (result != null)
                   ? Column(
-                    children: [
-                      Text(
-                        // Barcode Type: ${describeEnum(result!.format)}  
-                          'Data: ${result!.code}'),
-                    ],
-                  )
+                      children: [
+                        Text('${result!.code}'),
+                      ],
+                    )
                   : const Text('Scan a code'),
             ),
           )
