@@ -69,10 +69,10 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                       child: OutlinedButton.icon(
                                         onPressed: () {
                                           if (subjects
-                                              .contains(item as String)) {
+                                              .contains(item)) {
                                             setState(() {
                                               subjects.removeAt(subjects
-                                                  .indexOf(item as String));
+                                                  .indexOf(item));
                                             });
                                           }
                                         },
@@ -114,7 +114,7 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                             ),
                             OutlinedButton.icon(
                                 onPressed: () {
-                                  if(subjectController.text!=""){
+                                  if (subjectController.text != "") {
                                     setState(() {
                                       subjects.add(subjectController.text);
                                       subjectController.clear();
@@ -123,7 +123,9 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                 },
                                 icon: Icon(Icons.add),
                                 label: Text('Thêm')),
-                            SizedBox(height: 10,)
+                            SizedBox(
+                              height: 10,
+                            )
                           ],
                         ),
                       ),
@@ -152,7 +154,8 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        firestoreService.updateSubject(auth.currentUser!.uid,subjects);
+                                        firestoreService
+                                            .updateSubject(subjects);
                                         Navigator.pop(context, 'OK');
                                       },
                                       child: const Text('OK'),

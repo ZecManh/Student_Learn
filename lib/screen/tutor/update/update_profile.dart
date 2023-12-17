@@ -204,7 +204,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                         DateTime date =
                                             DateTime.parse(dateController.text);
                                         firestoreService.updateInfo(
-                                            auth.currentUser!.uid,
+
                                             nameController.text,
                                             phoneController.text,
                                             Timestamp.fromDate(date),

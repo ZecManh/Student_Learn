@@ -156,7 +156,7 @@ class _UpdateEducationState extends State<UpdateEducation> {
                                                     ? yearController.text
                                                     : null);
                                         firestoreService.updateEducation(
-                                            auth.currentUser!.uid, education);
+                                           education);
                                         Navigator.pop(context, 'OK');
                                       },
                                       child: const Text('OK'),

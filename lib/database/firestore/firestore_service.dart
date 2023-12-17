@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datn/model/user/user.dart';
+import 'package:datn/model/user/user.dart' as user_model ;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreService extends ChangeNotifier {
@@ -17,10 +18,10 @@ class FirestoreService extends ChangeNotifier {
         .then((value) => print(value));
   }
 
-  Stream<User>? user(String userId) {
+  Stream<user_model.User>? user(String userId) {
     DocumentReference docRef = _firestore.collection('users').doc(userId);
     final snapshot = docRef.snapshots();
-    return docRef.snapshots().map((json) => User.fromJson(json.data() as Map));
+    return docRef.snapshots().map((json) => user_model.User.fromJson(json.data() as Map));
   }
 
   Stream<Map<dynamic, dynamic>>? userMap(String userId) {
@@ -29,9 +30,9 @@ class FirestoreService extends ChangeNotifier {
     return docRef.snapshots().map((json) => json as Map);
   }
 
-  Future updateInfo(String userId, String displayName, String phone,
+  Future updateInfo(String displayName, String phone,
       Timestamp born, String gender) async {
-    await firestore.collection('users').doc(userId).set({
+    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set({
       'display_name': displayName,
       'phone': phone,
       'born': born,
@@ -41,48 +42,57 @@ class FirestoreService extends ChangeNotifier {
     });
   }
 
-  Future updateName(String userId, String displayName) async {
+  Future updateName(String displayName) async {
     await firestore
         .collection('users')
-        .doc(userId)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'display_name': displayName}, SetOptions(merge: true)).catchError(
             (error) {
       print('FIRESTORE UPLOAD DISPLAYNAME' + error);
     });
   }
 
-  Future updateImageUrl(String userId, String url) async {
+  Future updateImageUrl(String url) async {
     await firestore
         .collection('users')
-        .doc(userId)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'photo_url': url}, SetOptions(merge: true)).catchError((error) {
       print('FIRESTORE UPDATE IMAGE URL' + error);
     });
   }
 
-  Future updateAddress(String userId, Address address) async {
+  Future updateAddress(user_model.Address address) async {
     await firestore
         .collection('users')
-        .doc(userId)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'address': address.toJson()}, SetOptions(merge: true)).catchError(
             (error) {
       print('FIRESTORE UPDATE ADDRESS' + error);
     });
   }
 
-  void updateEducation(String userId, Education education) async {
-    await firestore.collection('users').doc(userId).set(
+  void updateEducation(user_model.Education education) async {
+    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(
         {'education': education.toJson()},
         SetOptions(merge: true)).catchError((error) {
       print('FIRESTORE UPDATE EDUCATION' + error);
     });
   }
 
-  void updateSubject(String userId, List<String> subject) async {
-    await firestore.collection('users').doc(userId).set(
+  void updateSubject(List<String> subject) async {
+    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(
         {'subjects': subject},
         SetOptions(merge: true)).catchError((error) {
       print('FIRESTORE UPDATE SUBJECTS' + error);
     });
   }
+
+  void updateExperience(String experience) async {
+    await firestore.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(
+        {'experience': experience},
+        SetOptions(merge: true)).catchError((error) {
+      print('FIRESTORE UPDATE EXPERIENCE' + error);
+    });
+  }
+
 }

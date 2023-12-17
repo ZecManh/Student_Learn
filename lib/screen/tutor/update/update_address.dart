@@ -228,7 +228,7 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                                   address.province=dropDownProvince?.name;
                                                   address.district=dropDownDistrict?.name;
                                                   address.ward=dropDownWards?.name;
-                                                  firestoreService.updateAddress(auth.currentUser!.uid, address as model_user.Address);
+                                                  firestoreService.updateAddress( address as model_user.Address);
                                                   Navigator.pop(context, 'OK');
                                                 },
                                                 child: const Text('OK'),
