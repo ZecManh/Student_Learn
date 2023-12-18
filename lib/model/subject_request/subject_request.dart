@@ -30,7 +30,7 @@ class SubjectRequest {
     subject = json['subject'];
     state = json['state'];
     teachMethod = json['teach_method'];
-    schedules = (json['schedules'] != null) ? json['schedules'] : null;
+    schedules = (json['schedules'] != null) ? TeachSchedules.fromJson(json['schedules']) : null;
     address =
         json['address'] != null ? Address.fromJson(json['address']) : null;
     createdTime = json['created_time'];
@@ -52,5 +52,10 @@ class SubjectRequest {
     data['start_time'] = this.startTime;
     data['end_time'] = this.endTime;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'SubjectRequest{learnerId: $learnerId, subject: $subject, state: $state, teachMethod: $teachMethod, schedules: $schedules, address: $address, createdTime: $createdTime, startTime: $startTime, endTime: $endTime}';
   }
 }

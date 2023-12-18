@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/subject_request/subject_request.dart';
+import 'package:datn/model/user/teach_schedules.dart';
 import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -139,6 +141,15 @@ class FirestoreService extends ChangeNotifier {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
           print('Document ID: ${document.id}, Data: $data');
           print('Document ID: ${document.id}, Data: $data');
+          print("data json $data");
+          var subjectRequest = SubjectRequest.fromJson(data);
+          print(subjectRequest.toString());
+        /*  print("learner id " + data['learner_id'].toString());
+          print("subject " + data['subject']);
+          print("state " + data['state']);
+          print("teach method " + data['teach_method']);*/
+          // print("schedules "+ data['schedules']);
+          // print(TeachSchedules.fromJson(data['schedules']).toString());
         }
       } catch (e) {
         print('Error querying Firestore: $e');

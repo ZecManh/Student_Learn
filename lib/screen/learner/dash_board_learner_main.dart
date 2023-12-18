@@ -194,10 +194,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 Radius.circular(5),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.person_add_alt,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.person_add_alt),
                                 color: Colors.white,
                               ),
                             ),
@@ -226,10 +227,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 Radius.circular(5),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.menu_book,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.edit_calendar),
                                 color: Colors.white,
                               ),
                             ),
@@ -238,7 +240,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Khoá học',
+                            'Yêu cầu',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -258,10 +260,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 Radius.circular(5),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.message_outlined,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.message_outlined),
                                 color: Colors.white,
                               ),
                             ),

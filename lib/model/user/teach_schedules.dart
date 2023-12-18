@@ -1,95 +1,68 @@
 class TeachSchedules {
-  List<Period>? monday;
-  List<Period>? tuesday;
-  List<Period>? wednesday;
-  List<Period>? thursday;
-  List<Period>? friday;
-  List<Period>? saturday;
-  List<Period>? sunday;
+  Period? sunday;
+  Period? saturday;
+  Period? tuesday;
+  Period? friday;
+  Period? thursday;
+  Period? wednesday;
+  Period? monday;
 
   TeachSchedules(
-      {this.monday,
-        this.tuesday,
-        this.wednesday,
-        this.thursday,
-        this.friday,
+      {this.sunday,
         this.saturday,
-        this.sunday});
+        this.tuesday,
+        this.friday,
+        this.thursday,
+        this.wednesday,
+        this.monday});
 
   TeachSchedules.fromJson(Map<String, dynamic> json) {
-    if (json['monday'] != null) {
-      monday = <Period>[];
-      json['monday'].forEach((v) {
-        monday!.add(Period.fromJson(v));
-      });
-    }
-    if (json['tuesday'] != null) {
-      tuesday = <Period>[];
-      json['tuesday'].forEach((v) {
-        tuesday!.add( Period.fromJson(v));
-      });
-    }
-    if (json['wednesday'] != null) {
-      wednesday = <Period>[];
-      json['wednesday'].forEach((v) {
-        wednesday!.add( Period.fromJson(v));
-      });
-    }
-    if (json['thursday'] != null) {
-      thursday = <Period>[];
-      json['thursday'].forEach((v) {
-        thursday!.add( Period.fromJson(v));
-      });
-    }
-    if (json['friday'] != null) {
-      friday = <Period>[];
-      json['friday'].forEach((v) {
-        friday!.add( Period.fromJson(v));
-      });
-    }
-    if (json['saturday'] != null) {
-      saturday = <Period>[];
-      json['saturday'].forEach((v) {
-        saturday!.add( Period.fromJson(v));
-      });
-    }
-    if (json['sunday'] != null) {
-      sunday = <Period>[];
-      json['sunday'].forEach((v) {
-        sunday!.add( Period.fromJson(v));
-      });
-    }
+    monday =
+    json['monday'] != null ? new Period.fromJson(json['monday']) : null;
+    tuesday =
+    json['tuesday'] != null ? new Period.fromJson(json['tuesday']) : null;
+    wednesday =
+    json['wednesday'] != null ? new Period.fromJson(json['wednesday']) : null;
+    thursday =
+    json['thursday'] != null ? new Period.fromJson(json['thursday']) : null;
+    friday =
+    json['friday'] != null ? new Period.fromJson(json['friday']) : null;
+    saturday = json['saturday'] != null
+        ? new Period.fromJson(json['saturday'])
+        : null;
+    sunday =
+    json['sunday'] != null ? new Period.fromJson(json['sunday']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.monday != null) {
-      data['monday'] = this.monday!.map((v) => v.toJson()).toList();
-    }
-    if (this.tuesday != null) {
-      data['tuesday'] = this.tuesday!.map((v) => v.toJson()).toList();
-    }
-    if (this.wednesday != null) {
-      data['wednesday'] = this.wednesday!.map((v) => v.toJson()).toList();
-    }
-    if (this.thursday != null) {
-      data['thursday'] = this.thursday!.map((v) => v.toJson()).toList();
-    }
-    if (this.friday != null) {
-      data['friday'] = this.friday!.map((v) => v.toJson()).toList();
+    if (this.sunday != null) {
+      data['sunday'] = this.sunday!.toJson();
     }
     if (this.saturday != null) {
-      data['saturday'] = this.saturday!.map((v) => v.toJson()).toList();
+      data['saturday'] = this.saturday!.toJson();
     }
-    if (this.sunday != null) {
-      data['sunday'] = this.sunday!.map((v) => v.toJson()).toList();
+    if (this.tuesday != null) {
+      data['tuesday'] = this.tuesday!.toJson();
+    }
+    if (this.friday != null) {
+      data['friday'] = this.friday!.toJson();
+    }
+    if (this.thursday != null) {
+      data['thursday'] = this.thursday!.toJson();
+    }
+    if (this.wednesday != null) {
+      data['wednesday'] = this.wednesday!.toJson();
+    }
+    if (this.monday != null) {
+      data['monday'] = this.monday!.toJson();
     }
     return data;
   }
 
   @override
   String toString() {
-    return 'TeachSchedules{monday: $monday, tuesday: $tuesday, wednesday: $wednesday, thursday: $thursday, friday: $friday, saturday: $saturday, sunday: $sunday}';
+    return 'TeachSchedules{sunday: $sunday, saturday: $saturday, tuesday: $tuesday, friday: $friday, thursday: $thursday, wednesday: $wednesday, monday: $monday}';
   }
 }
 
