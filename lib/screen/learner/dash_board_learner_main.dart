@@ -162,6 +162,16 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                             },
                                             icon: const Text('Quét Mã QR'),
                                           ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return QrScan();
+                                              }));
+                                            },
+                                            icon: const Text('Quét'),
+                                          ),
                                         ],
                                       );
                                     });

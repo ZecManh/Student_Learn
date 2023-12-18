@@ -1,19 +1,20 @@
 import 'dart:io';
 
+import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:scan/scan.dart';
-// import 'package:images_picker/images_picker.dart';
+import 'package:images_picker/images_picker.dart';
 // import 'package:scan_example/scan.dart';
 
-class MyApp extends StatefulWidget {
+class QrScan extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _QrScanState createState() => _QrScanState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _QrScanState extends State<QrScan> {
   String _platformVersion = 'Unknown';
 
   String qrcode = 'Unknown';
@@ -49,7 +50,6 @@ class _MyAppState extends State<MyApp> {
               ),
               body: Column(
                 children: [
-                  Text('Running on: $_platformVersion\n'),
                   Wrap(
                     children: [
                       ElevatedButton(
@@ -71,13 +71,13 @@ class _MyAppState extends State<MyApp> {
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (_) {
-                            return ScanPage();
+                            return DashBoardQrGenerate();
                           }));
                         },
                       ),
                     ],
                   ),
-                  Text('scan result is $qrcode'),
+                  Text('$qrcode'),
                 ],
               ),
             ),

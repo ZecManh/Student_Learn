@@ -43,6 +43,7 @@ dependencies:
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
   scan: ^1.6.0
+  images_picker: ^1.2.11
   intl: ^0.18.1
   phone_number: ^2.0.1
   intl_phone_number_input: ^0.7.3+1
