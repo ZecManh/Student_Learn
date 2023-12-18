@@ -167,10 +167,10 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                       builder: (context) {
-                                                return QrScan();
+                                                return QrScanImg();
                                               }));
                                             },
-                                            icon: const Text('Quét'),
+                                            icon: const Text('Quét QR qua ảnh'),
                                           ),
                                         ],
                                       );

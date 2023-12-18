@@ -180,10 +180,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                       builder: (context) {
-                                                return DashBoardQrGenerate();
+                                                return QrScanImg();
                                               }));
                                             },
-                                            icon: Text('Tạo Mã QR'),
+                                            icon: Text('Quét Qr qua ảnh'),
                                           ),
                                         ],
                                       );

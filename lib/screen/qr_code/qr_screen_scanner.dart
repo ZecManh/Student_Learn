@@ -36,18 +36,19 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 5,
+            flex: 1,
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Center(
               child: (result != null)
                   ? Column(
                       children: [
+                        Padding(padding: EdgeInsets.all(10.0)),
                         Text('${result!.code}'),
                       ],
                     )
