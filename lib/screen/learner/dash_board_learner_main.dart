@@ -1,5 +1,6 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
+import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -197,7 +198,15 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             child: Padding(
                               padding: EdgeInsets.all(10),
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return Provider.value(
+                                          value: user, child: FindTuTor());
+                                    }),
+                                  );
+                                },
                                 icon: Icon(Icons.person_add_alt),
                                 color: Colors.white,
                               ),
