@@ -337,7 +337,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                           width: 10,
                         ),
                         Expanded(
-                          child: (widget.tutor.education?.university != null)
+                          child: (widget.tutor.education?.major != null)
                               ? Text(
                                   widget.tutor.education!.major!,
                                   style: TextStyle(fontSize: 20),
