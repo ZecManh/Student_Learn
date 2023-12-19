@@ -1,3 +1,4 @@
+import 'package:datn/screen/learner/search_tutor/register_tutor.dart';
 import 'package:flutter/material.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:intl/intl.dart';
@@ -472,7 +473,13 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                 ],
               ),
             ),
-           Center(child: OutlinedButton(onPressed: (){}, child: Text('Đăng kí học')))
+           Center(child: OutlinedButton(onPressed: (){
+             Navigator.push(
+                 context,
+                 MaterialPageRoute(
+                     builder: (context) =>
+                         RegisterTutor(tutor: widget.tutor)));
+           }, child: Text('Đăng kí học')))
           ],
         ),
       ),
