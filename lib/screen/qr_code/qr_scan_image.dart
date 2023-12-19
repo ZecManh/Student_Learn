@@ -13,29 +13,12 @@ class QrScanImg extends StatefulWidget {
 }
 
 class _QrScanImgState extends State<QrScanImg> {
-  // String _platformVersion = 'Unknown';
-
   String qrcode = '';
 
   @override
   void initState() {
     super.initState();
-    // initPlatformState();
   }
-
-  // Future<void> initPlatformState() async {
-  //   String platformVersion;
-  //   try {
-  //     platformVersion = await Scan.platformVersion;
-  //   } on PlatformException {
-  //     platformVersion = 'Failed to get platform version.';
-  //   }
-  //   if (!mounted) return;
-
-  //   setState(() {
-  //     _platformVersion = platformVersion;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +47,6 @@ class _QrScanImgState extends State<QrScanImg> {
                   },
                 ),
               )
-
               // ElevatedButton(
               //   child: Text('go scan page'),
               //   onPressed: () {

@@ -10,7 +10,7 @@ import 'package:datn/model/user/user.dart' as model_user;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
-import 'package:datn/screen/qr_code/qr_scan.dart';
+import 'package:datn/screen/qr_code/qr_scan_image.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
