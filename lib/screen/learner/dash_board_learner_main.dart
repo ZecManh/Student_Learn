@@ -135,6 +135,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
+                                      var img = NetworkImage(user.photoUrl!);
                                       var info =
                                           '\nName : ${user.displayName!}\nSố điện thoại : ${user.phone!}\nEmail : ${user.email!}';
                                       return SimpleDialog(
@@ -160,7 +161,8 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                                 return const DashBoardQrScanner();
                                               }));
                                             },
-                                            icon: const Text('Quét Mã QR'),
+                                            icon: const Text(
+                                                'Quét Qr qua camera'),
                                           ),
                                           IconButton(
                                             onPressed: () {
@@ -170,7 +172,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                                 return QrScanImg();
                                               }));
                                             },
-                                            icon: const Text('Quét QR qua ảnh'),
+                                            icon: const Text('Quét Qr qua ảnh'),
                                           ),
                                         ],
                                       );
@@ -236,10 +238,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 Radius.circular(5),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.person_add_alt,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.person_add_alt),
                                 color: Colors.white,
                               ),
                             ),
@@ -268,10 +271,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 Radius.circular(5),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.menu_book,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.edit_calendar),
                                 color: Colors.white,
                               ),
                             ),
@@ -280,7 +284,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Khoá học',
+                            'Yêu cầu',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
@@ -300,10 +304,11 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 Radius.circular(5),
                               ),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.message_outlined,
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.message_outlined),
                                 color: Colors.white,
                               ),
                             ),

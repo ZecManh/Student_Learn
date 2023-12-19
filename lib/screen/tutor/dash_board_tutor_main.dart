@@ -148,6 +148,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
+                                      var img = NetworkImage(user.photoUrl!);
                                       var info =
                                           '\nName : ${user.displayName!}\nSố điện thoại : ${user.phone!}\nEmail : ${user.email!}';
                                       return SimpleDialog(
@@ -173,7 +174,8 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                                 return const DashBoardQrScanner();
                                               }));
                                             },
-                                            icon: const Text('Quét Mã QR'),
+                                            icon: const Text(
+                                                'Quét Qr qua camera'),
                                           ),
                                           IconButton(
                                             onPressed: () {

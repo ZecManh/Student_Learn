@@ -6,22 +6,18 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 
-List<String> genders = ['Nam', 'Nữ', 'Khác'];
 
-class UpdateProfile extends StatefulWidget {
+class UpdateEducation extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _UpdateProfileState();
+    return _UpdateEducationState();
   }
 }
 
-class _UpdateProfileState extends State<UpdateProfile> {
-  late TextEditingController nameController;
-  late TextEditingController phoneController;
-  late TextEditingController dateController;
-  late TextEditingController emailController;
-  String dropDownGender = genders.first;
+class _UpdateEducationState extends State<UpdateEducation> {
+  late TextEditingController universityController;
+  late TextEditingController majorController;
+  late TextEditingController yearController;
 
   @override
   void initState() {
@@ -33,24 +29,19 @@ class _UpdateProfileState extends State<UpdateProfile> {
     // final model_user.User sendUser=Provider<model_user.User>(context);
     model_user.User sendUser =
         Provider.of<model_user.User>(context, listen: false);
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   model_user.User sendUser=Provider.of<model_user.User>(context,listen:false);
-    // });
-    nameController = TextEditingController(
-        text: (sendUser.displayName != null)
-            ? (sendUser.displayName!)
+
+    universityController = TextEditingController(
+        text: (sendUser.education?.university != null)
+            ? (sendUser.education!.university)
             : ('Vui lòng cập nhật'));
-    phoneController = TextEditingController(
-        text: (sendUser.phone != null)
-            ? (sendUser.phone!)
+    majorController = TextEditingController(
+        text: (sendUser.education?.major != null)
+            ? (sendUser.education!.major)
             : ('Vui lòng cập nhật'));
-    emailController = TextEditingController(text: sendUser.email!);
-    dateController = TextEditingController(
-        text: (sendUser.born != null)
-            ? DateFormat('yyyy-MM-dd').format(sendUser.born!.toDate())
-        // ?sendUser.born.toString()
-            : 'Vui lòng cập nhật');
-    dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
+    yearController = TextEditingController(
+        text: (sendUser.education?.year != null)
+            ? (sendUser.education!.year)
+            : ('Vui lòng cập nhật'));
   }
 
   @override
@@ -69,7 +60,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Thông tin cá nhân'),
+              title: Text('Trình độ học vấn'),
             ),
             body: SingleChildScrollView(
               child: Center(
@@ -82,27 +73,15 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       SizedBox(
                         height: 20,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: CircleAvatar(
-                            backgroundImage: (user.photoUrl != null)
-                                ? NetworkImage(user.photoUrl!)
-                                : AssetImage('assets/bear.jpg')
-                                    as ImageProvider,
-                            radius: 80),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
                       TextFormField(
                         keyboardType: TextInputType.name,
-                        controller: nameController,
+                        controller: universityController,
                         obscureText: false,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context).colorScheme.background,
                           border: const OutlineInputBorder(),
-                          labelText: 'Họ và tên',
+                          labelText: 'Trường Đại Học',
                         ),
                       ),
                       SizedBox(
@@ -110,72 +89,30 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       ),
                       TextFormField(
                         keyboardType: TextInputType.name,
-                        controller: phoneController,
+                        controller: majorController,
                         obscureText: false,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context).colorScheme.background,
                           border: const OutlineInputBorder(),
-                          labelText: 'Số điện thoại',
+                          labelText: 'Ngành học',
                         ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       TextFormField(
-                        enabled: false,
+                        enabled: true,
                         keyboardType: TextInputType.name,
-                        controller: emailController,
+                        controller: yearController,
                         obscureText: false,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Theme.of(context).colorScheme.background,
                           border: const OutlineInputBorder(),
-                          labelText: 'Địa chỉ email',
+                          labelText: 'Năm học',
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      DropdownMenu<String>(
-                        menuStyle: MenuStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).colorScheme.background)),
-                        initialSelection: dropDownGender,
-                        onSelected: (String? gender) {
-                          dropDownGender = gender!;
-                        },
-                        dropdownMenuEntries: genders.map((value) {
-                          return DropdownMenuEntry<String>(
-                              value: value, label: value);
-                        }).toList(),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                          controller: dateController,
-                          readOnly: true,
-                          keyboardType: TextInputType.datetime,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.background,
-                            border: const OutlineInputBorder(),
-                            labelText: 'Sinh nhật',
-                          ),
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1950),
-                                lastDate: DateTime.now());
-                            if (pickedDate != null) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              dateController.text = formattedDate;
-                            }
-                          }),
                       SizedBox(
                         height: 20,
                       ),
@@ -201,14 +138,25 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        DateTime date =
-                                            DateTime.parse(dateController.text);
-                                        firestoreService.updateInfo(
-
-                                            nameController.text,
-                                            phoneController.text,
-                                            Timestamp.fromDate(date),
-                                            dropDownGender);
+                                        model_user.Education education =
+                                            model_user.Education(
+                                                university:
+                                                    (universityController
+                                                                .text !=
+                                                            "Vui lòng cập nhật")
+                                                        ? universityController
+                                                            .text
+                                                        : null,
+                                                major: (majorController.text !=
+                                                        "Vui lòng cập nhật")
+                                                    ? majorController.text
+                                                    : null,
+                                                year: (yearController.text !=
+                                                        "Vui lòng cập nhật")
+                                                    ? yearController.text
+                                                    : null);
+                                        firestoreService.updateEducation(
+                                           education);
                                         Navigator.pop(context, 'OK');
                                       },
                                       child: const Text('OK'),
@@ -226,7 +174,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,)
+                      SizedBox(
+                        height: 20,
+                      )
                     ],
                   ),
                 ),

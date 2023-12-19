@@ -1,9 +1,13 @@
-import 'package:datn/model/user/user.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:datn/screen/widget/mini_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../../database/storage/firebase_storage.dart';
 
 class TutorInfo extends StatefulWidget {
   const TutorInfo({super.key});
@@ -16,7 +20,8 @@ class TutorInfo extends StatefulWidget {
 
 class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
   late final TabController _tabController;
-
+  FirestoreService firestoreService = FirestoreService();
+  FirebaseStorageService firebaseStorageService = FirebaseStorageService();
   @override
   void initState() {
     super.initState();
@@ -33,7 +38,8 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
+    model_user.User user = Provider.of<model_user.User>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tổng quan'),
@@ -88,12 +94,28 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                CircleAvatar(
-                                    backgroundImage: (user.photoUrl != null)
-                                        ? NetworkImage(user.photoUrl!)
-                                        : AssetImage('assets/bear.jpg')
-                                            as ImageProvider,
-                                    radius: 80),
+                                GestureDetector(
+                                  onTap: firebaseStorageService.uploadImage,
+                                  child: StreamBuilder<model_user.User>(
+                                      stream: firestoreService.user(FirebaseAuth.instance.currentUser!.uid),
+                                      builder:
+                                          (context, AsyncSnapshot<model_user.User> snapshot) {
+                                        model_user.User? user = snapshot.data;
+                                        if (user != null) {
+                                          return CircleAvatar(
+                                              backgroundImage: (user.photoUrl != null)
+                                                  ? NetworkImage(user.photoUrl!)
+                                                  : AssetImage('assets/bear.jpg')
+                                              as ImageProvider,
+                                              radius: 50);
+                                        } else {
+                                          return CircleAvatar(
+                                            backgroundImage: AssetImage('assets/bear.jpg'),
+                                            radius: 50,
+                                          );
+                                        }
+                                      }),
+                                ),
                               ]),
                         ),
                         Padding(
@@ -280,7 +302,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             (user.born != null)
                                 ? Expanded(
                                     child: Text(
-                                      (int.parse(DateFormat('yyyy').format(user.born!.toDate()))-int.parse(DateFormat('yyyy').format(DateTime.now()))).toString(),
+                                      (int.parse(DateFormat('yyyy').format(DateTime.now()))-int.parse(DateFormat('yyyy').format(user.born!.toDate()))).toString(),
                                       textAlign: TextAlign.start,
                                       style: TextStyle(fontSize: 20),
                                     ),
@@ -396,7 +418,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                             Expanded(
                               child: (user.education?.university != null)
                                   ? Text(
-                                      user.education!.university!,
+                                      user.education!.major!,
                                       style: TextStyle(fontSize: 20),
                                     )
                                   : Text('Chưa cập nhât',

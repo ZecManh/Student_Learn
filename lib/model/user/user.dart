@@ -18,63 +18,52 @@ class User {
 
   User(
       {this.address,
-        this.born,
-        this.displayName,
-        this.education,
-        this.email,
-        this.gender,
-        this.phone,
-        this.photoUrl,
-        this.subjects,
-        this.teachAddress,
-        this.teachMethod,
-        this.uid,
-        this.verify,
-        this.experience});
+      this.born,
+      this.displayName,
+      this.education,
+      this.email,
+      this.gender,
+      this.phone,
+      this.photoUrl,
+      this.subjects,
+      this.teachAddress,
+      this.teachMethod,
+      this.uid,
+      this.verify,
+      this.experience,
+      });
 
   User.fromJson(Map<dynamic, dynamic> json) {
     address =
-    json['address'] != null ? Address.fromJson(json['address']) : null;
-    born = json['born']!=null?(json['born']):null;
+        json['address'] != null ? Address.fromJson(json['address']) : null;
+    born = json['born'] != null ? (json['born']) : null;
     displayName = json['display_name'];
     education = json['education'] != null
-        ?  Education.fromJson(json['education'])
+        ? Education.fromJson(json['education'])
         : null;
     email = json['email'];
     gender = json['gender'];
     phone = json['phone'];
     photoUrl = json['photo_url'];
-    subjects = (json['subjects']!=null)?json['subjects'].cast<String>():null;
-    teachAddress =(json['teach_address']!=null)?json['teach_address'].cast<String>():null;
-    teachMethod =(json['teach_method']!=null)?json['teach_method'].cast<String>():null;
+    subjects =
+        (json['subjects'] != null) ? json['subjects'].cast<String>() : null;
+    teachAddress = (json['teach_address'] != null)
+        ? json['teach_address'].cast<String>()
+        : null;
+    teachMethod = (json['teach_method'] != null)
+        ? json['teach_method'].cast<String>()
+        : null;
     uid = json['uid'];
     verify = json['verify'];
     experience = json['experience'];
 
-    print("JSON" + json.toString());
-    print("TO STRING "+toString());
 
-    // address =
-    // json['address'] != null ? Address.fromJson(json['address']) : null;
-    // born = json['born']?? null;
-    // displayName = json['display_name']??null;
-    // education = json['education'] != null
-    //     ?  Education.fromJson(json['education'])
-    //     : null;
-    // email = json['email']??null;
-    // gender = json['gender']??null;
-    // phone = json['phone']??null;
-    // photoUrl = json['photo_url']??null;
-    // subjects = json['subjects']??null;
-    // teachAddress = json['teach_address']??null;
-    // teachMethod = json['teach_method']??null;
-    // uid = json['uid']??null;
-    // verify = json['verify']??null;
-    // experience = json['experience']??null;
+    // print("JSON" + json.toString());
+    // print("TO STRING " + toString());
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.address != null) {
       data['address'] = this.address!.toJson();
     }
@@ -93,6 +82,7 @@ class User {
     data['uid'] = this.uid;
     data['verify'] = this.verify;
     data['experience'] = this.experience;
+
     return data;
   }
 
@@ -116,7 +106,7 @@ class Address {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['province'] = this.province;
     data['district'] = this.district;
     data['ward'] = this.ward;
@@ -143,7 +133,7 @@ class Education {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['major'] = this.major;
     data['university'] = this.university;
     data['year'] = this.year;

@@ -35,9 +35,7 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
   FirestoreService firestoreService = FirestoreService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
   FirebaseAuth auth = FirebaseAuth.instance;
-  ImagePicker imagePicker = ImagePicker();
-  XFile? returnImage;
-  File? selectedImage;
+
 
   @override
   void dispose() {
@@ -49,7 +47,6 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initUserInfo();
 
@@ -67,32 +64,7 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
     phoneController = TextEditingController(text: userInit.phone);
   }
 
-  Future uploadImage() async {
-    FirebaseStorage storage = firebaseStorageService.storage;
-    Reference folderReference =
-        storage.ref('user_images/${auth.currentUser!.uid}/avatar/');
 
-    //upload new image
-    returnImage = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (returnImage != null) {
-      selectedImage = File(returnImage!.path);
-      print('return image path $returnImage');
-      print('selectedImage $selectedImage');
-      try {
-        Reference imageRef = folderReference.child(returnImage!.name);
-        print('imageRef $imageRef');
-        await imageRef.putFile(selectedImage!);
-        String imageUrl = await imageRef.getDownloadURL();
-        print('Image URL ' + imageUrl);
-        firestoreService.updateImageUrl(auth.currentUser!.uid, imageUrl);
-        //store imageUrl to firestore
-      } catch (error) {
-        print(error);
-      }
-    }
-  }
-
-  // Future<List<String>>
   @override
   Widget build(BuildContext context) {
 
@@ -110,7 +82,7 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: uploadImage,
+                  onTap: firebaseStorageService.uploadImage,
                   child: StreamBuilder<model_user.User>(
                       stream: firestoreService.user(auth.currentUser!.uid),
                       builder:
@@ -270,7 +242,6 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
                                 print(phoneController.text);
                                 print('dropdown gender $dropDownGender');
                                 firestoreService.updateInfo(
-                                    auth.currentUser!.uid,
                                     nameController.text,
                                     phoneController.text,
                                     Timestamp.fromDate(
