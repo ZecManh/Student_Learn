@@ -437,85 +437,90 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-                // Card(
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(20),
-                //     side: BorderSide(
-                //         style: BorderStyle.solid,
-                //         color: Theme.of(context).colorScheme.primary),
-                //   ),
-                //   color: Theme.of(context).colorScheme.background,
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       SizedBox(
-                //         height: 20,
-                //       ),
-                //       Center(
-                //         child: Text(
-                //           'Môn dạy kèm',
-                //           style: TextStyle(fontSize: 20),
-                //         ),
-                //       ),
-                //       SizedBox(height: 10),
-                //       (user.subjects != null)
-                //           ? Wrap(
-                //               children: [
-                //                 ...user.subjects!.map((subjectName) =>
-                //                     MiniCard(cardName: subjectName))
-                //                 // for (String subject in user.subjects!) ...[SubjectCard(subjectName: subject)]
-                //               ],
-                //             )
-                //           : Center(
-                //               child: Text(
-                //                 'Chưa cập nhật',
-                //                 style: TextStyle(
-                //                     fontSize: 20,
-                //                     color: Theme.of(context).colorScheme.error),
-                //               ),
-                //             ),
-                //       SizedBox(
-                //         height: 10,
-                //       )
-                //     ],
-                //   ),
-                // ),
-                // Card(
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(20),
-                //     side: BorderSide(
-                //         style: BorderStyle.solid,
-                //         color: Theme.of(context).colorScheme.primary),
-                //   ),
-                //   color: Theme.of(context).colorScheme.background,
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       SizedBox(
-                //         height: 20,
-                //       ),
-                //       Center(
-                //         child: Text(
-                //           'Khu vực dạy kèm tại nhà',
-                //           style: TextStyle(fontSize: 20),
-                //         ),
-                //       ),
-                //       (user.teachAddress != null)
-                //           ? Wrap(
-                //               children: [
-                //                 ...user.teachAddress!
-                //                     .map((item) => MiniCard(cardName: item))
-                //               ],
-                //             )
-                //           : Text(
-                //               'Chưa cập nhật',
-                //               style: TextStyle(
-                //                   fontSize: 20,
-                //                   color: Theme.of(context).colorScheme.error),
-                //             ),
-                //     ],
-                //   ),
-                // ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                        style: BorderStyle.solid,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                  color: Theme.of(context).colorScheme.background,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                          'Môn dạy kèm',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      (user.subjects != null)
+                          ? Wrap(
+                              children: [
+                                ...user.subjects!.map((subjectName) =>
+                                    MiniCard(cardName: subjectName))
+                                // for (String subject in user.subjects!) ...[SubjectCard(subjectName: subject)]
+                              ],
+                            )
+                          : Center(
+                              child: Text(
+                                'Chưa cập nhật',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).colorScheme.error),
+                              ),
+                            ),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                        style: BorderStyle.solid,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                  color: Theme.of(context).colorScheme.background,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                          'Khu vực dạy kèm tại nhà',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      SizedBox(height: 20,)
+                      ,
+                      (user.teachAddress != null)
+                          ? Wrap(
+                              children: [
+                                ...user.teachAddress!
+                                    .map((item) => MiniCard(cardName: item))
+                              ],
+                            )
+                          : Center(
+                            child: Text(
+                                'Chưa cập nhật',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).colorScheme.error),
+                              ),
+                          ),
+                      SizedBox(height: 20,)
+                    ],
+                  ),
+                ),
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),

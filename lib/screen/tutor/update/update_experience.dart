@@ -36,7 +36,7 @@ class _UpdateExperienceState extends State<UpdateExperience> {
     model_user.User sendUser =
         Provider.of<model_user.User>(context, listen: false);
     experienceController.text =
-        (sendUser.experience != null) ? sendUser.experience! : "Cap nhat";
+        (sendUser.experience != null) ? sendUser.experience! : "";
   }
 
   @override

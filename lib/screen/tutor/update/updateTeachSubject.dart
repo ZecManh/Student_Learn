@@ -28,7 +28,9 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
   initInfo() {
     model_user.User sendUser =
         Provider.of<model_user.User>(context, listen: false);
-    subjects = (sendUser.subjects != null) ? sendUser.subjects! : [];
+    print("init info");
+    print("subject : " + sendUser.subjects.toString());
+    subjects.addAll(sendUser.subjects??[]);
     subjectController = TextEditingController();
   }
 
@@ -60,7 +62,7 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                     children: [
                       Card(
                         color: Theme.of(context).colorScheme.background,
-                        child: (user.teachMethod != null)
+                        child: (subjects != null)
                             ? Wrap(
                                 children: [
                                   ...subjects.map((item) {
@@ -86,12 +88,14 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                   })
                                 ],
                               )
-                            : Text(
-                                'Chưa cập nhật',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).colorScheme.error),
-                              ),
+                            : Center(
+                              child: Text(
+                                  'Chưa cập nhật',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Theme.of(context).colorScheme.error),
+                                ),
+                            ),
                       ),
                       SizedBox(
                         height: 20,
@@ -117,6 +121,7 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                   if (subjectController.text != "") {
                                     setState(() {
                                       subjects.add(subjectController.text);
+                                      print("add new subject");
                                       subjectController.clear();
                                     });
                                   }
