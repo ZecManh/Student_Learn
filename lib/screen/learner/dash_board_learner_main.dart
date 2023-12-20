@@ -3,6 +3,8 @@ import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/qr_code/qr_scan_image.dart';
+import 'package:datn/screen/qr_code/qr_scan_image_learner.dart';
+import 'package:datn/screen/qr_code/qr_screen_scanner_info_learner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -136,30 +138,36 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      var img = NetworkImage(user.photoUrl!);
+                                      // var img = NetworkImage(user.photoUrl!);
                                       var info =
-                                          '\nName : ${user.displayName!}\nSố điện thoại : ${user.phone!}\nEmail : ${user.email!}';
+                                          '\nName : ${user.displayName}\nSố điện thoại : ${user.phone}\nEmail : ${user.email}';
                                       return SimpleDialog(
                                         contentPadding:
                                             const EdgeInsets.all(10.0),
                                         children: [
                                           Center(child: Text('Mã QR của tôi')),
                                           Center(
-                                              child: QrImageView(
-                                            data: user.displayName != null &&
-                                                    user.phone != null &&
-                                                    user.email != null
-                                                ? info
-                                                : 'Qrcode sẽ chứa thông tin(Tên-SDT-Email) khi bạn điền đầy đủ thông tin',
-                                            version: QrVersions.auto,
-                                            size: 200.0,
-                                          )),
+                                              child: (user.displayName !=
+                                                          null &&
+                                                      user.phone != null &&
+                                                      user.email != null)
+                                                  ? QrImageView(
+                                                      data: info,
+                                                      version: QrVersions.auto,
+                                                      size: 200.0,
+                                                    )
+                                                  : QrImageView(
+                                                      data:
+                                                          'Dữ liệu chưa được cập nhật khi chưa điền đủ thông tin',
+                                                      version: QrVersions.auto,
+                                                      size: 200.0,
+                                                    )),
                                           IconButton(
                                             onPressed: () {
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                       builder: (context) {
-                                                return const DashBoardQrScanner();
+                                                return const DashBoardQrScannerLearner();
                                               }));
                                             },
                                             icon: const Text(
@@ -170,7 +178,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                       builder: (context) {
-                                                return QrScanImg();
+                                                return QrScanImgLearner();
                                               }));
                                             },
                                             icon: const Text('Quét Qr qua ảnh'),

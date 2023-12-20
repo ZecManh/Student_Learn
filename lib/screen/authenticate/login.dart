@@ -214,17 +214,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           GestureDetector(
-                            child: const Text('Đăng nhập bằng qr'),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return QrScanImg();
-                                }),
-                              );
-                            },
-                          ),
-                          GestureDetector(
                             child: const Text('Quên mật khẩu?'),
                             onTap: () {
                               Navigator.push(context,
