@@ -87,6 +87,8 @@ class _FindTutorState extends State<FindTuTor> {
         body: Builder(
           builder: (BuildContext context) {
             model_user.User user = Provider.of<model_user.User>(context);
+            print("user find tutor " );
+            users.forEach((element) {print("find tutor  "+element.toString());});
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

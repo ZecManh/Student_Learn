@@ -44,7 +44,7 @@ class SubjectRequest {
     data['subject'] = this.subject;
     data['state'] = this.state;
     data['teach_method'] = this.teachMethod;
-    data['teach_schedules'] = this.schedules;
+    data['teach_schedules'] = (this.schedules!= null)?this.schedules!.toJson():null;
     if (this.address != null) {
       data['address'] = this.address!.toJson();
     }

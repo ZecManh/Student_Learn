@@ -4,6 +4,9 @@ import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../model/user/teach_schedules.dart';
+import '../../model/user/user.dart';
+
 class FirestoreService extends ChangeNotifier {
   static String USER_DOC = "users";
   static String SUBJECT_REQUEST_DOC = "subject_request";
@@ -162,6 +165,25 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {
       print('Error querying Firestore: $e');
     }
+    // return users;
+    users.retainWhere((element) {
+      if(element.subjects!=null){
+        if(element!.subjects!.length>0){
+          return true;
+        }
+        return false;
+      }
+      return false;
+    });
     return users;
+  }
+
+  Future<void> addSubjectRequest(String subject,String teachMethod,TeachSchedules schedules,Address address,Timestamp startTime,Timestamp endTime)
+  async {
+      SubjectRequest subjectRequest = SubjectRequest(learnerId: FirebaseAuth.instance.currentUser!.uid,subject: subject,state:"Pending",teachMethod: teachMethod,schedules: schedules,address: address,createdTime: Timestamp.now(),startTime: startTime,endTime: endTime);
+      print("Subject Request" + subjectRequest.toString());
+      await firestore
+          .collection('subject_requests')
+          .add(subjectRequest.toJson());
   }
 }

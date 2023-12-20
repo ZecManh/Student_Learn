@@ -59,6 +59,7 @@ dependencies:
   vn_provinces: ^0.0.2
   easy_search_bar: ^2.5.0
   cached_network_image: ^3.3.0
+  day_night_time_picker: ^1.3.0+1
 
 dev_dependencies:
   flutter_test:
