@@ -18,44 +18,44 @@ class TeachSchedules {
 
   TeachSchedules.fromJson(Map<String, dynamic> json) {
     monday =
-    json['monday'] != null ? new Period.fromJson(json['monday']) : null;
+    json['monday'] != null ? Period.fromJson(json['monday']) : null;
     tuesday =
-    json['tuesday'] != null ? new Period.fromJson(json['tuesday']) : null;
+    json['tuesday'] != null ? Period.fromJson(json['tuesday']) : null;
     wednesday =
-    json['wednesday'] != null ? new Period.fromJson(json['wednesday']) : null;
+    json['wednesday'] != null ? Period.fromJson(json['wednesday']) : null;
     thursday =
-    json['thursday'] != null ? new Period.fromJson(json['thursday']) : null;
+    json['thursday'] != null ? Period.fromJson(json['thursday']) : null;
     friday =
-    json['friday'] != null ? new Period.fromJson(json['friday']) : null;
+    json['friday'] != null ? Period.fromJson(json['friday']) : null;
     saturday = json['saturday'] != null
-        ? new Period.fromJson(json['saturday'])
+        ? Period.fromJson(json['saturday'])
         : null;
     sunday =
-    json['sunday'] != null ? new Period.fromJson(json['sunday']) : null;
+    json['sunday'] != null ? Period.fromJson(json['sunday']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.sunday != null) {
-      data['sunday'] = this.sunday!.toJson();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (sunday != null) {
+      data['sunday'] = sunday!.toJson();
     }
-    if (this.saturday != null) {
-      data['saturday'] = this.saturday!.toJson();
+    if (saturday != null) {
+      data['saturday'] = saturday!.toJson();
     }
-    if (this.tuesday != null) {
-      data['tuesday'] = this.tuesday!.toJson();
+    if (tuesday != null) {
+      data['tuesday'] = tuesday!.toJson();
     }
-    if (this.friday != null) {
-      data['friday'] = this.friday!.toJson();
+    if (friday != null) {
+      data['friday'] = friday!.toJson();
     }
-    if (this.thursday != null) {
-      data['thursday'] = this.thursday!.toJson();
+    if (thursday != null) {
+      data['thursday'] = thursday!.toJson();
     }
-    if (this.wednesday != null) {
-      data['wednesday'] = this.wednesday!.toJson();
+    if (wednesday != null) {
+      data['wednesday'] = wednesday!.toJson();
     }
-    if (this.monday != null) {
-      data['monday'] = this.monday!.toJson();
+    if (monday != null) {
+      data['monday'] = monday!.toJson();
     }
     return data;
   }
@@ -78,9 +78,9 @@ class Period {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['start_time'] = startTime;
+    data['end_time'] = endTime;
     return data;
   }
 

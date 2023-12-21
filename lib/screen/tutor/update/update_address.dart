@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:http/http.dart' as http;
@@ -39,8 +37,8 @@ class _UpdateAddressState extends State<UpdateAddress> {
   }
 
   initInfo() {
-    model_user.User sendUser =
-        Provider.of<model_user.User>(context, listen: false);
+    // model_user.User sendUser =
+    //     Provider.of<model_user.User>(context, listen: false);
   }
 
   Future getProvince() async {
@@ -74,26 +72,22 @@ class _UpdateAddressState extends State<UpdateAddress> {
         return Province.fromJson(e);
       }).toList();
       provinceFromJson.forEach((element) {
-        print(element.toString());
       });
       setState(() {
         provinces = List.from(provinceFromJson);
         dropDownProvince = provinces.first;
       });
     } else {
-      print('Request failed with status: ${response.statusCode}.');
     }
   }
 
   Future getDistrictByProvince(int code) async{
     final url=Uri.https('provinces.open-api.vn','/api/p/$code/',{'depth':'3',});
-    print("url "+url.toString());
     var response=await http.get(url);
     if (response.statusCode == 200) {
       var jsonDecoded=convert.utf8.decoder.convert(response.body.codeUnits);
       var jsonResponse=convert.jsonDecode(jsonDecoded) as Map<String,dynamic>;
       Province province=Province.fromJson(jsonResponse);
-      print(province.toString());
       setState(() {
         districts=List.from(province.districts!);
         dropDownDistrict=districts[0];
@@ -123,22 +117,22 @@ class _UpdateAddressState extends State<UpdateAddress> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Thông tin địa chỉ'),
+              title: const Text('Thông tin địa chỉ'),
             ),
             body: SingleChildScrollView(
               child: Card(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child:  Row(
                       children: [ Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text('Tỉnh / Thành Phố',style: TextStyle(fontSize: 20),),
-                              SizedBox(
+                              const Text('Tỉnh / Thành Phố',style: TextStyle(fontSize: 20),),
+                              const SizedBox(
                                 height: 10,
                               ),
                               DropdownMenu<Province>(
@@ -147,7 +141,6 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                   onSelected: (Province? newProvince) {
                                     setState(() {
                                       dropDownProvince = newProvince!;
-                                      print(newProvince.toString());
                                       getDistrictByProvince(newProvince.code!);
                                     });
                                   },
@@ -157,11 +150,11 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                         label: item.name!,
                                         style: ButtonStyle(
                                             textStyle: MaterialStateProperty.all(
-                                                TextStyle(color: Colors.white))));
+                                                const TextStyle(color: Colors.white))));
                                   }).toList()),
-                              SizedBox(height: 20,),
-                              Text('Quận / Huyện',style: TextStyle(fontSize: 20),),
-                             SizedBox(height: 10,),
+                              const SizedBox(height: 20,),
+                              const Text('Quận / Huyện',style: TextStyle(fontSize: 20),),
+                             const SizedBox(height: 10,),
                              DropdownMenu<Districts>(
                                     width: MediaQuery.of(context).size.width-60,
                                     initialSelection: dropDownDistrict,
@@ -169,36 +162,34 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                       setState(() {
                                         dropDownDistrict = newDistricts!;
                                         wards=newDistricts.wards!;
-                                        print(newDistricts.toString());
                                       });
                                     },
                                     dropdownMenuEntries:
                                     districts.map((item){
                                       return DropdownMenuEntry<Districts>(value: item!, label: item.name!,style:ButtonStyle(
                                                     textStyle: MaterialStateProperty.all(
-                                                        TextStyle(color: Colors.white))));
+                                                        const TextStyle(color: Colors.white))));
                                     }).toList()),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Text('Phường / Xã',style: TextStyle(fontSize: 20),),
-                              SizedBox(height: 10,),
+                              const Text('Phường / Xã',style: TextStyle(fontSize: 20),),
+                              const SizedBox(height: 10,),
                               DropdownMenu<Wards>(
                                   width: MediaQuery.of(context).size.width-60,
                                   initialSelection: dropDownWards,
                                   onSelected: (Wards? newWards) {
                                     setState(() {
                                       dropDownWards = newWards!;
-                                      print(newWards.toString());
                                     });
                                   },
                                   dropdownMenuEntries:
                                   wards.map((item){
                                     return DropdownMenuEntry<Wards>(value: item!, label: item.name!,style:ButtonStyle(
                                         textStyle: MaterialStateProperty.all(
-                                            TextStyle(color: Colors.white))));
+                                            const TextStyle(color: Colors.white))));
                                   }).toList()),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               Center(
@@ -213,8 +204,8 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
-                                            title: Text('Xác nhận'),
-                                            content: Text(
+                                            title: const Text('Xác nhận'),
+                                            content: const Text(
                                                 'Bạn chắc chắn với sự thay đổi này?'),
                                             actions: <Widget>[
                                               TextButton(
@@ -247,7 +238,7 @@ class _UpdateAddressState extends State<UpdateAddress> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               // ...provinces

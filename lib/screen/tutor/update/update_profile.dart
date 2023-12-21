@@ -9,6 +9,8 @@ import 'package:datn/model/user/user.dart' as model_user;
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
 
 class UpdateProfile extends StatefulWidget {
+  const UpdateProfile({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -69,29 +71,29 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Thông tin cá nhân'),
+              title: const Text('Thông tin cá nhân'),
             ),
             body: SingleChildScrollView(
               child: Center(
                   child: Card(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         child: CircleAvatar(
                             backgroundImage: (user.photoUrl != null)
                                 ? NetworkImage(user.photoUrl!)
-                                : AssetImage('assets/bear.jpg')
+                                : const AssetImage('assets/bear.jpg')
                                     as ImageProvider,
                             radius: 80),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -105,7 +107,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           labelText: 'Họ và tên',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -119,7 +121,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           labelText: 'Số điện thoại',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -134,7 +136,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           labelText: 'Địa chỉ email',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       DropdownMenu<String>(
@@ -150,7 +152,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               value: value, label: value);
                         }).toList(),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -176,7 +178,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               dateController.text = formattedDate;
                             }
                           }),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       OutlinedButton(
@@ -190,8 +192,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text('Xác nhận'),
-                                  content: Text(
+                                  title: const Text('Xác nhận'),
+                                  content: const Text(
                                       'Bạn chắc chắn với sự thay đổi này?'),
                                   actions: <Widget>[
                                     TextButton(
@@ -226,7 +228,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,)
+                      const SizedBox(height: 20,)
                     ],
                   ),
                 ),

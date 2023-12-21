@@ -1,6 +1,5 @@
 import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -18,18 +17,16 @@ class _DashBoardQrState extends State<DashBoardQr> {
 
   @override
   Widget build(BuildContext context) {
-    print('dash board qr rebuild');
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Qr Code'),
+          title: const Text('Qr Code'),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Qr của tôi'),
+            const Text('Qr của tôi'),
             Center(
                 child: QrImageView(
               data: 'NhamDucManh-61TNB-DHTL',
@@ -47,10 +44,10 @@ class _DashBoardQrState extends State<DashBoardQr> {
             IconButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return DashBoardQrGenerate();
+                  return const DashBoardQrGenerate();
                 }));
               },
-              icon: Text('Qr Generate'),
+              icon: const Text('Qr Generate'),
             ),
           ],
         ),

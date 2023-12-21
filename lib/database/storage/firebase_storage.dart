@@ -18,10 +18,10 @@ class FirebaseStorageService {
     storage.ref('user_images/${FirebaseAuth.instance.currentUser!.uid}/avatar/');
     returnImage = await imagePicker.pickImage(source: ImageSource.gallery);
     if (returnImage != null) {
-      selectedImage = File(returnImage!.path);
+      selectedImage = File(returnImage.path);
       try {
-        Reference imageRef = folderReference.child(returnImage!.name);
-        await imageRef.putFile(selectedImage!);
+        Reference imageRef = folderReference.child(returnImage.name);
+        await imageRef.putFile(selectedImage);
         String imageUrl = await imageRef.getDownloadURL();
         firestoreService.updateImageUrl(imageUrl);
         //store imageUrl to firestore

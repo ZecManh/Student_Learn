@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -15,25 +14,24 @@ class _DashBoardQrGenerateState extends State<DashBoardQrGenerate> {
   String data = "";
   @override
   Widget build(BuildContext context) {
-    print('dash board qr rebuild');
 
     return SafeArea(
       child: Scaffold(
       appBar: AppBar(
-        title: Text('Qr Generate'),
+        title: const Text('Qr Generate'),
       ),
        body: Column(
          mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
          children: [
-          Text('Tạo QR'),
+          const Text('Tạo QR'),
           Center(
             child: QrImageView(
             data: data,
             version: QrVersions.auto,
             size: 200.0,
           )),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Container(
@@ -47,10 +45,10 @@ class _DashBoardQrGenerateState extends State<DashBoardQrGenerate> {
                 });
               },
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
               ),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Mời nhập dữ liệu",
                 filled: true,
                 // fillColor: AppStyle.textInputColor,

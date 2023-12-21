@@ -33,7 +33,6 @@ class _FindTutorState extends State<FindTuTor> {
     setState(() {
       users = usersFetch;
     });
-    print("user size " + users.length.toString());
     users.forEach((element) {
       print("userrrrrr " + element.toString());
     });
@@ -87,8 +86,7 @@ class _FindTutorState extends State<FindTuTor> {
         body: Builder(
           builder: (BuildContext context) {
             model_user.User user = Provider.of<model_user.User>(context);
-            print("user find tutor " );
-            users.forEach((element) {print("find tutor  "+element.toString());});
+            users.forEach((element) {});
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -106,15 +104,15 @@ class _FindTutorState extends State<FindTuTor> {
                         child: Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: CircleAvatar(
                                   backgroundImage: (itemUser.photoUrl != null)
                                       ? NetworkImage(itemUser.photoUrl!)
-                                      : AssetImage('assets/bear.jpg')
+                                      : const AssetImage('assets/bear.jpg')
                                           as ImageProvider,
                                   radius: 40),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Column(

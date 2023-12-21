@@ -9,10 +9,10 @@ class MiniCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Text(
               cardName,
-              style: TextStyle(fontSize: 14),
+              style: const TextStyle(fontSize: 14),
             )));
   }
 }

@@ -22,7 +22,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin gia sư'),
+        title: const Text('Thông tin gia sư'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -39,15 +39,15 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     CircleAvatar(
                         backgroundImage: (widget.tutor.photoUrl != null)
                             ? NetworkImage(widget.tutor.photoUrl!)
-                            : AssetImage('assets/bear.jpg') as ImageProvider,
+                            : const AssetImage('assets/bear.jpg') as ImageProvider,
                         radius: 50),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -73,7 +73,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                       shape: const OutlineInputBorder(borderSide: BorderSide()),
                       color: Theme.of(context).colorScheme.background,
                       child: Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: (widget.tutor.verify == true)
                             ? Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -88,7 +88,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                           fontSize: 20,
                                           fontStyle: FontStyle.italic),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Icon(
@@ -105,7 +105,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                               ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     )
                   ],
@@ -123,10 +123,10 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Center(
+                  const Center(
                     child: Text(
                       'Kinh nghiệm',
                       style: TextStyle(fontSize: 20),
@@ -137,7 +137,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                     children: [
                       Expanded(
                           child: Padding(
-                        padding: EdgeInsets.all(30),
+                        padding: const EdgeInsets.all(30),
                         child: (widget.tutor.experience != null)
                             ? Text(
                                 widget.tutor.experience!,
@@ -171,25 +171,25 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: Row(
                       children: [
-                        Icon(Icons.person_2_outlined),
-                        SizedBox(
+                        const Icon(Icons.person_2_outlined),
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        const Text(
                           'Giới tính : ',
                           style: TextStyle(fontSize: 20),
                         ),
                         (widget.tutor.gender != null)
                             ? Text(
                                 widget.tutor.gender!,
-                                style: TextStyle(fontSize: 20),
+                                style: const TextStyle(fontSize: 20),
                               )
                             : Text(
                                 '',
@@ -197,28 +197,28 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                     fontSize: 20,
                                     color: Theme.of(context).colorScheme.error),
                               ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: Row(
                       children: [
-                        Icon(Icons.info_outline),
-                        SizedBox(
+                        const Icon(Icons.info_outline),
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        const Text(
                           'Tuổi :',
                           style: TextStyle(fontSize: 20),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         (widget.tutor.born != null)
@@ -230,7 +230,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                               widget.tutor.born!.toDate())))
                                       .toString(),
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 20),
+                                  style: const TextStyle(fontSize: 20),
                                 ),
                               )
                             : Expanded(
@@ -246,21 +246,21 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: Row(children: [
-                      Icon(Icons.location_on_outlined),
-                      SizedBox(
+                      const Icon(Icons.location_on_outlined),
+                      const SizedBox(
                         width: 10,
                       ),
-                      Text(
+                      const Text(
                         'Đang ở :',
                         style: TextStyle(fontSize: 20),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Expanded(
@@ -279,7 +279,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                       (widget.tutor.address!.province != null
                                           ? (widget.tutor.address!.province!)
                                           : '')),
-                                  style: TextStyle(fontSize: 20),
+                                  style: const TextStyle(fontSize: 20),
                                 )
                               : Text(
                                   textAlign: TextAlign.start,
@@ -291,23 +291,23 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                 ))
                     ]),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: Row(
                       children: [
-                        Icon(Icons.school_outlined),
-                        SizedBox(
+                        const Icon(Icons.school_outlined),
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text('Trường : ', style: TextStyle(fontSize: 20)),
+                        const Text('Trường : ', style: TextStyle(fontSize: 20)),
                         Expanded(
                           child: (widget.tutor.education?.university != null)
                               ? Text(
                                   widget.tutor.education!.university!,
-                                  style: TextStyle(fontSize: 20),
+                                  style: const TextStyle(fontSize: 20),
                                 )
                               : Text('',
                                   style: TextStyle(
@@ -318,29 +318,29 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                     child: Row(
                       children: [
-                        Icon(Icons.class_outlined),
-                        SizedBox(
+                        const Icon(Icons.class_outlined),
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        const Text(
                           'Ngành :',
                           style: TextStyle(fontSize: 20),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: (widget.tutor.education?.major != null)
                               ? Text(
                                   widget.tutor.education!.major!,
-                                  style: TextStyle(fontSize: 20),
+                                  style: const TextStyle(fontSize: 20),
                                 )
                               : Text('',
                                   style: TextStyle(
@@ -351,7 +351,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                 ],
@@ -368,16 +368,16 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Center(
+                  const Center(
                     child: Text(
                       'Môn dạy kèm',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   (widget.tutor.subjects != null)
                       ? Wrap(
                           children: [
@@ -393,7 +393,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                 color: Theme.of(context).colorScheme.error),
                           ),
                         ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   )
                 ],
@@ -410,10 +410,10 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Center(
+                  const Center(
                     child: Text(
                       'Khu vực dạy kèm tại nhà',
                       style: TextStyle(fontSize: 20),
@@ -435,51 +435,14 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                 ],
               ),
             ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                    style: BorderStyle.solid,
-                    color: Theme.of(context).colorScheme.primary),
-              ),
-              color: Theme.of(context).colorScheme.background,
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: Text(
-                      'Phương thức giảng dạy',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: (widget.tutor.teachMethod != null)
-                          ? Wrap(
-                              children: [
-                                ...widget.tutor.teachMethod!
-                                    .map((item) => MiniCard(cardName: item)),
-                              ],
-                            )
-                          : Text(
-                              '',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Theme.of(context).colorScheme.error),
-                            ))
-                ],
-              ),
-            ),
+
            Center(child: OutlinedButton(onPressed: (){
              Navigator.push(
                  context,
                  MaterialPageRoute(
                      builder: (context) =>
                          RegisterTutor(tutor: widget.tutor)));
-           }, child: Text('Đăng kí học')))
+           }, child: const Text('Đăng kí học')))
           ],
         ),
       ),

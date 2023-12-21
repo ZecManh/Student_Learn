@@ -9,7 +9,7 @@ class SubjectRequest {
   String? state;
   String? teachMethod;
   TeachSchedules? schedules;
-  Address? address;
+  String? address;
   Timestamp? createdTime;
   Timestamp? startTime;
   Timestamp? endTime;
@@ -30,9 +30,10 @@ class SubjectRequest {
     subject = json['subject'];
     state = json['state'];
     teachMethod = json['teach_method'];
-    schedules = (json['schedules'] != null) ? TeachSchedules.fromJson(json['schedules']) : null;
-    address =
-        json['address'] != null ? Address.fromJson(json['address']) : null;
+    schedules = (json['schedules'] != null)
+        ? TeachSchedules.fromJson(json['schedules'])
+        : null;
+    address = json['address'] != null ? json['address'] : null;
     createdTime = json['created_time'];
     startTime = json['start_time'];
     endTime = json['end_time'];
@@ -40,17 +41,15 @@ class SubjectRequest {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['learner_id'] = this.learnerId;
-    data['subject'] = this.subject;
-    data['state'] = this.state;
-    data['teach_method'] = this.teachMethod;
-    data['teach_schedules'] = (this.schedules!= null)?this.schedules!.toJson():null;
-    if (this.address != null) {
-      data['address'] = this.address!.toJson();
-    }
-    data['created_time'] = this.createdTime;
-    data['start_time'] = this.startTime;
-    data['end_time'] = this.endTime;
+    data['learner_id'] = learnerId;
+    data['subject'] = subject;
+    data['state'] = state;
+    data['teach_method'] = teachMethod;
+    data['teach_schedules'] = (schedules != null) ? schedules!.toJson() : null;
+    data['address'] = address;
+    data['created_time'] = createdTime;
+    data['start_time'] = startTime;
+    data['end_time'] = endTime;
     return data;
   }
 

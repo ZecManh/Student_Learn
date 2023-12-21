@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/database/storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:provider/provider.dart';
@@ -92,11 +88,11 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
                           return CircleAvatar(
                               backgroundImage: (user.photoUrl != null)
                                   ? NetworkImage(user.photoUrl!)
-                                  : AssetImage('assets/bear.jpg')
+                                  : const AssetImage('assets/bear.jpg')
                                       as ImageProvider,
                               radius: 50);
                         } else {
-                          return CircleAvatar(
+                          return const CircleAvatar(
                             backgroundImage: AssetImage('assets/bear.jpg'),
                             radius: 50,
                           );
@@ -112,7 +108,6 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
                       onPressed: () {
                         setState(() {
                           isEdit = !isEdit;
-                          print(isEdit);
                         });
                       },
                       icon: const Icon(Icons.edit),
@@ -238,9 +233,6 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
                                 Theme.of(context).colorScheme.background)),
                         onPressed: isEdit
                             ? () {
-                                print('update');
-                                print(phoneController.text);
-                                print('dropdown gender $dropDownGender');
                                 firestoreService.updateInfo(
                                     nameController.text,
                                     phoneController.text,
