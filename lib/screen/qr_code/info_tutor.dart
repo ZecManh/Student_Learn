@@ -9,16 +9,16 @@ import 'package:provider/provider.dart';
 
 import '../../../database/storage/firebase_storage.dart';
 
-class TutorInfo extends StatefulWidget {
-  const TutorInfo({super.key});
+class InfoTutor extends StatefulWidget {
+  const InfoTutor({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _TutorInfoState();
+    return _InfoTutorState();
   }
 }
 
-class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
+class _InfoTutorState extends State<InfoTutor> with TickerProviderStateMixin {
   late final TabController _tabController;
   FirestoreService firestoreService = FirestoreService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
@@ -95,6 +95,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 GestureDetector(
+                                  onTap: firebaseStorageService.uploadImage,
                                   child: StreamBuilder<model_user.User>(
                                       stream: firestoreService.user(FirebaseAuth
                                           .instance.currentUser!.uid),

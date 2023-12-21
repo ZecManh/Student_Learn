@@ -26,9 +26,7 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
 
   @override
   Widget build(BuildContext context) {
-    // model_user.User user = Provider.of<model_user.User>(context);
-    // FirebaseAuth auth = firebaseAuthService.auth;
-    // FirestoreService firestoreService = Provider.of<FirestoreService>(context);
+    model_user.User user = Provider.of<model_user.User>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quét QR qua ảnh'),
@@ -48,15 +46,15 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
                       if (str != null) {
                         setState(() {
                           qrcode = str;
-                          // if (qrcode != null) {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(builder: (context) {
-                          //       return Provider.value(
-                          //           value: user, child: UpdateInfoLearner());
-                          //     }),
-                          //   );
-                          // }
+                          if (qrcode != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Provider.value(
+                                    value: user, child: InfoLearner());
+                              }),
+                            );
+                          }
                         });
                       }
                     }
@@ -73,14 +71,9 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
               // ),
             ],
           ),
-          Text('$qrcode'),
+          Text('${qrcode}'),
         ],
       ),
     );
   }
-
-  // void navigateToNewPage() {
-  //   // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
-  //   // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
-  // }
 }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/qr_code/info_learner.dart';
-import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';
@@ -64,9 +63,13 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         result = scanData;
         if (result != null) {
           // Chuyển hướng đến trang khác dựa trên dữ liệu từ mã QR
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const DashBoardQrGenerate();
-          }));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              model_user.User user = Provider.of<model_user.User>(context);
+              return Provider.value(value: user, child: InfoLearner());
+            }),
+          );
         }
       });
     });

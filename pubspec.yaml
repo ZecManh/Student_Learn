@@ -46,7 +46,6 @@ dependencies:
   images_picker: ^1.2.11
   intl: ^0.18.1
   phone_number: ^2.0.1
-  intl_phone_number_input: ^0.7.3+1
   camera: ^0.10.5+5
   get: ^4.3.8
   shared_preferences: ^2.2.2

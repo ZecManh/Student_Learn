@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';

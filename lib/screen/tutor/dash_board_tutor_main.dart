@@ -1,6 +1,8 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/qr_code/qr_code_info_tutor.dart';
+import 'package:datn/screen/qr_code/qr_code_info_learner.dart';
 import 'package:datn/screen/qr_code/qr_scan_image_tutor.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner_info_tutor.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
@@ -10,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:datn/screen/qr_code/qr_screen_generate.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 import 'package:datn/screen/qr_code/qr_scan_image.dart';
 
@@ -147,56 +148,13 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                           .colorScheme
                                           .background)),
                               onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      var info =
-                                          '\nName : ${user.displayName}\nSố điện thoại : ${user.phone}\nEmail : ${user.email}';
-                                      return SimpleDialog(
-                                        contentPadding:
-                                            const EdgeInsets.all(20.0),
-                                        children: [
-                                          Center(child: Text('Mã QR của tôi')),
-                                          Center(
-                                              child: (user.displayName !=
-                                                          null &&
-                                                      user.phone != null &&
-                                                      user.email != null)
-                                                  ? QrImageView(
-                                                      data: info,
-                                                      version: QrVersions.auto,
-                                                      size: 200.0,
-                                                    )
-                                                  : QrImageView(
-                                                      data:
-                                                          'Dữ liệu chưa được cập nhật khi chưa điền đủ thông tin',
-                                                      version: QrVersions.auto,
-                                                      size: 200.0,
-                                                    )),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return const DashBoardQrScannerTutor();
-                                              }));
-                                            },
-                                            icon: const Text(
-                                                'Quét Qr qua camera'),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return QrScanImgTutor();
-                                              }));
-                                            },
-                                            icon: Text('Quét Qr qua ảnh'),
-                                          ),
-                                        ],
-                                      );
-                                    });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return Provider.value(
+                                        value: user, child: QrCodeInfoTutor());
+                                  }),
+                                );
                               },
                               icon: const Icon(Icons.qr_code),
                             ),
