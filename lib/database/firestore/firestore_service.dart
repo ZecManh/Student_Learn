@@ -26,7 +26,7 @@ class FirestoreService extends ChangeNotifier {
 
   Stream<user_model.User>? user(String userId) {
     DocumentReference docRef = _firestore.collection('users').doc(userId);
-    final snapshot = docRef.snapshots();
+    // final snapshot = docRef.snapshots();
     return docRef
         .snapshots()
         .map((json) => user_model.User.fromJson(json.data() as Map));
@@ -34,7 +34,7 @@ class FirestoreService extends ChangeNotifier {
 
   Stream<Map<dynamic, dynamic>>? userMap(String userId) {
     DocumentReference docRef = _firestore.collection('users').doc(userId);
-    final snapshot = docRef.snapshots();
+    // final snapshot = docRef.snapshots();
     return docRef.snapshots().map((json) => json as Map);
   }
 
@@ -107,13 +107,10 @@ class FirestoreService extends ChangeNotifier {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'experience': experience}, SetOptions(merge: true)).catchError(
-            (error) {
-      print('FIRESTORE UPDATE EXPERIENCE' + error);
-    });
+            (error) {});
   }
 
   void getSubjectRequest() async {
-    print("GET SUBJECT REQUEST");
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection(
@@ -126,11 +123,7 @@ class FirestoreService extends ChangeNotifier {
       for (QueryDocumentSnapshot document in querySnapshot.docs) {
         // Access the data of the matching document
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        print('Document ID: ${document.id}, Data: $data');
-        print('Document ID: ${document.id}, Data: $data');
-        print("data json $data");
         var subjectRequest = SubjectRequest.fromJson(data);
-        print(subjectRequest.toString());
         /*  print("learner id " + data['learner_id'].toString());
           print("subject " + data['subject']);
           print("state " + data['state']);
@@ -138,37 +131,28 @@ class FirestoreService extends ChangeNotifier {
         // print("schedules "+ data['schedules']);
         // print(TeachSchedules.fromJson(data['schedules']).toString());
       }
-    } catch (e) {
-      print('Error querying Firestore: $e');
-    }
+    } catch (e) {}
   }
 
   Future<List<user_model.User>> getTutors() async {
     List<user_model.User> users = [];
     try {
       QuerySnapshot querySnapshot = await firestore
-          .collection(
-          'users') // Replace with your actual collection name
-          .where('uid',
-          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .collection('users') // Replace with your actual collection name
+          .where('uid', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
       for (QueryDocumentSnapshot document in querySnapshot.docs) {
         // Access the data of the matching document
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        print('Document ID: ${document.id}, Data: $data');
-        print("data json $data");
         var user = user_model.User.fromJson(data);
-        print("user to String "+user.toString());
         users.add(user);
       }
-    } catch (e) {
-      print('Error querying Firestore: $e');
-    }
+    } catch (e) {}
     // return users;
     users.retainWhere((element) {
-      if(element.subjects!=null){
-        if(element!.subjects!.length>0){
+      if (element.subjects != null) {
+        if (element.subjects!.length > 0) {
           return true;
         }
         return false;
@@ -178,12 +162,31 @@ class FirestoreService extends ChangeNotifier {
     return users;
   }
 
-  Future<void> addSubjectRequest(String subject,String teachMethod,TeachSchedules schedules,Address address,Timestamp startTime,Timestamp endTime)
-  async {
-      SubjectRequest subjectRequest = SubjectRequest(learnerId: FirebaseAuth.instance.currentUser!.uid,subject: subject,state:"Pending",teachMethod: teachMethod,schedules: schedules,address: address,createdTime: Timestamp.now(),startTime: startTime,endTime: endTime);
-      print("Subject Request" + subjectRequest.toString());
-      await firestore
-          .collection('subject_requests')
-          .add(subjectRequest.toJson());
+  Future<void> addSubjectRequest(
+      String subject,
+      String teachMethod,
+      TeachSchedules schedules,
+      String address,
+      Timestamp startTime,
+      Timestamp endTime) async {
+    SubjectRequest subjectRequest = SubjectRequest(
+        learnerId: FirebaseAuth.instance.currentUser!.uid,
+        subject: subject,
+        state: "Pending",
+        teachMethod: teachMethod,
+        schedules: schedules,
+        address: address,
+        createdTime: Timestamp.now(),
+        startTime: startTime,
+        endTime: endTime);
+    await firestore.collection('subject_requests').add(subjectRequest.toJson());
+  }
+
+  Future<void> updateTeachAddress(List<String> chosenDistricts) async {
+    await firestore
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({'teach_address': chosenDistricts}, SetOptions(merge: true)).catchError(
+            (error) {});
   }
 }

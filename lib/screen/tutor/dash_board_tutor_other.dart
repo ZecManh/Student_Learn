@@ -15,23 +15,21 @@ class DashBoardTutorOther extends StatefulWidget {
 class _DashBoardTutorOtherState extends State<DashBoardTutorOther> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          children: [
-            OutlinedButton(
-              onPressed: () async {
-                FirebaseAuthService auth = FirebaseAuthService();
-               await auth.signOut();
-                Navigator.pushAndRemoveUntil(context,
-                    MaterialPageRoute(builder: (context) {
-                  return const Wrapper();
-                }), (route) => false);
-              },
-              child: const Text('Đăng xuất'),
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        children: [
+          OutlinedButton(
+            onPressed: () async {
+              FirebaseAuthService auth = FirebaseAuthService();
+             await auth.signOut();
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                return const Wrapper();
+              }), (route) => false);
+            },
+            child: const Text('Đăng xuất'),
+          ),
+        ],
       ),
     );
   }

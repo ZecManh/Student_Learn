@@ -64,24 +64,24 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.address != null) {
-      data['address'] = this.address!.toJson();
+    if (address != null) {
+      data['address'] = address!.toJson();
     }
-    data['born'] = this.born;
-    data['display_name'] = this.displayName;
-    if (this.education != null) {
-      data['education'] = this.education!.toJson();
+    data['born'] = born;
+    data['display_name'] = displayName;
+    if (education != null) {
+      data['education'] = education!.toJson();
     }
-    data['email'] = this.email;
-    data['gender'] = this.gender;
-    data['phone'] = this.phone;
-    data['photo_url'] = this.photoUrl;
-    data['subjects'] = this.subjects;
-    data['teach_address'] = this.teachAddress;
-    data['teach_method'] = this.teachMethod;
-    data['uid'] = this.uid;
-    data['verify'] = this.verify;
-    data['experience'] = this.experience;
+    data['email'] = email;
+    data['gender'] = gender;
+    data['phone'] = phone;
+    data['photo_url'] = photoUrl;
+    data['subjects'] = subjects;
+    data['teach_address'] = teachAddress;
+    data['teach_method'] = teachMethod;
+    data['uid'] = uid;
+    data['verify'] = verify;
+    data['experience'] = experience;
 
     return data;
   }
@@ -107,9 +107,9 @@ class Address {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['province'] = this.province;
-    data['district'] = this.district;
-    data['ward'] = this.ward;
+    data['province'] = province;
+    data['district'] = district;
+    data['ward'] = ward;
     return data;
   }
 
@@ -134,9 +134,9 @@ class Education {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['major'] = this.major;
-    data['university'] = this.university;
-    data['year'] = this.year;
+    data['major'] = major;
+    data['university'] = university;
+    data['year'] = year;
     return data;
   }
 

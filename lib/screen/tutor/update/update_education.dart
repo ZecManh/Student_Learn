@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 
 
 class UpdateEducation extends StatefulWidget {
+  const UpdateEducation({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _UpdateEducationState();
@@ -56,21 +56,21 @@ class _UpdateEducationState extends State<UpdateEducation> {
       ],
       child: Builder(
         builder: (context) {
-          model_user.User user = Provider.of<model_user.User>(context);
+          // model_user.User user = Provider.of<model_user.User>(context);
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Trình độ học vấn'),
+              title: const Text('Trình độ học vấn'),
             ),
             body: SingleChildScrollView(
               child: Center(
                   child: Card(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -84,7 +84,7 @@ class _UpdateEducationState extends State<UpdateEducation> {
                           labelText: 'Trường Đại Học',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -98,7 +98,7 @@ class _UpdateEducationState extends State<UpdateEducation> {
                           labelText: 'Ngành học',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TextFormField(
@@ -113,7 +113,7 @@ class _UpdateEducationState extends State<UpdateEducation> {
                           labelText: 'Năm học',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       OutlinedButton(
@@ -127,8 +127,8 @@ class _UpdateEducationState extends State<UpdateEducation> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text('Xác nhận'),
-                                  content: Text(
+                                  title: const Text('Xác nhận'),
+                                  content: const Text(
                                       'Bạn chắc chắn với sự thay đổi này?'),
                                   actions: <Widget>[
                                     TextButton(
@@ -174,7 +174,7 @@ class _UpdateEducationState extends State<UpdateEducation> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       )
                     ],

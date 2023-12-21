@@ -6,7 +6,6 @@ import 'package:datn/screen/qr_code/qr_code_info_learner.dart';
 import 'package:datn/screen/qr_code/qr_scan_image_tutor.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner_info_tutor.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
-import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,13 +42,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     ageController = TextEditingController(text: user.email);
 
     FirebaseAuth auth = firebaseAuthService.auth;
-    print("current user id " + auth.currentUser!.uid);
-    // print('current display name ' + auth.currentUser!.displayName);
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
-    FirebaseAuthService firebaseAuthModel =
-        Provider.of<FirebaseAuthService>(context);
-    print('dash board main rebuild');
-
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
@@ -74,7 +67,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                               return Provider.value(
                                 value: user,
                                 // child: UpdateInfoTutor()
-                                child: TutorInfo(),
+                                child: const TutorInfo(),
                               );
                             }),
                           );
@@ -83,20 +76,18 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             stream:
                                 firestoreService.user(auth.currentUser!.uid),
                             builder: (context,
-                                // AsyncSnapshot<model_user.User> snapshot) {
                                 AsyncSnapshot<model_user.User> snapshot) {
-                              var data = snapshot.data;
+                              // var data=snapshot.data;
                               model_user.User? user = snapshot.data;
                               if (user != null) {
                                 return CircleAvatar(
                                     backgroundImage: (user.photoUrl != null)
                                         ? NetworkImage(user.photoUrl!)
-                                        : AssetImage('assets/bear.jpg')
+                                        : const AssetImage('assets/bear.jpg')
                                             as ImageProvider,
                                     radius: 50);
                               } else {
-                                print('image null');
-                                return CircleAvatar(
+                                return const CircleAvatar(
                                   backgroundImage:
                                       AssetImage('assets/bear.jpg'),
                                   radius: 50,
@@ -122,17 +113,17 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                     (snapshot.data!.displayName != null)
                                         ? snapshot.data!.displayName!
                                         : 'Tên bạn là gì?',
-                                    style: TextStyle(fontSize: 24),
+                                    style: const TextStyle(fontSize: 24),
                                   );
                                 } else {
-                                  return Text(
+                                  return const Text(
                                     'Loading',
                                     style: TextStyle(fontSize: 24),
                                   );
                                 }
                               }
                             }),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
@@ -140,9 +131,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                           children: [
                             IconButton(
                               iconSize: 30,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              style: ButtonStyle().copyWith(
+                              style: const ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Theme.of(context)
                                           .colorScheme
@@ -160,9 +151,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             ),
                             IconButton(
                               iconSize: 30,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              style: ButtonStyle().copyWith(
+                              style: const ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Theme.of(context)
                                           .colorScheme
@@ -177,9 +168,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             ),
                             IconButton(
                               iconSize: 30,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              style: ButtonStyle().copyWith(
+                              style: const ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Theme.of(context)
                                           .colorScheme
@@ -200,107 +191,105 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
             height: 20,
           ),
           Card(
-            child: Container(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              shape: BoxShape.rectangle,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.add_outlined,
-                                color: Colors.white,
-                              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            shape: BoxShape.rectangle,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(5),
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
+                          child: const Padding(
+                            padding: EdgeInsets.all(18),
+                            child: Icon(
+                              Icons.add_outlined,
+                              color: Colors.white,
+                            ),
                           ),
-                          const Text(
-                            'Tạo lớp',
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          'Tạo lớp',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              shape: BoxShape.rectangle,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.mark_email_unread_outlined,
-                                color: Colors.white,
-                              ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            shape: BoxShape.rectangle,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(5),
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
+                          child: const Padding(
+                            padding: EdgeInsets.all(18),
+                            child: Icon(
+                              Icons.mark_email_unread_outlined,
+                              color: Colors.white,
+                            ),
                           ),
-                          const Text(
-                            'Lời mời',
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          'Lời mời',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              shape: BoxShape.rectangle,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Icon(
-                                Icons.message_outlined,
-                                color: Colors.white,
-                              ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            shape: BoxShape.rectangle,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(5),
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
+                          child: const Padding(
+                            padding: EdgeInsets.all(18),
+                            child: Icon(
+                              Icons.message_outlined,
+                              color: Colors.white,
+                            ),
                           ),
-                          const Text(
-                            'Hỗ trợ',
-                            style: TextStyle(fontSize: 16),
-                          )
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          'Hỗ trợ',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             margin: const EdgeInsets.all(10),
             shape: const RoundedRectangleBorder(

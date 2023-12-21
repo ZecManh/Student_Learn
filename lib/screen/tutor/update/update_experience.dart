@@ -1,17 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 
-import '../../../model/user/user.dart';
-import '../../../model/vn_province/district.dart';
-import '../../../model/vn_province/province.dart';
-import '../../../model/vn_province/ward.dart';
 
 class UpdateExperience extends StatefulWidget {
   const UpdateExperience({super.key});
@@ -55,24 +47,24 @@ class _UpdateExperienceState extends State<UpdateExperience> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Kinh nghiệm'),
+              title: const Text('Kinh nghiệm'),
             ),
             body: SingleChildScrollView(
               child: Card(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           TextField(
                             controller: experienceController,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Center(
@@ -82,8 +74,8 @@ class _UpdateExperienceState extends State<UpdateExperience> {
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
-                                          title: Text('Xác nhận'),
-                                          content: Text(
+                                          title: const Text('Xác nhận'),
+                                          content: const Text(
                                               'Bạn chắc chắn với sự thay đổi này?'),
                                           actions: <Widget>[
                                             TextButton(
@@ -105,9 +97,9 @@ class _UpdateExperienceState extends State<UpdateExperience> {
                                         );
                                       });
                                 },
-                                child: Text('Cập nhật')),
+                                child: const Text('Cập nhật')),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           )
                         ],

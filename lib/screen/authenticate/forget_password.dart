@@ -80,7 +80,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             FormState? emailFormState =
                                 _formEmailKey.currentState;
                             if (emailFormState!.validate()) {
-                              print('validate email ok');
                               firebaseAuthService.resetPassword(
                                   _emailController.text.trim(), context);
                             }

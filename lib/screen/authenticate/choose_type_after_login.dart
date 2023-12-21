@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'choose_type.dart';
-import 'login.dart';
 
 
 class ChooseTypeAfterLogin extends StatefulWidget {
@@ -142,13 +141,13 @@ class _ChooseTypeAfterLoginState extends State<ChooseTypeAfterLogin> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DashBoardTutor(),
+                                builder: (context) => const DashBoardTutor(),
                               ));
                         }else{
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DashBoardLearner(),
+                                builder: (context) => const DashBoardLearner(),
                               ));
                         }
 

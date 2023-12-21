@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 
-import '../../widget/mini_card.dart';
 
 class UpdateTeachSubject extends StatefulWidget {
   @override
@@ -28,8 +25,6 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
   initInfo() {
     model_user.User sendUser =
         Provider.of<model_user.User>(context, listen: false);
-    print("init info");
-    print("subject : " + sendUser.subjects.toString());
     subjects.addAll(sendUser.subjects??[]);
     subjectController = TextEditingController();
   }
@@ -46,17 +41,17 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
       ],
       child: Builder(
         builder: (context) {
-          model_user.User user = Provider.of<model_user.User>(context);
+          // model_user.User user = Provider.of<model_user.User>(context);
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Môn dạy kèm'),
+              title: const Text('Môn dạy kèm'),
             ),
             body: SingleChildScrollView(
               child: Center(
                   child: Card(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -67,7 +62,7 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                 children: [
                                   ...subjects.map((item) {
                                     return Padding(
-                                      padding: EdgeInsets.all(5),
+                                      padding: const EdgeInsets.all(5),
                                       child: OutlinedButton.icon(
                                         onPressed: () {
                                           if (subjects
@@ -78,10 +73,10 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                             });
                                           }
                                         },
-                                        icon: Icon(Icons.delete_forever),
+                                        icon: const Icon(Icons.delete_forever),
                                         label: Text(
                                           item,
-                                          style: TextStyle(fontSize: 14),
+                                          style: const TextStyle(fontSize: 14),
                                         ),
                                       ),
                                     );
@@ -97,23 +92,23 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                 ),
                             ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Card(
                         color: Theme.of(context).colorScheme.background,
                         child: Column(
                           children: [
-                            SizedBox(height: 10),
-                            Text(
+                            const SizedBox(height: 10),
+                            const Text(
                               'Thêm mới',
                               style: TextStyle(fontSize: 20),
                             ),
                             Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: TextField(
                                 controller: subjectController,
-                                style: TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 18),
                               ),
                             ),
                             OutlinedButton.icon(
@@ -121,20 +116,19 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                                   if (subjectController.text != "") {
                                     setState(() {
                                       subjects.add(subjectController.text);
-                                      print("add new subject");
                                       subjectController.clear();
                                     });
                                   }
                                 },
-                                icon: Icon(Icons.add),
-                                label: Text('Thêm')),
-                            SizedBox(
+                                icon: const Icon(Icons.add),
+                                label: const Text('Thêm')),
+                            const SizedBox(
                               height: 10,
                             )
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       OutlinedButton(
@@ -148,8 +142,8 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: Text('Xác nhận'),
-                                  content: Text(
+                                  title: const Text('Xác nhận'),
+                                  content: const Text(
                                       'Bạn chắc chắn với sự thay đổi này?'),
                                   actions: <Widget>[
                                     TextButton(
@@ -178,7 +172,7 @@ class _UpdateTeachSubjectState extends State<UpdateTeachSubject> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       )
                     ],

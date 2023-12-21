@@ -1,4 +1,3 @@
-import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:datn/screen/wrapper.dart';
 import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';

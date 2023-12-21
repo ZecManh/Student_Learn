@@ -31,7 +31,7 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Qr Scanner'),
+        title: const Text('Qr Scanner'),
       ),
       body: Column(
         children: <Widget>[

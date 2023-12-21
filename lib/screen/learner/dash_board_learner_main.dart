@@ -65,7 +65,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                           context,
                           MaterialPageRoute(builder: (context) {
                             return Provider.value(
-                                value: user, child: UpdateInfoLearner());
+                                value: user, child: const UpdateInfoLearner());
                           }),
                         );
                       },
@@ -75,16 +75,14 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               AsyncSnapshot<model_user.User> snapshot) {
                             model_user.User? user = snapshot.data;
                             if (user != null) {
-                              print(user.toString());
                               return CircleAvatar(
                                   backgroundImage: (user.photoUrl != null)
                                       ? NetworkImage(user.photoUrl!)
-                                      : AssetImage('assets/bear.jpg')
+                                      : const AssetImage('assets/bear.jpg')
                                           as ImageProvider,
                                   radius: 50);
                             } else {
-                              print('image null');
-                              return CircleAvatar(
+                              return const CircleAvatar(
                                 backgroundImage: AssetImage('assets/bear.jpg'),
                                 radius: 50,
                               );
@@ -109,18 +107,18 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                   return (snapshot.data!.displayName != null)
                                       ? Text(
                                           snapshot.data!.displayName!,
-                                          style: TextStyle(fontSize: 24),
+                                          style: const TextStyle(fontSize: 24),
                                         )
-                                      : Text('Tên bạn là gì?');
+                                      : const Text('Tên bạn là gì?');
                                 } else {
-                                  return Text(
+                                  return const Text(
                                     'Loading',
                                     style: TextStyle(fontSize: 24),
                                   );
                                 }
                               }
                             }),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
@@ -128,9 +126,9 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                           children: [
                             IconButton(
                               iconSize: 30,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              style: ButtonStyle().copyWith(
+                              style: const ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Theme.of(context)
                                           .colorScheme
@@ -148,9 +146,9 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             ),
                             IconButton(
                               iconSize: 30,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              style: ButtonStyle().copyWith(
+                              style: const ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Theme.of(context)
                                           .colorScheme
@@ -165,9 +163,9 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             ),
                             IconButton(
                               iconSize: 30,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
-                              style: ButtonStyle().copyWith(
+                              style: const ButtonStyle().copyWith(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Theme.of(context)
                                           .colorScheme
@@ -188,6 +186,12 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
             height: 20,
           ),
           Card(
+            margin: const EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
             child: Container(
               child: Row(
                 children: [
@@ -205,18 +209,18 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: IconButton(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) {
                                       return Provider.value(
-                                          value: user, child: FindTuTor());
+                                          value: user, child: const FindTuTor());
                                     }),
                                   );
                                 },
-                                icon: Icon(Icons.person_add_alt),
+                                icon: const Icon(Icons.person_add_alt),
                                 color: Colors.white,
                               ),
                             ),
@@ -246,10 +250,10 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: IconButton(
                                 onPressed: () {},
-                                icon: Icon(Icons.edit_calendar),
+                                icon: const Icon(Icons.edit_calendar),
                                 color: Colors.white,
                               ),
                             ),
@@ -279,10 +283,10 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: IconButton(
                                 onPressed: () {},
-                                icon: Icon(Icons.message_outlined),
+                                icon: const Icon(Icons.message_outlined),
                                 color: Colors.white,
                               ),
                             ),
@@ -299,12 +303,6 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                     ),
                   ),
                 ],
-              ),
-            ),
-            margin: const EdgeInsets.all(10),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
               ),
             ),
           ),

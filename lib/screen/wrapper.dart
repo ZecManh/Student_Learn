@@ -27,12 +27,12 @@ class _WrapperState extends State<Wrapper> {
           if (snapshot.connectionState == ConnectionState.active) {
             final User? user = snapshot.data;
             if (user == null) {
-              return Authenticate();
+              return const Authenticate();
             } else {
-              return ChooseTypeAfterLogin();
+              return const ChooseTypeAfterLogin();
             }
           } else {
-            return Scaffold(
+            return const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
               ),

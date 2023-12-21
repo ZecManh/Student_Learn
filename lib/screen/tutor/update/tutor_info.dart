@@ -50,21 +50,21 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                   onPressed: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return UpdateInfoTutor();
+                      return const UpdateInfoTutor();
                     }));
                   },
                   icon: const Icon(Icons.edit)))
         ],
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
-            const Padding(
+          tabs: const [
+            Padding(
                 padding: EdgeInsets.only(bottom: 5),
                 child: Icon(Icons.person_3_outlined)),
-            const Padding(
+            Padding(
                 padding: EdgeInsets.only(bottom: 5),
                 child: Icon(Icons.calendar_month_outlined)),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 5),
               child: Icon(Icons.rate_review_outlined),
             )
@@ -90,7 +90,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -105,11 +105,11 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                           return CircleAvatar(
                                               backgroundImage: (user.photoUrl != null)
                                                   ? NetworkImage(user.photoUrl!)
-                                                  : AssetImage('assets/bear.jpg')
+                                                  : const AssetImage('assets/bear.jpg')
                                               as ImageProvider,
                                               radius: 50);
                                         } else {
-                                          return CircleAvatar(
+                                          return const CircleAvatar(
                                             backgroundImage: AssetImage('assets/bear.jpg'),
                                             radius: 50,
                                           );
@@ -143,7 +143,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               borderSide: BorderSide()),
                           color: Theme.of(context).colorScheme.background,
                           child: Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child: (user.verify == true)
                                 ? Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -158,7 +158,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                               fontSize: 20,
                                               fontStyle: FontStyle.italic),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Icon(
@@ -177,7 +177,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                   ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         )
                       ],
@@ -195,10 +195,10 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                   child: Column(
                     // crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Center(
+                      const Center(
                         child: Text(
                           'Kinh nghiệm',
                           style: TextStyle(fontSize: 20),
@@ -209,7 +209,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                         children: [
                           Expanded(
                               child: Padding(
-                            padding: EdgeInsets.all(30),
+                            padding: const EdgeInsets.all(30),
                             child: (user.experience != null)
                                 ? Text(
                                     user.experience!,
@@ -245,26 +245,26 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                   child: Column(
                     // crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                            const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                         child: Row(
                           children: [
-                            Icon(Icons.person_2_outlined),
-                            SizedBox(
+                            const Icon(Icons.person_2_outlined),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            const Text(
                               'Giới tính : ',
                               style: TextStyle(fontSize: 20),
                             ),
                             (user.gender != null)
                                 ? Text(
                                     user.gender!,
-                                    style: TextStyle(fontSize: 20),
+                                    style: const TextStyle(fontSize: 20),
                                   )
                                 : Text(
                                     'Chưa cập nhật',
@@ -274,29 +274,29 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                             .colorScheme
                                             .error),
                                   ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                            const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                         child: Row(
                           children: [
-                            Icon(Icons.info_outline),
-                            SizedBox(
+                            const Icon(Icons.info_outline),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            const Text(
                               'Tuổi :',
                               style: TextStyle(fontSize: 20),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             (user.born != null)
@@ -304,7 +304,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                     child: Text(
                                       (int.parse(DateFormat('yyyy').format(DateTime.now()))-int.parse(DateFormat('yyyy').format(user.born!.toDate()))).toString(),
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(fontSize: 20),
+                                      style: const TextStyle(fontSize: 20),
                                     ),
                                   )
                                 : Expanded(
@@ -321,22 +321,22 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                            const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                         child: Row(children: [
-                          Icon(Icons.location_on_outlined),
-                          SizedBox(
+                          const Icon(Icons.location_on_outlined),
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text(
+                          const Text(
                             'Đang ở :',
                             style: TextStyle(fontSize: 20),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Expanded(
@@ -354,7 +354,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                           (user.address!.province != null
                                               ? (user.address!.province!)
                                               : '')),
-                                      style: TextStyle(fontSize: 20),
+                                      style: const TextStyle(fontSize: 20),
                                     )
                                   : Text(
                                       textAlign: TextAlign.start,
@@ -367,24 +367,24 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                     ))
                         ]),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                            const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                         child: Row(
                           children: [
-                            Icon(Icons.school_outlined),
-                            SizedBox(
+                            const Icon(Icons.school_outlined),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text('Trường : ', style: TextStyle(fontSize: 20)),
+                            const Text('Trường : ', style: TextStyle(fontSize: 20)),
                             Expanded(
                               child: (user.education?.university != null)
                                   ? Text(
                                       user.education!.university!,
-                                      style: TextStyle(fontSize: 20),
+                                      style: const TextStyle(fontSize: 20),
                                     )
                                   : Text('Chưa cập nhật',
                                       style: TextStyle(
@@ -396,30 +396,30 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Padding(
                         padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                            const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                         child: Row(
                           children: [
-                            Icon(Icons.class_outlined),
-                            SizedBox(
+                            const Icon(Icons.class_outlined),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            const Text(
                               'Ngành :',
                               style: TextStyle(fontSize: 20),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Expanded(
                               child: (user.education?.university != null)
                                   ? Text(
                                       user.education!.major!,
-                                      style: TextStyle(fontSize: 20),
+                                      style: const TextStyle(fontSize: 20),
                                     )
                                   : Text('Chưa cập nhât',
                                       style: TextStyle(
@@ -431,7 +431,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                     ],
@@ -448,16 +448,16 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Center(
+                      const Center(
                         child: Text(
                           'Môn dạy kèm',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       (user.subjects != null)
                           ? Wrap(
                               children: [
@@ -474,7 +474,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                     color: Theme.of(context).colorScheme.error),
                               ),
                             ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       )
                     ],
@@ -491,16 +491,16 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Center(
+                      const Center(
                         child: Text(
                           'Khu vực dạy kèm tại nhà',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      SizedBox(height: 20,)
+                      const SizedBox(height: 20,)
                       ,
                       (user.teachAddress != null)
                           ? Wrap(
@@ -517,7 +517,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                                     color: Theme.of(context).colorScheme.error),
                               ),
                           ),
-                      SizedBox(height: 20,)
+                      const SizedBox(height: 20,)
                     ],
                   ),
                 ),
@@ -532,41 +532,41 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                   child: Column(
                     // crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Center(
-                        child: Text(
-                          'Phương thức giảng dạy',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.all(10),
-                          child: (user.teachMethod != null)
-                              ? Wrap(
-                                  children: [
-                                    ...user.teachMethod!.map(
-                                        (item) => MiniCard(cardName: item)),
-                                  ],
-                                )
-                              : Text(
-                                  'Chưa cập nhật',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color:
-                                          Theme.of(context).colorScheme.error),
-                                ))
+                      // const Center(
+                      //   child: Text(
+                      //     'Phương thức giảng dạy',
+                      //     style: TextStyle(fontSize: 20),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //     padding: const EdgeInsets.all(10),
+                      //     child: (user.teachMethod != null)
+                      //         ? Wrap(
+                      //             children: [
+                      //               ...user.teachMethod!.map(
+                      //                   (item) => MiniCard(cardName: item)),
+                      //             ],
+                      //           )
+                      //         : Text(
+                      //             'Chưa cập nhật',
+                      //             style: TextStyle(
+                      //                 fontSize: 20,
+                      //                 color:
+                      //                     Theme.of(context).colorScheme.error),
+                      //           ))
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          Center(
+          const Center(
             child: Text("It's rainy here"),
           ),
-          Center(
+          const Center(
             child: Text("It's sunny here"),
           ),
         ],

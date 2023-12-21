@@ -4,6 +4,7 @@ import 'package:datn/screen/tutor/update/update_address.dart';
 import 'package:datn/screen/tutor/update/update_education.dart';
 import 'package:datn/screen/tutor/update/update_experience.dart';
 import 'package:datn/screen/tutor/update/update_profile.dart';
+import 'package:datn/screen/tutor/update/update_teach_address.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,15 +47,15 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           MaterialPageRoute(builder: (context) {
                             return Provider(
                                 create: (context) => user,
-                                builder: (context, child) => UpdateProfile());
+                                builder: (context, child) => const UpdateProfile());
                           }));
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Card(
                         color: Theme.of(context).colorScheme.primaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
                             children: [
@@ -64,20 +65,20 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                                       MaterialPageRoute(builder: (context) {
                                         return Provider(
                                             create: (context) => user,
-                                            builder: (context, child) => UpdateProfile());
+                                            builder: (context, child) => const UpdateProfile());
                                       }));
                                 },
-                                child: Icon(Icons.person_2_rounded,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                        CircleBorder()),
+                                        const CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
+                                child: Icon(Icons.person_2_rounded,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
                               ),
                               Expanded(
                                 child: Text(
@@ -101,15 +102,15 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           MaterialPageRoute(builder: (context) {
                         return Provider(
                             create: (context) => user,
-                            builder: (context, child) => UpdateAddress());
+                            builder: (context, child) => const UpdateAddress());
                       }));
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Card(
                         color: Theme.of(context).colorScheme.primaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
                             children: [
@@ -119,20 +120,20 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                                       MaterialPageRoute(builder: (context) {
                                         return Provider(
                                             create: (context) => user,
-                                            builder: (context, child) => UpdateAddress());
+                                            builder: (context, child) => const UpdateAddress());
                                       }));
                                 },
-                                child: Icon(Icons.home,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                        CircleBorder()),
+                                        const CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
+                                child: Icon(Icons.home,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
                               ),
                               Expanded(
                                 child: Text(
@@ -156,15 +157,15 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           MaterialPageRoute(builder: (context) {
                             return Provider(
                                 create: (context) => user,
-                                builder: (context, child) => UpdateEducation());
+                                builder: (context, child) => const UpdateEducation());
                           }));
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Card(
                         color: Theme.of(context).colorScheme.primaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
                             children: [
@@ -174,20 +175,20 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                                       MaterialPageRoute(builder: (context) {
                                         return Provider(
                                             create: (context) => user,
-                                            builder: (context, child) => UpdateEducation());
+                                            builder: (context, child) => const UpdateEducation());
                                       }));
                                 },
-                                child: Icon(Icons.school,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                        CircleBorder()),
+                                        const CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
+                                child: Icon(Icons.school,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
                               ),
                               Expanded(
                                 child: Text(
@@ -215,11 +216,11 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           }));
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Card(
                         color: Theme.of(context).colorScheme.primaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
                             children: [
@@ -232,17 +233,17 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                                             builder: (context, child) => UpdateTeachSubject());
                                       }));
                                 },
-                                child: Icon(Icons.subject,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                        CircleBorder()),
+                                        const CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
+                                child: Icon(Icons.subject,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
                               ),
                               Expanded(
                                 child: Text(
@@ -266,15 +267,15 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                           MaterialPageRoute(builder: (context) {
                             return Provider(
                                 create: (context) => user,
-                                builder: (context, child) => UpdateExperience());
+                                builder: (context, child) => const UpdateExperience());
                           }));
                     },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Card(
                         color: Theme.of(context).colorScheme.primaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
                             children: [
@@ -284,20 +285,20 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                                       MaterialPageRoute(builder: (context) {
                                         return Provider(
                                             create: (context) => user,
-                                            builder: (context, child) => UpdateExperience());
+                                            builder: (context, child) => const UpdateExperience());
                                       }));
                                 },
-                                child: Icon(Icons.info,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                        CircleBorder()),
+                                        const CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
+                                child: Icon(Icons.info,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
                               ),
                               Expanded(
                                 child: Text(
@@ -316,29 +317,84 @@ class _UpdateInfoTutorState extends State<UpdateInfoTutor> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return Provider(
+                                create: (context) => user,
+                                builder: (context, child) => const UpdateTeachAddress());
+                          }));
+                    },
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Card(
                         color: Theme.of(context).colorScheme.primaryContainer,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 10),
+                          child: Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return Provider(
+                                            create: (context) => user,
+                                            builder: (context, child) => const UpdateTeachAddress());
+                                      }));
+                                },
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        const CircleBorder()),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                child: Icon(Icons.info,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Khu vực dạy kèm',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer,
+                                      fontSize: 20),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Card(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 10),
                           child: Row(
                             children: [
                               ElevatedButton(
                                 onPressed: () {},
-                                child: Icon(Icons.upload_file_sharp,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
-                                        CircleBorder()),
+                                        const CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
+                                child: Icon(Icons.upload_file_sharp,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
                               ),
                               Expanded(
                                 child: Text(
