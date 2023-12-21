@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 import 'package:flutter/material.dart';
 
+import '../../model/subject_request/subject_request.dart';
+
 class FirebaseAuthService extends ChangeNotifier {
   final firebase_auth.FirebaseAuth _firebaseAuth =
       firebase_auth.FirebaseAuth.instance;
@@ -57,4 +59,6 @@ class FirebaseAuthService extends ChangeNotifier {
             'Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
     Navigator.of(context).pop();
   }
+
+
 }
