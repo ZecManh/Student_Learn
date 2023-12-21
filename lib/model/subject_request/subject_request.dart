@@ -5,6 +5,7 @@ import '../user/user.dart';
 
 class SubjectRequest {
   String? learnerId;
+  String? tutorId;
   String? subject;
   String? state;
   String? teachMethod;
@@ -16,6 +17,7 @@ class SubjectRequest {
 
   SubjectRequest(
       {this.learnerId,
+      this.tutorId,
       this.subject,
       this.state,
       this.teachMethod,
@@ -27,6 +29,7 @@ class SubjectRequest {
 
   SubjectRequest.fromJson(Map<String, dynamic> json) {
     learnerId = json['learner_id'];
+    tutorId = json['tutor_id'];
     subject = json['subject'];
     state = json['state'];
     teachMethod = json['teach_method'];
@@ -42,6 +45,7 @@ class SubjectRequest {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['learner_id'] = learnerId;
+    data['tutor_id'] = tutorId;
     data['subject'] = subject;
     data['state'] = state;
     data['teach_method'] = teachMethod;
@@ -55,6 +59,6 @@ class SubjectRequest {
 
   @override
   String toString() {
-    return 'SubjectRequest{learnerId: $learnerId, subject: $subject, state: $state, teachMethod: $teachMethod, schedules: $schedules, address: $address, createdTime: $createdTime, startTime: $startTime, endTime: $endTime}';
+    return 'SubjectRequest{learnerId: $learnerId, tutorId: $tutorId, subject: $subject, state: $state, teachMethod: $teachMethod, schedules: $schedules, address: $address, createdTime: $createdTime, startTime: $startTime, endTime: $endTime}';
   }
 }

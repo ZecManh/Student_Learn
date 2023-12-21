@@ -1183,8 +1183,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
 
                                     FirestoreService firestoreService =
                                         FirestoreService();
-                                    var finalAddress = addressTextController.text + (dropDownDistrict!.name??'');
-                                    firestoreService.addSubjectRequest(
+                                    var finalAddress = addressTextController.text +" , " + (dropDownDistrict!.name??'');
+
+                                    firestoreService.addSubjectRequest(widget.tutor.uid!,
                                         initSubject,
                                         initTeachMethod,
                                         schedules,

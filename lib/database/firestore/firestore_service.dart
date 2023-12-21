@@ -163,6 +163,7 @@ class FirestoreService extends ChangeNotifier {
   }
 
   Future<void> addSubjectRequest(
+      String tutorId,
       String subject,
       String teachMethod,
       TeachSchedules schedules,
@@ -171,6 +172,7 @@ class FirestoreService extends ChangeNotifier {
       Timestamp endTime) async {
     SubjectRequest subjectRequest = SubjectRequest(
         learnerId: FirebaseAuth.instance.currentUser!.uid,
+        tutorId: tutorId,
         subject: subject,
         state: "Pending",
         teachMethod: teachMethod,
@@ -186,7 +188,36 @@ class FirestoreService extends ChangeNotifier {
     await firestore
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({'teach_address': chosenDistricts}, SetOptions(merge: true)).catchError(
-            (error) {});
+        .set({'teach_address': chosenDistricts},
+            SetOptions(merge: true)).catchError((error) {});
   }
+
+// Future<List<SubjectRequest>> getAllSubjectRequest() async {
+//
+//   List<SubjectRequest> subjectRequest = [];
+//   try {
+//     QuerySnapshot querySnapshot = await firestore
+//         .collection('subjectRequest') // Replace with your actual collection name
+//         .where('tutorId', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+//         .get();
+//
+//     for (QueryDocumentSnapshot document in querySnapshot.docs) {
+//       // Access the data of the matching document
+//       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+//       var user = user_model.User.fromJson(data);
+//       users.add(user);
+//     }
+//   } catch (e) {}
+//   // return users;
+//   users.retainWhere((element) {
+//     if (element.subjects != null) {
+//       if (element.subjects!.length > 0) {
+//         return true;
+//       }
+//       return false;
+//     }
+//     return false;
+//   });
+//   return users;
+// }
 }
