@@ -4,8 +4,7 @@ import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../model/user/teach_schedules.dart';
-import '../../model/user/user.dart';
+import '../../model/subject_request/schedules.dart';
 
 class FirestoreService extends ChangeNotifier {
   static String USER_DOC = "users";
@@ -166,7 +165,7 @@ class FirestoreService extends ChangeNotifier {
       String tutorId,
       String subject,
       String teachMethod,
-      TeachSchedules schedules,
+      Schedules schedules,
       String address,
       Timestamp startTime,
       Timestamp endTime) async {
@@ -176,11 +175,12 @@ class FirestoreService extends ChangeNotifier {
         subject: subject,
         state: "Pending",
         teachMethod: teachMethod,
-        schedules: schedules,
+        schedules: null,
         address: address,
         createdTime: Timestamp.now(),
         startTime: startTime,
         endTime: endTime);
+    print(subjectRequest.toJson().toString());
     await firestore.collection('subject_requests').add(subjectRequest.toJson());
   }
 
@@ -192,32 +192,49 @@ class FirestoreService extends ChangeNotifier {
             SetOptions(merge: true)).catchError((error) {});
   }
 
-// Future<List<SubjectRequest>> getAllSubjectRequest() async {
-//
-//   List<SubjectRequest> subjectRequest = [];
-//   try {
-//     QuerySnapshot querySnapshot = await firestore
-//         .collection('subjectRequest') // Replace with your actual collection name
-//         .where('tutorId', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
-//         .get();
-//
-//     for (QueryDocumentSnapshot document in querySnapshot.docs) {
-//       // Access the data of the matching document
-//       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-//       var user = user_model.User.fromJson(data);
-//       users.add(user);
-//     }
-//   } catch (e) {}
-//   // return users;
-//   users.retainWhere((element) {
-//     if (element.subjects != null) {
-//       if (element.subjects!.length > 0) {
-//         return true;
-//       }
-//       return false;
-//     }
-//     return false;
-//   });
-//   return users;
-// }
+  Future<List<SubjectRequest>> getAllSubjectRequest() async {
+    List<SubjectRequest> subjectRequests = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection(
+              'subject_requests') // Replace with your actual collection name
+          // .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        print("getAllSubjectRequest DATA JSON : $data" );
+        var subjectRequest = SubjectRequest.fromJson(data);
+        print("getAllSubjectRequest DATA JSON PARSED : $subjectRequest" );
+        // subjectRequests.add(subjectRequest);
+      }
+    } catch (e) {}
+
+    return subjectRequests;
+  }
+
+  Future<List<String>> getLearnerNameByListSubjectRequest(
+      List<SubjectRequest> subjectRequest) async {
+    List<String> name = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('users') // Replace with your actual collection name
+          .where('uid', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        var user = user_model.User.fromJson(data);
+        subjectRequest.forEach((element) {
+          if (element.learnerId == user.uid) {
+            name.add(user.displayName ?? '');
+          }
+        });
+      }
+    } catch (e) {}
+    return name;
+  }
 }
+

@@ -1,6 +1,7 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -182,6 +183,12 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
             height: 20,
           ),
           Card(
+            margin: const EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -219,32 +226,47 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.rectangle,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
+                    child: GestureDetector(onTap: (){
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Provider.value(
+                            value: user,
+                            // child: UpdateInfoTutor()
+                            child: const SubjectRequestScreen(),
+                          );
+                        }),
+                      );
+
+                    },
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.rectangle,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(18),
+                              child: Icon(
+                                Icons.mark_email_unread_outlined,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(18),
-                            child: Icon(
-                              Icons.mark_email_unread_outlined,
-                              color: Colors.white,
-                            ),
+                          const SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          'Lời mời',
-                          style: TextStyle(fontSize: 16),
-                        )
-                      ],
+                          const Text(
+                            'Lời mời',
+                            style: TextStyle(fontSize: 16),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -281,12 +303,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                   ),
                 ),
               ],
-            ),
-            margin: const EdgeInsets.all(10),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
             ),
           ),
           const SizedBox(

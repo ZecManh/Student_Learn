@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/subject_request/schedules.dart';
 
 import '../user/teach_schedules.dart';
 import '../user/user.dart';
@@ -9,7 +10,7 @@ class SubjectRequest {
   String? subject;
   String? state;
   String? teachMethod;
-  TeachSchedules? schedules;
+  Schedules? schedules;
   String? address;
   Timestamp? createdTime;
   Timestamp? startTime;
@@ -27,15 +28,14 @@ class SubjectRequest {
       this.startTime,
       this.endTime});
 
+
   SubjectRequest.fromJson(Map<String, dynamic> json) {
     learnerId = json['learner_id'];
     tutorId = json['tutor_id'];
     subject = json['subject'];
     state = json['state'];
     teachMethod = json['teach_method'];
-    schedules = (json['schedules'] != null)
-        ? TeachSchedules.fromJson(json['schedules'])
-        : null;
+    schedules = json['schedules'] != null ? Schedules.fromJson(json['schedules']) : null;
     address = json['address'] != null ? json['address'] : null;
     createdTime = json['created_time'];
     startTime = json['start_time'];
@@ -49,11 +49,15 @@ class SubjectRequest {
     data['subject'] = subject;
     data['state'] = state;
     data['teach_method'] = teachMethod;
-    data['teach_schedules'] = (schedules != null) ? schedules!.toJson() : null;
+    data['teach_schedules'] = schedules;
     data['address'] = address;
     data['created_time'] = createdTime;
     data['start_time'] = startTime;
     data['end_time'] = endTime;
+    // data['schedules'] = schedules??schedules!.toJson();
+    if (schedules != null) {
+      data['schedules'] = schedules!.toJson();
+    }
     return data;
   }
 
