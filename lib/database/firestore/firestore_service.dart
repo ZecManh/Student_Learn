@@ -123,12 +123,6 @@ class FirestoreService extends ChangeNotifier {
         // Access the data of the matching document
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         var subjectRequest = SubjectRequest.fromJson(data);
-        /*  print("learner id " + data['learner_id'].toString());
-          print("subject " + data['subject']);
-          print("state " + data['state']);
-          print("teach method " + data['teach_method']);*/
-        // print("schedules "+ data['schedules']);
-        // print(TeachSchedules.fromJson(data['schedules']).toString());
       }
     } catch (e) {}
   }
@@ -137,11 +131,12 @@ class FirestoreService extends ChangeNotifier {
     List<SubjectRequest> subjectRequests = [];
     print("GET ALL SUBJECT REQUEST");
     firestore.collection("subject_requests").get().then(
-          (querySnapshot) {
+      (querySnapshot) {
         print("Successfully completed");
         for (var docSnapshot in querySnapshot.docs) {
           print('${docSnapshot.id} => ${docSnapshot.data()}');
-          Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+          Map<String, dynamic> data =
+              docSnapshot.data() as Map<String, dynamic>;
           var subjectRequest = SubjectRequest.fromJson(data);
           subjectRequests.add(subjectRequest);
           print("SUBJECT REQUEST $subjectRequest");
@@ -151,6 +146,7 @@ class FirestoreService extends ChangeNotifier {
     );
     return subjectRequests;
   }
+
   Future<List<user_model.User>> getTutors() async {
     List<user_model.User> users = [];
     try {
@@ -230,29 +226,44 @@ class FirestoreService extends ChangeNotifier {
     return subjectRequests;
   }
 
-  Future<List<String>> getLearnerNameByListSubjectRequest(
-      List<SubjectRequest> subjectRequest) async {
-    List<String> name = [];
+  Future<Map<SubjectRequest, user_model.User>>
+      getLearnerInfoWithListSubjectRequest() async {
+    List<user_model.User> leaners = [];
+    List<SubjectRequest> subjectRequests = await getAllSubjectRequestByID();
+    Map<SubjectRequest, user_model.User> data = {};
     try {
-      QuerySnapshot querySnapshot = await firestore
-          .collection('users') // Replace with your actual collection name
-          .where('uid', isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .get();
-
-      for (QueryDocumentSnapshot document in querySnapshot.docs) {
-        // Access the data of the matching document
-        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        var user = user_model.User.fromJson(data);
-        subjectRequest.forEach((element) {
-          if (element.learnerId == user.uid) {
-            name.add(user.displayName ?? '');
-          }
-        });
+      for (SubjectRequest subjectRequest in subjectRequests) {
+        user_model.User learner = await  getUser(subjectRequest.learnerId!);
+        Map<SubjectRequest,user_model.User> map = {subjectRequest:learner};
+        data.addAll(map);
       }
     } catch (e) {
 
     }
-    return name;
+    return data;
   }
-}
 
+  Future<user_model.User> getUser(String uid) async {
+    List<user_model.User> users = [];
+    QuerySnapshot querySnapshot = await firestore
+        .collection('users') // Replace with your actual collection name
+        .where('uid', isEqualTo: uid)
+        .get();
+    for (var docSnapshot in querySnapshot.docs) {
+      var json = docSnapshot.data() as Map<String, dynamic>;
+      var user = user_model.User.fromJson(json);
+      users.add(user);
+    }
+    return users.first;
+  }
+  //
+  // Future<void> addClass(SubjectRequest key) async {
+  //
+  //
+  //   await _firestore
+  //       .collection('users')
+  //       .add(data)
+  //       .then((value) => print(value));
+  //
+  // }
+}
