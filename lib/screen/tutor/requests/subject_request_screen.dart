@@ -38,7 +38,8 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
   }
 
   void initInfo() async {
-    var subjectRequestsFetch = await firestoreService.getAllSubjectRequest();
+    print("getAllSubjectRequestByID");
+    var subjectRequestsFetch = await firestoreService.getAllSubjectRequestByID();
     var fetchNames = await firestoreService
         .getLearnerNameByListSubjectRequest(subjectRequestsFetch);
     fetchNames.forEach((element) {
@@ -61,7 +62,6 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // initInfo();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lời mời dạy"),
@@ -70,80 +70,6 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
         child: Card(
           child: Column(
             children: [
-              // ...subjectRequests.map((item) {
-              //   return ElevatedButton(
-              //     onPressed: () {},
-              //     child: Column(children: [
-              //       Card(
-              //         color: Theme.of(context).colorScheme.primary,
-              //         child: Padding(
-              //           padding: const EdgeInsets.symmetric(
-              //               horizontal: 10, vertical: 10),
-              //           child: Row(
-              //             children: [
-              //               (item.subject != null)
-              //                   ? Expanded(
-              //                       child: Text(
-              //                         item.subject!,
-              //                         style: TextStyle(
-              //                             fontSize: 20,
-              //                             color: Theme.of(context)
-              //                                 .colorScheme
-              //                                 .background),
-              //                       ),
-              //                     )
-              //                   : Text(''),
-              //               Expanded(
-              //                 child: Row(children: [
-              //                   IconButton(
-              //                       color: Theme.of(context)
-              //                           .colorScheme
-              //                           .background,
-              //                       onPressed: () {},
-              //                       icon: const Icon(Icons.done)),
-              //                   IconButton(
-              //                       color: Theme.of(context)
-              //                           .colorScheme
-              //                           .background,
-              //                       onPressed: () {},
-              //                       icon: const Icon(
-              //                           Icons.remove_circle_outline)),
-              //                 ]),
-              //               ),
-              //               IconButton(
-              //                 onPressed: () {},
-              //                 icon: const Icon(Icons.done),
-              //               )
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       Card(
-              //         child: Row(
-              //           children: [
-              //             Column(
-              //               children: [
-              //                 Padding(
-              //                     padding: EdgeInsets.all(10),
-              //                     child: Row(children: [
-              //                       Text('Địa chỉ : '),
-              //                       Text(item.address ?? '')
-              //                     ])),
-              //                 Padding(
-              //                     padding: EdgeInsets.all(10),
-              //                     child: Row(children: [
-              //                       Text('Địa chỉ : '),
-              //                       Text(item.address ?? '')
-              //                     ])),
-              //               ],
-              //             )
-              //           ],
-              //         ),
-              //       ),
-              //       Divider()
-              //     ]),
-              //   );
-              // }),
               ...mapInfo.entries.map((mapItem) => ElevatedButton(
                     onPressed: () {},
                     child: Column(children: [
@@ -172,7 +98,9 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .background,
-                                      onPressed: () {},
+                                      onPressed: () {
+
+                                      },
                                       icon: const Icon(Icons.done)),
                                   IconButton(
                                       color: Theme.of(context)

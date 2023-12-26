@@ -133,6 +133,24 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {}
   }
 
+  Future<List<SubjectRequest>> getAllSubjectRequest() async {
+    List<SubjectRequest> subjectRequests = [];
+    print("GET ALL SUBJECT REQUEST");
+    firestore.collection("subject_requests").get().then(
+          (querySnapshot) {
+        print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          print('${docSnapshot.id} => ${docSnapshot.data()}');
+          Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+          var subjectRequest = SubjectRequest.fromJson(data);
+          subjectRequests.add(subjectRequest);
+          print("SUBJECT REQUEST $subjectRequest");
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return subjectRequests;
+  }
   Future<List<user_model.User>> getTutors() async {
     List<user_model.User> users = [];
     try {
@@ -175,7 +193,7 @@ class FirestoreService extends ChangeNotifier {
         subject: subject,
         state: "Pending",
         teachMethod: teachMethod,
-        schedules: null,
+        schedules: schedules,
         address: address,
         createdTime: Timestamp.now(),
         startTime: startTime,
@@ -192,22 +210,20 @@ class FirestoreService extends ChangeNotifier {
             SetOptions(merge: true)).catchError((error) {});
   }
 
-  Future<List<SubjectRequest>> getAllSubjectRequest() async {
+  Future<List<SubjectRequest>> getAllSubjectRequestByID() async {
     List<SubjectRequest> subjectRequests = [];
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection(
               'subject_requests') // Replace with your actual collection name
-          // .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
       for (QueryDocumentSnapshot document in querySnapshot.docs) {
         // Access the data of the matching document
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        print("getAllSubjectRequest DATA JSON : $data" );
         var subjectRequest = SubjectRequest.fromJson(data);
-        print("getAllSubjectRequest DATA JSON PARSED : $subjectRequest" );
-        // subjectRequests.add(subjectRequest);
+        subjectRequests.add(subjectRequest);
       }
     } catch (e) {}
 
@@ -233,7 +249,9 @@ class FirestoreService extends ChangeNotifier {
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+
+    }
     return name;
   }
 }
