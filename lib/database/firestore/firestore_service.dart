@@ -386,7 +386,7 @@ class FirestoreService extends ChangeNotifier {
     return teachingData;
   }
   Future<user_model.User?> getTutorById(String uid) async {
-    user_model.User? user;
+    user_model.User? user = null;
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('users') // Thay thế bằng tên collection thực tế của bạn
