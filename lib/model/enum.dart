@@ -3,3 +3,8 @@ enum SubjectRequestState{
   accepted,
   deleted
 }
+
+enum ClassesState{
+  running,
+  ended
+}
