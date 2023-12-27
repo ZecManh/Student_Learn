@@ -269,7 +269,7 @@ class FirestoreService extends ChangeNotifier {
     teachClass.tutorId = subjectRequest.tutorId;
     teachClass.subject = subjectRequest.subject;
     teachClass.address = subjectRequest.address;
-    teachClass.state = "start";
+    teachClass.state = ClassesState.running.name;
     teachClass.teachMethod = subjectRequest.teachMethod;
 
     List<LessonSchedules> lessonSchedules =
@@ -317,6 +317,7 @@ class FirestoreService extends ChangeNotifier {
         .collection("subject_requests")
         .where("learner_id", isEqualTo: subjectRequest.learnerId)
         .where("tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where("created_time", isEqualTo: subjectRequest.createdTime)
         .get()
         .then(
       (querySnapshot) {
@@ -336,5 +337,52 @@ class FirestoreService extends ChangeNotifier {
       },
       onError: (e) => print("Error completing: $e"),
     );
+  }
+
+  Future<List<TeachClass>> getAllClassByID() async {
+    List<TeachClass> teachClasses = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('classes') // Replace with your actual collection name
+          .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('state', isEqualTo: ClassesState.running.name)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        var teachClass = TeachClass.fromJson(data);
+        teachClasses.add(teachClass);
+      }
+    } catch (e) {}
+
+    return teachClasses;
+  }
+
+  Future<List<Map<String, dynamic>>> getTeachingInfo() async {
+    List<Map<String, dynamic>> teachingData = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('classes') // Replace with your actual collection name
+          .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('state', isEqualTo: ClassesState.running.name)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> itemData = {};
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        var teachClass = TeachClass.fromJson(data);
+        user_model.User learnerInfo = await getUser(teachClass.learnerId!);
+        itemData.addAll({
+          'docId': document.id,
+          'teachClass': teachClass,
+          'learnerInfo': learnerInfo
+        });
+        teachingData.add(itemData);
+      }
+    } catch (e) {}
+
+    return teachingData;
   }
 }
