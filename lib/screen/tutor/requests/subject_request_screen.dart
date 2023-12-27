@@ -31,13 +31,14 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
   @override
   void initState() {
     super.initState();
-    initInfo();
+    updateListRequest();
   }
 
-  void initInfo() async {
+  void updateListRequest() async {
     mapInfo = await firestoreService.getLearnerInfoWithListSubjectRequest();
     setState(() {
       mapInfo = mapInfo;
+      print("MAP INFO UPDATE");
     });
   }
 
@@ -81,13 +82,24 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           .background,
                                       onPressed: () {
                                         firestoreService.addClass(mapItem.key);
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                          content: Text("Bạn có một lớp học mới"),
+                                        ));
+                                        setState(() {
+                                          mapInfo.remove(mapItem.key);
+                                        });
                                       },
                                       icon: const Icon(Icons.done)),
                                   IconButton(
                                       color: Theme.of(context)
                                           .colorScheme
                                           .background,
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        firestoreService.removeSubjectRequest(mapItem.key);
+                                        setState(() {
+                                          mapInfo.remove(mapItem.key);
+                                        });
+                                      },
                                       icon: const Icon(
                                           Icons.remove_circle_outline)),
                                 ]),
