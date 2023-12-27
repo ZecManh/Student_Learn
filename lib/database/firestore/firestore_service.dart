@@ -216,6 +216,7 @@ class FirestoreService extends ChangeNotifier {
           .collection(
               'subject_requests') // Replace with your actual collection name
           .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('state', isEqualTo: SubjectRequestState.pending.name)
           .get();
 
       for (QueryDocumentSnapshot document in querySnapshot.docs) {
@@ -236,13 +237,11 @@ class FirestoreService extends ChangeNotifier {
     Map<SubjectRequest, user_model.User> data = {};
     try {
       for (SubjectRequest subjectRequest in subjectRequests) {
-        user_model.User learner = await  getUser(subjectRequest.learnerId!);
-        Map<SubjectRequest,user_model.User> map = {subjectRequest:learner};
+        user_model.User learner = await getUser(subjectRequest.learnerId!);
+        Map<SubjectRequest, user_model.User> map = {subjectRequest: learner};
         data.addAll(map);
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
     return data;
   }
 
@@ -273,36 +272,69 @@ class FirestoreService extends ChangeNotifier {
     teachClass.state = "start";
     teachClass.teachMethod = subjectRequest.teachMethod;
 
-    List<LessonSchedules> lessonSchedules = TeachClass.generateTimetableTimestamp(subjectRequest.startTime!, subjectRequest.endTime!, subjectRequest.weekSchedules!);
+    List<LessonSchedules> lessonSchedules =
+        TeachClass.generateTimetableTimestamp(subjectRequest.startTime!,
+            subjectRequest.endTime!, subjectRequest.weekSchedules!);
 
-    teachClass.schedules = Schedules(weekSchedules: subjectRequest.weekSchedules,lessonSchedules: lessonSchedules);
+    teachClass.schedules = Schedules(
+        weekSchedules: subjectRequest.weekSchedules,
+        lessonSchedules: lessonSchedules);
 
     await _firestore
         .collection('classes')
         .add(teachClass.toJson())
         .then((value) => print(value));
 
-    _firestore.collection("subject_requests")
+    _firestore
+        .collection("subject_requests")
         .where("learner_id", isEqualTo: subjectRequest.learnerId)
-        .where("tutor_id",isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .get().then(
-            (querySnapshot) {
+        .where("tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (querySnapshot) {
         print("Successfully completed SUBJECT REQUEST");
         for (var docSnapshot in querySnapshot.docs) {
-
           print('${docSnapshot.id} => ${docSnapshot.data()}');
-           String subjectRequestId = docSnapshot.id;
+          String subjectRequestId = docSnapshot.id;
           changeSubjectRequestStateToAccept(subjectRequestId);
-
         }
       },
       onError: (e) => print("Error completing: $e"),
     );
   }
 
-  Future<void> changeSubjectRequestStateToAccept(String subjectRequestID) async {
-    // await _firestore.collection("subject_requests").co
-
+  Future<void> changeSubjectRequestStateToAccept(
+      String subjectRequestID) async {
+    await _firestore.collection("subject_requests").doc(subjectRequestID).set({
+      'state': SubjectRequestState.accepted.name,
+    }, SetOptions(merge: true)).catchError((error) {
+      print('FIRESTORE UPDATE SUBJECT REQUEST TO ACCEPTED' + error);
+    });
   }
 
+  Future<void> removeSubjectRequest(SubjectRequest subjectRequest) async {
+    _firestore
+        .collection("subject_requests")
+        .where("learner_id", isEqualTo: subjectRequest.learnerId)
+        .where("tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then(
+      (querySnapshot) {
+        print("Successfully completed SUBJECT REQUEST");
+        for (var docSnapshot in querySnapshot.docs) {
+          print('${docSnapshot.id} => ${docSnapshot.data()}');
+          String subjectRequestId = docSnapshot.id;
+          _firestore
+              .collection("subject_requests")
+              .doc(subjectRequestId)
+              .delete()
+              .then(
+                (doc) => print("Document $subjectRequestId deleted"),
+                onError: (e) => print("Error updating subject request $e"),
+              );
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
 }
