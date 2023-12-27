@@ -34,9 +34,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     initInto();
   }
 
-  void initInto() async {
-
-  }
+  void initInto() async {}
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
@@ -63,6 +61,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                     padding: const EdgeInsets.all(20),
                     child: GestureDetector(
                         onTap: () {
+                          print("TUTOR INFO");
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) {

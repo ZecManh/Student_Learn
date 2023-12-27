@@ -1,14 +1,14 @@
 import 'package:datn/model/user/teach_schedules.dart';
 
 class Schedules {
-  TeachSchedules? weekSchedules;
+  WeekSchedules? weekSchedules;
   List<LessonSchedules>? lessonSchedules = [];
 
   Schedules({this.weekSchedules, this.lessonSchedules});
 
   Schedules.fromJson(Map<String, dynamic> json) {
     weekSchedules = json['week_schedules'] != null
-        ? TeachSchedules.fromJson(json['week_schedules'])
+        ? WeekSchedules.fromJson(json['week_schedules'])
         : null;
     // lessonSchedules =(json['lesson_schedules'] != null) ? json['lesson_schedules'].cast<LessonSchedules>() : null;
     if (json['lesson_schedules'] != null) {

@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/enum.dart';
+import 'package:datn/model/subject_request/schedules.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
+import 'package:datn/model/teach_classes/teach_class.dart';
 import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../model/subject_request/schedules.dart';
+import '../../model/user/teach_schedules.dart';
 
 class FirestoreService extends ChangeNotifier {
   static String USER_DOC = "users";
@@ -179,7 +182,7 @@ class FirestoreService extends ChangeNotifier {
       String tutorId,
       String subject,
       String teachMethod,
-      Schedules schedules,
+      WeekSchedules schedules,
       String address,
       Timestamp startTime,
       Timestamp endTime) async {
@@ -187,9 +190,9 @@ class FirestoreService extends ChangeNotifier {
         learnerId: FirebaseAuth.instance.currentUser!.uid,
         tutorId: tutorId,
         subject: subject,
-        state: "Pending",
+        state: SubjectRequestState.pending.name,
         teachMethod: teachMethod,
-        schedules: schedules,
+        weekSchedules: schedules,
         address: address,
         createdTime: Timestamp.now(),
         startTime: startTime,
@@ -256,14 +259,50 @@ class FirestoreService extends ChangeNotifier {
     }
     return users.first;
   }
-  //
-  // Future<void> addClass(SubjectRequest key) async {
-  //
-  //
-  //   await _firestore
-  //       .collection('users')
-  //       .add(data)
-  //       .then((value) => print(value));
-  //
-  // }
+
+  Future<void> addClass(SubjectRequest subjectRequest) async {
+    TeachClass teachClass = TeachClass();
+
+    teachClass.createdTime = Timestamp.now();
+    teachClass.startTime = subjectRequest.startTime;
+    teachClass.endTime = subjectRequest.endTime;
+    teachClass.learnerId = subjectRequest.learnerId;
+    teachClass.tutorId = subjectRequest.tutorId;
+    teachClass.subject = subjectRequest.subject;
+    teachClass.address = subjectRequest.address;
+    teachClass.state = "start";
+    teachClass.teachMethod = subjectRequest.teachMethod;
+
+    List<LessonSchedules> lessonSchedules = TeachClass.generateTimetableTimestamp(subjectRequest.startTime!, subjectRequest.endTime!, subjectRequest.weekSchedules!);
+
+    teachClass.schedules = Schedules(weekSchedules: subjectRequest.weekSchedules,lessonSchedules: lessonSchedules);
+
+    await _firestore
+        .collection('classes')
+        .add(teachClass.toJson())
+        .then((value) => print(value));
+
+    _firestore.collection("subject_requests")
+        .where("learner_id", isEqualTo: subjectRequest.learnerId)
+        .where("tutor_id",isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get().then(
+            (querySnapshot) {
+        print("Successfully completed SUBJECT REQUEST");
+        for (var docSnapshot in querySnapshot.docs) {
+
+          print('${docSnapshot.id} => ${docSnapshot.data()}');
+           String subjectRequestId = docSnapshot.id;
+          changeSubjectRequestStateToAccept(subjectRequestId);
+
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
+
+  Future<void> changeSubjectRequestStateToAccept(String subjectRequestID) async {
+    // await _firestore.collection("subject_requests").co
+
+  }
+
 }

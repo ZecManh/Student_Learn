@@ -80,7 +80,7 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           .colorScheme
                                           .background,
                                       onPressed: () {
-                                        // firestoreService.addClass(mapItem.key);
+                                        firestoreService.addClass(mapItem.key);
                                       },
                                       icon: const Icon(Icons.done)),
                                   IconButton(
@@ -126,18 +126,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.monday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.monday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -158,18 +156,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.tuesday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.tuesday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -190,18 +186,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.wednesday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.wednesday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -222,18 +216,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.thursday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.thursday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -254,18 +246,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.friday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.friday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(height: 10,),
@@ -282,18 +272,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.saturday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.saturday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(height: 10,),
@@ -310,18 +298,16 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           const Text("Từ "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.sunday
-                                                  ?.startTime ??
+                                                  ?.startTime?.format() ??
                                               ''),
                                           const Text(" Đến "),
                                           Text(mapItem
                                                   .key
-                                                  .schedules
-                                                  ?.weekSchedules
+                                                  .weekSchedules
                                                   ?.sunday
-                                                  ?.endTime ??
+                                                  ?.endTime?.format() ??
                                               '')
                                         ])),
                                   ],
