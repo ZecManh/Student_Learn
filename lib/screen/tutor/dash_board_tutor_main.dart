@@ -31,8 +31,12 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   @override
   void initState() {
     super.initState();
+    initInto();
   }
 
+  void initInto() async {
+
+  }
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);

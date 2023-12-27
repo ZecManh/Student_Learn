@@ -78,6 +78,19 @@ class _RegisterTutorState extends State<RegisterTutor> {
   Districts? dropDownDistrict;
   var addressTextController = TextEditingController();
 
+  String convertTime(Time time) {
+    String timeString = "";
+    int hour = time.hour;
+    int minute = time.minute;
+    timeString += hour.toString() + " : ";
+    if (minute == 0) {
+      timeString += "00";
+    } else {
+      timeString += minute.toString();
+    }
+    return timeString;
+  }
+
   List<LessonSchedules> generateTimetable(DateTime startDate, DateTime endDate,
       Map<String, Map<String, TimeOfDay>> schedule) {
     List<LessonSchedules> timetable = [];
@@ -114,7 +127,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
         // }
 
         // timetable.add([startTimeDateTime, endTimeDateTime]);
-        timetable.add(LessonSchedules(startTime: Timestamp.fromDate(startTimeDateTime),endTime: Timestamp.fromDate(endTimeDateTime)));
+        timetable.add(LessonSchedules(
+            startTime: Timestamp.fromDate(startTimeDateTime),
+            endTime: Timestamp.fromDate(endTimeDateTime)));
       }
 
       currentDate = currentDate.add(Duration(days: 1)); // Move to the next day
@@ -1212,140 +1227,159 @@ class _RegisterTutorState extends State<RegisterTutor> {
             Center(
                 child: OutlinedButton(
                     onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Xác nhận'),
-                              content: const Text(
-                                  'Bạn chắc chắn với sự thay đổi này?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'Cancel'),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    TeachSchedules weekSchedules =
-                                        TeachSchedules();
-                                    LessonSchedules lessonSchedules =
-                                        LessonSchedules();
-                                    if (isMondayChosen) {
-                                      studySchedule["Monday"] = {
-                                        'startTime': mondayStartTime,
-                                        'endTime': mondayEndTime
-                                      };
-                                      weekSchedules.monday = Period(
-                                          startTime: mondayStartTime.toString(),
-                                          endTime: mondayEndTime.toString());
-                                    }
-                                    if (isTuesdayChosen) {
-                                      studySchedule["Tuesday"] = {
-                                        'startTime': tuesdayStartTime,
-                                        'endTime': tuesdayEndTime
-                                      };
-                                      weekSchedules.tuesday = Period(
-                                          startTime: tuesdayStartTime.toString(),
-                                          endTime: tuesdayEndTime.toString());
-                                    }
-                                    if (isWednesdayChosen) {
-                                      studySchedule["Wednesday"] = {
-                                        'startTime': wednesdayStartTime,
-                                        'endTime': wednesdayEndTime
-                                      };
-                                      weekSchedules.wednesday = Period(
-                                          startTime: wednesdayStartTime.toString(),
-                                          endTime: wednesdayEndTime.toString());
-                                    }
-                                    if (isThursdayChosen) {
-                                      studySchedule["Thursday"] = {
-                                        'startTime': thursdayStartTime,
-                                        'endTime': thursdayEndTime
-                                      };
-                                      weekSchedules.thursday = Period(
-                                          startTime: thursdayStartTime.toString(),
-                                          endTime: thursdayEndTime.toString());
-                                    }
-                                    if (isFridayChosen) {
-                                      studySchedule["Friday"] = {
-                                        'startTime': fridayStartTime,
-                                        'endTime': fridayEndTime
-                                      };
-                                      weekSchedules.friday = Period(
-                                          startTime: fridayStartTime.toString(),
-                                          endTime: fridayEndTime.toString());
-                                    }
-                                    if (isSaturdayChosen) {
-                                      studySchedule["Saturday"] = {
-                                        'startTime': saturdayStartTime,
-                                        'endTime': saturdayEndTime
-                                      };
-                                      weekSchedules.saturday = Period(
-                                          startTime: saturdayStartTime.toString(),
-                                          endTime: saturdayEndTime.toString());
-                                    }
-                                    if (isSundayChosen) {
-                                      studySchedule["Sunday"] = {
-                                        'startTime': sundayStartTime,
-                                        'endTime': sundayEndTime
-                                      };
-                                      weekSchedules.sunday = Period(
-                                          startTime: sundayStartTime.toString(),
-                                          endTime: sundayEndTime.toString());
-                                    }
+                      if (startDateController.text != "" &&
+                          startDateController.text != null &&
+                          endDateController.text != "" &&
+                          endDateController.text != null&&startDate.isBefore(endDate)) {
 
-                                    List<LessonSchedules> timetable =
-                                        generateTimetable(
-                                            startDate, endDate, studySchedule);
-                                    studySchedule.forEach((key, value) {
-                                      print(key + value.toString());
-                                    });
-                                    timetable.forEach((element) {
-                                      print(element.toString());
-                                    });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Xác nhận'),
+                                content: const Text(
+                                    'Bạn chắc chắn với sự thay đổi này?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Cancel'),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
 
-                                    Schedules schedules = Schedules(lessonSchedules:timetable,weekSchedules: weekSchedules);
 
-                                    model_user.Address address =
-                                        model_user.Address(
-                                            province: "Hà Nội",
-                                            district: "Ứng Hoà",
-                                            ward: "Hoà Nam");
-                                    // var dateFormated = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                    Timestamp startTime = Timestamp.fromDate(
-                                        DateTime.parse(
-                                            startDateController.text));
-                                    Timestamp endTime = Timestamp.fromDate(
-                                        DateTime.parse(endDateController.text));
+                                      TeachSchedules weekSchedules =
+                                      TeachSchedules();
+                                      LessonSchedules lessonSchedules =
+                                      LessonSchedules();
+                                      if (isMondayChosen) {
+                                        studySchedule["Monday"] = {
+                                          'startTime': mondayStartTime,
+                                          'endTime': mondayEndTime
+                                        };
+                                        weekSchedules.monday = Period(
+                                            startTime:
+                                            convertTime(mondayStartTime),
+                                            endTime: convertTime(mondayEndTime));
+                                      }
+                                      if (isTuesdayChosen) {
+                                        studySchedule["Tuesday"] = {
+                                          'startTime': tuesdayStartTime,
+                                          'endTime': tuesdayEndTime
+                                        };
+                                        weekSchedules.tuesday = Period(
+                                            startTime:
+                                            convertTime(tuesdayStartTime),
+                                            endTime: convertTime(tuesdayEndTime));
+                                      }
+                                      if (isWednesdayChosen) {
+                                        studySchedule["Wednesday"] = {
+                                          'startTime': wednesdayStartTime,
+                                          'endTime': wednesdayEndTime
+                                        };
+                                        weekSchedules.wednesday = Period(
+                                            startTime:
+                                            convertTime(wednesdayStartTime),
+                                            endTime:
+                                            convertTime(wednesdayEndTime));
+                                      }
+                                      if (isThursdayChosen) {
+                                        studySchedule["Thursday"] = {
+                                          'startTime': thursdayStartTime,
+                                          'endTime': thursdayEndTime
+                                        };
+                                        weekSchedules.thursday = Period(
+                                            startTime:
+                                            convertTime(thursdayStartTime),
+                                            endTime:
+                                            convertTime(thursdayEndTime));
+                                      }
+                                      if (isFridayChosen) {
+                                        studySchedule["Friday"] = {
+                                          'startTime': fridayStartTime,
+                                          'endTime': fridayEndTime
+                                        };
+                                        weekSchedules.friday = Period(
+                                            startTime:
+                                            convertTime(fridayStartTime),
+                                            endTime: convertTime(fridayEndTime));
+                                      }
+                                      if (isSaturdayChosen) {
+                                        studySchedule["Saturday"] = {
+                                          'startTime': saturdayStartTime,
+                                          'endTime': saturdayEndTime
+                                        };
+                                        weekSchedules.saturday = Period(
+                                            startTime:
+                                            convertTime(saturdayStartTime),
+                                            endTime:
+                                            convertTime(saturdayEndTime));
+                                      }
+                                      if (isSundayChosen) {
+                                        studySchedule["Sunday"] = {
+                                          'startTime': sundayStartTime,
+                                          'endTime': sundayEndTime
+                                        };
+                                        weekSchedules.sunday = Period(
+                                            startTime:
+                                            convertTime(sundayStartTime),
+                                            endTime: convertTime(sundayEndTime));
+                                      }
 
-                                    FirestoreService firestoreService =
-                                        FirestoreService();
-                                    var finalAddress =
-                                        (addressTextController.text != '')
-                                            ? addressTextController.text +
-                                                " , " +
-                                                (dropDownDistrict!.name ?? '')
-                                            : (dropDownDistrict!.name ?? '');
+                                      List<LessonSchedules> timetable =
+                                      generateTimetable(
+                                          startDate, endDate, studySchedule);
+                                      studySchedule.forEach((key, value) {
+                                        print(key + value.toString());
+                                      });
+                                      timetable.forEach((element) {
+                                        print(element.toString());
+                                      });
 
-                                    print("schedules before add ${schedules.toString() } ");
-                                    print("schedules after add");
-                                    schedules.lessonSchedules?.forEach((element) {print(element.toString());});
-                                    firestoreService.addSubjectRequest(
-                                        widget.tutor.uid!,
-                                        initSubject,
-                                        initTeachMethod,
-                                        schedules,
-                                        finalAddress,
-                                        startTime,
-                                        endTime);
-                                    Navigator.pop(context, 'OK');
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          });
+                                      Schedules schedules = Schedules(
+                                          lessonSchedules: timetable,
+                                          weekSchedules: weekSchedules);
+
+                                      // var dateFormated = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                      Timestamp startTime = Timestamp.fromDate(
+                                          DateTime.parse(
+                                              startDateController.text));
+                                      Timestamp endTime = Timestamp.fromDate(
+                                          DateTime.parse(endDateController.text));
+
+                                      FirestoreService firestoreService =
+                                      FirestoreService();
+                                      var finalAddress =
+                                      (addressTextController.text != '')
+                                          ? addressTextController.text +
+                                          " , " +
+                                          (dropDownDistrict!.name ?? '')
+                                          : (dropDownDistrict!.name ?? '');
+
+                                      firestoreService.addSubjectRequest(
+                                          widget.tutor.uid!,
+                                          initSubject,
+                                          initTeachMethod,
+                                          schedules,
+                                          finalAddress,
+                                          startTime,
+                                          endTime);
+
+
+                                      Navigator.pop(context, 'OK');
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            });
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Vui lòng kiểm tra ngày giờ"),
+                        ));
+                      }
+
                     },
                     child: const Text('Xác nhận')))
           ],

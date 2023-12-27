@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 import 'package:flutter/material.dart';
 
-import '../../model/subject_request/subject_request.dart';
 
 class FirebaseAuthService extends ChangeNotifier {
   final firebase_auth.FirebaseAuth _firebaseAuth =

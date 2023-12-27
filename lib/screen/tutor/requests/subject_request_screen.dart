@@ -1,8 +1,8 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
+import 'package:datn/model/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class SubjectRequestScreen extends StatefulWidget {
   const SubjectRequestScreen({super.key});
@@ -26,10 +26,7 @@ String extractTimeString(String timeOfDayString) {
 
 class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
   FirestoreService firestoreService = FirestoreService();
-  List<SubjectRequest> subjectRequests = [];
-  List<String> leanerName = [];
-  int index = 0;
-  Map<SubjectRequest, String> mapInfo = {};
+  Map<SubjectRequest, User> mapInfo = {};
 
   @override
   void initState() {
@@ -38,26 +35,10 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
   }
 
   void initInfo() async {
-    print("getAllSubjectRequestByID");
-    var subjectRequestsFetch = await firestoreService.getAllSubjectRequestByID();
-    var fetchNames = await firestoreService
-        .getLearnerNameByListSubjectRequest(subjectRequestsFetch);
-    fetchNames.forEach((element) {
-      print(element);
-    });
+    mapInfo = await firestoreService.getLearnerInfoWithListSubjectRequest();
     setState(() {
-      subjectRequests = subjectRequestsFetch;
-      leanerName = fetchNames;
-      mapInfo = Map.fromIterables(subjectRequests, leanerName);
+      mapInfo = mapInfo;
     });
-    if (subjectRequests.length > 0) {
-      print("LENGTH ${subjectRequests.length}");
-      subjectRequests.forEach((element) {
-        print(element.toString());
-      });
-    } else {
-      print("SUBJECT REQUEST NIL");
-    }
   }
 
   @override
@@ -91,7 +72,7 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                                 .background),
                                       ),
                                     )
-                                  : Text(''),
+                                  : const Text(''),
                               Expanded(
                                 child: Row(children: [
                                   IconButton(
@@ -99,7 +80,7 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           .colorScheme
                                           .background,
                                       onPressed: () {
-
+                                        // firestoreService.addClass(mapItem.key);
                                       },
                                       icon: const Icon(Icons.done)),
                                   IconButton(
@@ -120,30 +101,238 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               // Return the dialog widget
                               return AlertDialog(
-                                title: Text('Lịch Học'),
-                                content: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                title: const Text('Lịch Học'),
+                                content: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  Text('Thứ 2',style: TextStyle(fontSize: 20),),
-                                  Text('Thứ 3',style: TextStyle(fontSize: 20),),
-                                  Text('Thứ 4',style: TextStyle(fontSize: 20),),
-                                  Text('Thứ 5',style: TextStyle(fontSize: 20),),
-                                  Text('Thứ 6',style: TextStyle(fontSize: 20),),
-                                  Text('Thứ 7',style: TextStyle(fontSize: 20),),
-                                  Text('Chủ nhật',style: TextStyle(fontSize: 20),),
-                                ],),
+                                    const Text(
+                                      'Thứ 2',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.monday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.monday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Thứ 3',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.tuesday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.tuesday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Thứ 4',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.wednesday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.wednesday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Thứ 5',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.thursday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.thursday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      'Thứ 6',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.friday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.friday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                    const SizedBox(height: 10,),
+                                    const Text(
+                                      'Thứ 7',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.saturday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.saturday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                    const SizedBox(height: 10,),
+                                    const Text(
+                                      'Chủ nhật',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Center(
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                          const Text("Từ "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.sunday
+                                                  ?.startTime ??
+                                              ''),
+                                          const Text(" Đến "),
+                                          Text(mapItem
+                                                  .key
+                                                  .schedules
+                                                  ?.weekSchedules
+                                                  ?.sunday
+                                                  ?.endTime ??
+                                              '')
+                                        ])),
+                                  ],
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       // Close the dialog
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                   ),
                                 ],
                               );
@@ -157,50 +346,62 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
+                                    child: CircleAvatar(
+                                        backgroundImage:
+                                            (mapItem.value.photoUrl != null)
+                                                ? NetworkImage(
+                                                    mapItem.value.photoUrl!)
+                                                : const AssetImage(
+                                                        'assets/bear.jpg')
+                                                    as ImageProvider,
+                                        radius: 30),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
                                     child: Row(children: [
-                                      Text('Tên : '),
-                                      Text(mapItem.value ?? '')
+                                      const Text('Tên : '),
+                                      Text(mapItem.value.displayName ?? '')
                                     ]),
                                   ),
                                   Padding(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Row(children: [
-                                        Text('Địa chỉ : '),
+                                        const Text('Địa chỉ : '),
                                         Text(mapItem.key.address ?? '')
                                       ])),
                                   Padding(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Row(children: [
-                                        Text('Môn học : '),
+                                        const Text('Môn học : '),
                                         Text(mapItem.key.subject ?? '')
                                       ])),
                                   Padding(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Row(children: [
-                                        Text('Thời gian bắt đầu : '),
+                                        const Text('Thời gian bắt đầu : '),
                                         Text((mapItem.key.startTime != null)
                                             ? (DateFormat('dd-MM-yyyy').format(
-                                                mapItem.key.startTime!.toDate()))
+                                                mapItem.key.startTime!
+                                                    .toDate()))
                                             : '')
                                       ])),
                                   Padding(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Row(children: [
-                                        Text('Thời gian kết thúc : '),
+                                        const Text('Thời gian kết thúc : '),
                                         Text((mapItem.key.startTime != null)
                                             ? (DateFormat('dd-MM-yyyy').format(
                                                 mapItem.key.endTime!.toDate()))
                                             : ''),
                                       ])),
-
                                 ],
                               )
                             ],
                           ),
                         ),
                       ),
-                      Divider()
+                      const Divider()
                     ]),
                   ))
             ],

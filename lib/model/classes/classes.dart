@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/subject_request/schedules.dart';
 
-
-class SubjectRequest {
+class TeachClass {
   String? learnerId;
   String? tutorId;
-  String? subject;
-  String? state;
-  String? teachMethod;
-  Schedules? schedules;
-  String? address;
   Timestamp? createdTime;
   Timestamp? startTime;
   Timestamp? endTime;
+  String? teachMethod;
+  String? subject;
+  Schedules? schedules;
+  String? address;
+  String? state;
 
-  SubjectRequest(
+  TeachClass(
       {this.learnerId,
       this.tutorId,
       this.subject,
@@ -26,14 +25,15 @@ class SubjectRequest {
       this.startTime,
       this.endTime});
 
-
-  SubjectRequest.fromJson(Map<String, dynamic> json) {
+  TeachClass.fromJson(Map<String, dynamic> json) {
     learnerId = json['learner_id'];
     tutorId = json['tutor_id'];
     subject = json['subject'];
     state = json['state'];
     teachMethod = json['teach_method'];
-    schedules = json['schedules'] != null ? Schedules.fromJson(json['schedules']) : null;
+    schedules = json['schedules'] != null
+        ? Schedules.fromJson(json['schedules'])
+        : null;
     address = json['address'] != null ? json['address'] : null;
     createdTime = json['created_time'];
     startTime = json['start_time'];
@@ -59,6 +59,6 @@ class SubjectRequest {
 
   @override
   String toString() {
-    return 'SubjectRequest{learnerId: $learnerId, tutorId: $tutorId, subject: $subject, state: $state, teachMethod: $teachMethod, schedules: $schedules, address: $address, createdTime: $createdTime, startTime: $startTime, endTime: $endTime}';
+    return 'TeachClass{learnerId: $learnerId, tutorId: $tutorId, createdTime: $createdTime, startTime: $startTime, endTime: $endTime, teachMethod: $teachMethod, subject: $subject, schedules: $schedules, address: $address, state: $state}';
   }
 }

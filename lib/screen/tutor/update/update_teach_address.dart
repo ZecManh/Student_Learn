@@ -6,7 +6,6 @@ import 'package:datn/model/user/user.dart' as model_user;
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import '../../../model/user/user.dart';
 import '../../../model/vn_province/district.dart';
 import '../../../model/vn_province/province.dart';
 import '../../../model/vn_province/ward.dart';
