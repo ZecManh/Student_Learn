@@ -1,35 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/subject_request/schedules.dart';
 
-import '../user/teach_schedules.dart';
-import '../user/user.dart';
 
-class SubjectRequest {
+class TeachClass {
   String? learnerId;
   String? tutorId;
+  Timestamp? createdTime;
+  Timestamp? startTime;
+  Timestamp? endTime;
   String? subject;
   String? state;
   String? teachMethod;
   Schedules? schedules;
   String? address;
-  Timestamp? createdTime;
-  Timestamp? startTime;
-  Timestamp? endTime;
 
-  SubjectRequest(
+
+  TeachClass(
       {this.learnerId,
-      this.tutorId,
-      this.subject,
-      this.state,
-      this.teachMethod,
-      this.schedules,
-      this.address,
-      this.createdTime,
-      this.startTime,
-      this.endTime});
+        this.tutorId,
+        this.subject,
+        this.state,
+        this.teachMethod,
+        this.schedules,
+        this.address,
+        this.createdTime,
+        this.startTime,
+        this.endTime});
 
 
-  SubjectRequest.fromJson(Map<String, dynamic> json) {
+  TeachClass.fromJson(Map<String, dynamic> json) {
     learnerId = json['learner_id'];
     tutorId = json['tutor_id'];
     subject = json['subject'];

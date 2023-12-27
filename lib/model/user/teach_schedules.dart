@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TeachSchedules {
   Period? sunday;
   Period? saturday;
@@ -89,3 +91,38 @@ class Period {
     return 'Period{startTime: $startTime, endTime: $endTime}';
   }
 }
+
+class LessonSchedules{
+
+  Timestamp? startTime;
+  Timestamp? endTime;
+  Timestamp? attendanceTime;
+  String? state;
+
+  LessonSchedules({this.startTime, this.endTime,this.attendanceTime,this.state});
+
+  LessonSchedules.fromJson(Map<String, dynamic> json) {
+
+    startTime = json['start_time'] != null ? (json['start_time']) : null;
+    endTime = json['end_time'] != null ? (json['end_time']) : null;
+    attendanceTime = json['attendance_time'] != null ? (json['attendance_time']) : null;
+    state = json['state'] != null ? (json['state']) : null;
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['start_time'] = startTime;
+    data['end_time'] = endTime;
+    data['attendance_time'] = attendanceTime;
+    data['state'] = state;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'LessonSchedules{startTime: $startTime, endTime: $endTime, attendanceTime: $attendanceTime, state: $state}';
+  }
+
+}
+

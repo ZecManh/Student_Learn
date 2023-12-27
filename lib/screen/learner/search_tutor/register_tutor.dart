@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:datn/model/subject_request/schedules.dart';
 import 'package:datn/model/user/teach_schedules.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,11 @@ class _RegisterTutorState extends State<RegisterTutor> {
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
 
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+
+  Map<String, Map<String, TimeOfDay>> studySchedule = {};
+
   Time mondayStartTime = Time(hour: 00, minute: 00, second: 00);
   Time mondayEndTime = Time(hour: 00, minute: 00, second: 00);
   Time tuesdayStartTime = Time(hour: 00, minute: 00, second: 00);
@@ -45,6 +51,21 @@ class _RegisterTutorState extends State<RegisterTutor> {
   Time sundayStartTime = Time(hour: 00, minute: 00, second: 00);
   Time sundayEndTime = Time(hour: 00, minute: 00, second: 00);
 
+  DateTime mondayStartDateTime = DateTime.now();
+  DateTime mondayEndDateTime = DateTime.now();
+  DateTime tuesdayStartDateTime = DateTime.now();
+  DateTime tuesdayEndDateTime = DateTime.now();
+  DateTime wednesdayStartDateTime = DateTime.now();
+  DateTime wednesdayEndDateTime = DateTime.now();
+  DateTime thursdayStartDateTime = DateTime.now();
+  DateTime thursdayEndDateTime = DateTime.now();
+  DateTime fridayStartDateTime = DateTime.now();
+  DateTime fridayEndDateTime = DateTime.now();
+  DateTime saturdayStartDateTime = DateTime.now();
+  DateTime saturdayEndDateTime = DateTime.now();
+  DateTime sundayStartDateTime = DateTime.now();
+  DateTime sundayEndDateTime = DateTime.now();
+
   bool isMondayChosen = false;
   bool isTuesdayChosen = false;
   bool isWednesdayChosen = false;
@@ -57,9 +78,55 @@ class _RegisterTutorState extends State<RegisterTutor> {
   Districts? dropDownDistrict;
   var addressTextController = TextEditingController();
 
+  List<LessonSchedules> generateTimetable(DateTime startDate, DateTime endDate,
+      Map<String, Map<String, TimeOfDay>> schedule) {
+    List<LessonSchedules> timetable = [];
+    DateTime currentDate = startDate;
+
+    while (currentDate.isBefore(endDate.add(Duration(days: 1)))) {
+      String dayOfWeek = DateFormat('EEEE')
+          .format(currentDate); // Get the day of the week (e.g., Tuesday)
+
+      if (schedule.containsKey(dayOfWeek)) {
+        TimeOfDay startTime = schedule[dayOfWeek]!['startTime']!;
+        TimeOfDay endTime = schedule[dayOfWeek]!['endTime']!;
+
+        DateTime startTimeDateTime = DateTime(
+          currentDate.year,
+          currentDate.month,
+          currentDate.day,
+          startTime.hour,
+          startTime.minute,
+        );
+
+        DateTime endTimeDateTime = DateTime(
+          currentDate.year,
+          currentDate.month,
+          currentDate.day,
+          endTime.hour,
+          endTime.minute,
+        );
+
+        // while (startTimeDateTime.isBefore(endTimeDateTime)) {
+        //  var endTime = startTimeDateTime.add(Duration(hours: endTimeDateTime.hour,minutes: endTimeDateTime.minute));
+        //  timetable.add([startTimeDateTime,endTime]);
+        //
+        // }
+
+        // timetable.add([startTimeDateTime, endTimeDateTime]);
+        timetable.add(LessonSchedules(startTime: Timestamp.fromDate(startTimeDateTime),endTime: Timestamp.fromDate(endTimeDateTime)));
+      }
+
+      currentDate = currentDate.add(Duration(days: 1)); // Move to the next day
+    }
+
+    return timetable;
+  }
+
   void onMondayStartTimeChanged(Time newTime) {
     setState(() {
       mondayStartTime = newTime;
+      // mondayStartTime = Time(hour: newTime.hour,minute: newTime.minute);
     });
   }
 
@@ -296,7 +363,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       const TextStyle(color: Colors.white))));
                         }).toList()),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     controller: addressTextController,
                     keyboardType: TextInputType.text,
@@ -353,6 +422,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                   firstDate: DateTime.now(),
                                   lastDate: DateTime(2030));
                               if (pickedDate != null) {
+                                startDate = pickedDate;
+                                print("START DATE " + startDate.toString());
+
                                 String formattedDate =
                                     DateFormat('yyyy-MM-dd').format(pickedDate);
                                 startDateController.text = formattedDate;
@@ -378,6 +450,15 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                   firstDate: DateTime.now(),
                                   lastDate: DateTime(2030));
                               if (pickedDate != null) {
+                                pickedDate = DateTime(
+                                    pickedDate.year,
+                                    pickedDate.month,
+                                    pickedDate.day,
+                                    23,
+                                    59,
+                                    59);
+                                endDate = pickedDate;
+                                print("END DATE " + endDate.toString());
                                 String formattedDate =
                                     DateFormat('yyyy-MM-dd').format(pickedDate);
                                 endDateController.text = formattedDate;
@@ -439,6 +520,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        mondayStartDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -476,6 +558,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        mondayEndDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -541,7 +624,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
-                                        // print(dateTime);
+                                        tuesdayStartDateTime = dateTime;
+                                        print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
                                       },
@@ -579,6 +663,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
                                         // print(dateTime);
+                                        tuesdayEndDateTime = dateTime;
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
                                       },
@@ -643,6 +728,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        wednesdayStartDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -680,6 +766,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        wednesdayEndDateTime = dateTime;
+
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -745,6 +833,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        thursdayStartDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -782,6 +871,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        thursdayEndDateTime = dateTime;
+
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -847,6 +938,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        fridayStartDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -884,6 +976,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        fridayEndDateTime = dateTime;
+
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -949,6 +1043,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        saturdayStartDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -986,6 +1081,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        saturdayEndDateTime = dateTime;
+
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -1052,6 +1149,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
                                         // print(dateTime);
+                                        sundayStartDateTime = dateTime;
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
                                       },
@@ -1088,6 +1186,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       minuteInterval: TimePickerInterval.FIVE,
                                       // Optional onChange to receive value as DateTime
                                       onChangeDateTime: (DateTime dateTime) {
+                                        sundayEndDateTime = dateTime;
                                         // print(dateTime);
                                         debugPrint(
                                             "[debug datetime]:  $dateTime");
@@ -1128,46 +1227,85 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                                 TextButton(
                                   onPressed: () async {
-                                    TeachSchedules schedules = TeachSchedules();
+                                    TeachSchedules weekSchedules =
+                                        TeachSchedules();
+                                    LessonSchedules lessonSchedules =
+                                        LessonSchedules();
                                     if (isMondayChosen) {
-                                      schedules.monday = Period(
+                                      studySchedule["Monday"] = {
+                                        'startTime': mondayStartTime,
+                                        'endTime': mondayEndTime
+                                      };
+                                      weekSchedules.monday = Period(
                                           startTime: mondayStartTime.toString(),
                                           endTime: mondayEndTime.toString());
                                     }
                                     if (isTuesdayChosen) {
-                                      schedules.tuesday = Period(
-                                          startTime:
-                                              tuesdayStartTime.toString(),
+                                      studySchedule["Tuesday"] = {
+                                        'startTime': tuesdayStartTime,
+                                        'endTime': tuesdayEndTime
+                                      };
+                                      weekSchedules.tuesday = Period(
+                                          startTime: tuesdayStartTime.toString(),
                                           endTime: tuesdayEndTime.toString());
                                     }
                                     if (isWednesdayChosen) {
-                                      schedules.wednesday = Period(
-                                          startTime:
-                                              wednesdayStartTime.toString(),
+                                      studySchedule["Wednesday"] = {
+                                        'startTime': wednesdayStartTime,
+                                        'endTime': wednesdayEndTime
+                                      };
+                                      weekSchedules.wednesday = Period(
+                                          startTime: wednesdayStartTime.toString(),
                                           endTime: wednesdayEndTime.toString());
                                     }
                                     if (isThursdayChosen) {
-                                      schedules.thursday = Period(
-                                          startTime:
-                                              thursdayStartTime.toString(),
+                                      studySchedule["Thursday"] = {
+                                        'startTime': thursdayStartTime,
+                                        'endTime': thursdayEndTime
+                                      };
+                                      weekSchedules.thursday = Period(
+                                          startTime: thursdayStartTime.toString(),
                                           endTime: thursdayEndTime.toString());
                                     }
                                     if (isFridayChosen) {
-                                      schedules.friday = Period(
+                                      studySchedule["Friday"] = {
+                                        'startTime': fridayStartTime,
+                                        'endTime': fridayEndTime
+                                      };
+                                      weekSchedules.friday = Period(
                                           startTime: fridayStartTime.toString(),
                                           endTime: fridayEndTime.toString());
                                     }
                                     if (isSaturdayChosen) {
-                                      schedules.saturday = Period(
-                                          startTime:
-                                              saturdayStartTime.toString(),
+                                      studySchedule["Saturday"] = {
+                                        'startTime': saturdayStartTime,
+                                        'endTime': saturdayEndTime
+                                      };
+                                      weekSchedules.saturday = Period(
+                                          startTime: saturdayStartTime.toString(),
                                           endTime: saturdayEndTime.toString());
                                     }
                                     if (isSundayChosen) {
-                                      schedules.sunday = Period(
+                                      studySchedule["Sunday"] = {
+                                        'startTime': sundayStartTime,
+                                        'endTime': sundayEndTime
+                                      };
+                                      weekSchedules.sunday = Period(
                                           startTime: sundayStartTime.toString(),
                                           endTime: sundayEndTime.toString());
                                     }
+
+                                    List<LessonSchedules> timetable =
+                                        generateTimetable(
+                                            startDate, endDate, studySchedule);
+                                    studySchedule.forEach((key, value) {
+                                      print(key + value.toString());
+                                    });
+                                    timetable.forEach((element) {
+                                      print(element.toString());
+                                    });
+
+                                    Schedules schedules = Schedules(lessonSchedules:timetable,weekSchedules: weekSchedules);
 
                                     model_user.Address address =
                                         model_user.Address(
@@ -1183,9 +1321,18 @@ class _RegisterTutorState extends State<RegisterTutor> {
 
                                     FirestoreService firestoreService =
                                         FirestoreService();
-                                    var finalAddress = addressTextController.text +" , " + (dropDownDistrict!.name??'');
+                                    var finalAddress =
+                                        (addressTextController.text != '')
+                                            ? addressTextController.text +
+                                                " , " +
+                                                (dropDownDistrict!.name ?? '')
+                                            : (dropDownDistrict!.name ?? '');
 
-                                    firestoreService.addSubjectRequest(widget.tutor.uid!,
+                                    print("schedules before add ${schedules.toString() } ");
+                                    print("schedules after add");
+                                    schedules.lessonSchedules?.forEach((element) {print(element.toString());});
+                                    firestoreService.addSubjectRequest(
+                                        widget.tutor.uid!,
                                         initSubject,
                                         initTeachMethod,
                                         schedules,
