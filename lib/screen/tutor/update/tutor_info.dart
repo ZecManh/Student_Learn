@@ -416,7 +416,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                               width: 10,
                             ),
                             Expanded(
-                              child: (user.education?.university != null)
+                              child: (user.education?.major != null)
                                   ? Text(
                                       user.education!.major!,
                                       style: const TextStyle(fontSize: 20),

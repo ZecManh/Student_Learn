@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/subject_request/schedules.dart';
+import 'package:datn/model/teach_classes/teach_class.dart';
 import 'package:datn/model/user/teach_schedules.dart';
 import 'package:day_night_time_picker/day_night_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -1230,8 +1231,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                       if (startDateController.text != "" &&
                           startDateController.text != null &&
                           endDateController.text != "" &&
-                          endDateController.text != null&&startDate.isBefore(endDate)) {
-
+                          endDateController.text != null &&
+                          startDate.isBefore(endDate)) {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -1247,21 +1248,20 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                   ),
                                   TextButton(
                                     onPressed: () async {
-
-
-                                      TeachSchedules weekSchedules =
-                                      TeachSchedules();
+                                      WeekSchedules weekSchedules =
+                                          WeekSchedules();
                                       LessonSchedules lessonSchedules =
-                                      LessonSchedules();
+                                          LessonSchedules();
                                       if (isMondayChosen) {
                                         studySchedule["Monday"] = {
                                           'startTime': mondayStartTime,
                                           'endTime': mondayEndTime
                                         };
                                         weekSchedules.monday = Period(
-                                            startTime:
-                                            convertTime(mondayStartTime),
-                                            endTime: convertTime(mondayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                mondayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                mondayEndTime));
                                       }
                                       if (isTuesdayChosen) {
                                         studySchedule["Tuesday"] = {
@@ -1269,9 +1269,10 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           'endTime': tuesdayEndTime
                                         };
                                         weekSchedules.tuesday = Period(
-                                            startTime:
-                                            convertTime(tuesdayStartTime),
-                                            endTime: convertTime(tuesdayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                tuesdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                tuesdayEndTime));
                                       }
                                       if (isWednesdayChosen) {
                                         studySchedule["Wednesday"] = {
@@ -1279,10 +1280,10 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           'endTime': wednesdayEndTime
                                         };
                                         weekSchedules.wednesday = Period(
-                                            startTime:
-                                            convertTime(wednesdayStartTime),
-                                            endTime:
-                                            convertTime(wednesdayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                wednesdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                wednesdayEndTime));
                                       }
                                       if (isThursdayChosen) {
                                         studySchedule["Thursday"] = {
@@ -1290,10 +1291,10 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           'endTime': thursdayEndTime
                                         };
                                         weekSchedules.thursday = Period(
-                                            startTime:
-                                            convertTime(thursdayStartTime),
-                                            endTime:
-                                            convertTime(thursdayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                thursdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                thursdayEndTime));
                                       }
                                       if (isFridayChosen) {
                                         studySchedule["Friday"] = {
@@ -1301,9 +1302,10 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           'endTime': fridayEndTime
                                         };
                                         weekSchedules.friday = Period(
-                                            startTime:
-                                            convertTime(fridayStartTime),
-                                            endTime: convertTime(fridayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                fridayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                fridayEndTime));
                                       }
                                       if (isSaturdayChosen) {
                                         studySchedule["Saturday"] = {
@@ -1311,10 +1313,10 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           'endTime': saturdayEndTime
                                         };
                                         weekSchedules.saturday = Period(
-                                            startTime:
-                                            convertTime(saturdayStartTime),
-                                            endTime:
-                                            convertTime(saturdayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                saturdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                saturdayEndTime));
                                       }
                                       if (isSundayChosen) {
                                         studySchedule["Sunday"] = {
@@ -1322,14 +1324,15 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           'endTime': sundayEndTime
                                         };
                                         weekSchedules.sunday = Period(
-                                            startTime:
-                                            convertTime(sundayStartTime),
-                                            endTime: convertTime(sundayEndTime));
+                                            startTime: HourInDay.fromTime(
+                                                sundayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                sundayEndTime));
                                       }
 
                                       List<LessonSchedules> timetable =
-                                      generateTimetable(
-                                          startDate, endDate, studySchedule);
+                                          generateTimetable(startDate, endDate,
+                                              studySchedule);
                                       studySchedule.forEach((key, value) {
                                         print(key + value.toString());
                                       });
@@ -1346,26 +1349,34 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                           DateTime.parse(
                                               startDateController.text));
                                       Timestamp endTime = Timestamp.fromDate(
-                                          DateTime.parse(endDateController.text));
+                                          DateTime.parse(
+                                              endDateController.text));
 
                                       FirestoreService firestoreService =
-                                      FirestoreService();
+                                          FirestoreService();
                                       var finalAddress =
-                                      (addressTextController.text != '')
-                                          ? addressTextController.text +
-                                          " , " +
-                                          (dropDownDistrict!.name ?? '')
-                                          : (dropDownDistrict!.name ?? '');
-
+                                          (addressTextController.text != '')
+                                              ? addressTextController.text +
+                                                  " , " +
+                                                  (dropDownDistrict!.name ?? '')
+                                              : (dropDownDistrict!.name ?? '');
+                                      var list = TeachClass.generateTimetable(
+                                          startDate, endDate, weekSchedules);
+                                      print("LESSON SCHEDULES");
+                                      list.forEach((element) {
+                                        print(element.toString());
+                                      });
+                                      var myTimestamp = Timestamp.now();
+                                      var myDateTime = DateTime.fromMillisecondsSinceEpoch(myTimestamp.millisecondsSinceEpoch);
+                                      print("MY DATE TIME ${myDateTime.toString()}");
                                       firestoreService.addSubjectRequest(
                                           widget.tutor.uid!,
                                           initSubject,
                                           initTeachMethod,
-                                          schedules,
+                                          weekSchedules,
                                           finalAddress,
                                           startTime,
                                           endTime);
-
 
                                       Navigator.pop(context, 'OK');
                                     },
@@ -1374,12 +1385,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ],
                               );
                             });
-                      }else{
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text("Vui lòng kiểm tra ngày giờ"),
                         ));
                       }
-
                     },
                     child: const Text('Xác nhận')))
           ],

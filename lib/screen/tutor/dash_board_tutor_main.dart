@@ -59,6 +59,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                     padding: const EdgeInsets.all(20),
                     child: GestureDetector(
                       onTap: () {
+                        print("TUTOR INFO");
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {

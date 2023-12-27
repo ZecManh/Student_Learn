@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:day_night_time_picker/lib/state/time.dart';
 
-class TeachSchedules {
+class WeekSchedules {
   Period? sunday;
   Period? saturday;
   Period? tuesday;
@@ -9,31 +10,26 @@ class TeachSchedules {
   Period? wednesday;
   Period? monday;
 
-  TeachSchedules(
+  WeekSchedules(
       {this.sunday,
-        this.saturday,
-        this.tuesday,
-        this.friday,
-        this.thursday,
-        this.wednesday,
-        this.monday});
+      this.saturday,
+      this.tuesday,
+      this.friday,
+      this.thursday,
+      this.wednesday,
+      this.monday});
 
-  TeachSchedules.fromJson(Map<String, dynamic> json) {
-    monday =
-    json['monday'] != null ? Period.fromJson(json['monday']) : null;
-    tuesday =
-    json['tuesday'] != null ? Period.fromJson(json['tuesday']) : null;
+  WeekSchedules.fromJson(Map<String, dynamic> json) {
+    monday = json['monday'] != null ? Period.fromJson(json['monday']) : null;
+    tuesday = json['tuesday'] != null ? Period.fromJson(json['tuesday']) : null;
     wednesday =
-    json['wednesday'] != null ? Period.fromJson(json['wednesday']) : null;
+        json['wednesday'] != null ? Period.fromJson(json['wednesday']) : null;
     thursday =
-    json['thursday'] != null ? Period.fromJson(json['thursday']) : null;
-    friday =
-    json['friday'] != null ? Period.fromJson(json['friday']) : null;
-    saturday = json['saturday'] != null
-        ? Period.fromJson(json['saturday'])
-        : null;
-    sunday =
-    json['sunday'] != null ? Period.fromJson(json['sunday']) : null;
+        json['thursday'] != null ? Period.fromJson(json['thursday']) : null;
+    friday = json['friday'] != null ? Period.fromJson(json['friday']) : null;
+    saturday =
+        json['saturday'] != null ? Period.fromJson(json['saturday']) : null;
+    sunday = json['sunday'] != null ? Period.fromJson(json['sunday']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -64,25 +60,34 @@ class TeachSchedules {
 
   @override
   String toString() {
-    return 'TeachSchedules{sunday: $sunday, saturday: $saturday, tuesday: $tuesday, friday: $friday, thursday: $thursday, wednesday: $wednesday, monday: $monday}';
+    return 'WeekSchedules{sunday: $sunday, saturday: $saturday, tuesday: $tuesday, friday: $friday, thursday: $thursday, wednesday: $wednesday, monday: $monday}';
   }
 }
 
 class Period {
-  String? startTime;
-  String? endTime;
+  HourInDay? startTime;
+  HourInDay? endTime;
 
   Period({this.startTime, this.endTime});
 
   Period.fromJson(Map<String, dynamic> json) {
-    startTime = json['start_time'];
-    endTime = json['end_time'];
+    if (json['start_time'] != null) {
+      startTime = HourInDay.fromJson(json['start_time']);
+    }
+    if (json['end_time'] != null) {
+      endTime = HourInDay.fromJson(json['end_time']);
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['start_time'] = startTime;
-    data['end_time'] = endTime;
+
+    if (startTime != null) {
+      data['start_time'] = startTime!.toJson();
+    }
+    if (endTime != null) {
+      data['end_time'] = endTime!.toJson();
+    }
     return data;
   }
 
@@ -92,22 +97,69 @@ class Period {
   }
 }
 
-class LessonSchedules{
+class HourInDay {
+  int? hour;
+  int? minute;
 
+  HourInDay({this.hour, this.minute});
+
+  HourInDay.fromTime(Time time) {
+    this.hour = time.hour;
+    this.minute = time.minute;
+  }
+
+  HourInDay.fromJson(Map<String, dynamic> json) {
+    hour = json['hour'];
+    minute = json['minute'];
+  }
+  String format(){
+    if(hour==null || minute == null){
+      return '';
+    }
+
+    String hourString='';
+    String minuteString = '';
+    if(hour!<10){
+      hourString = "0$hour";
+    }else{
+      hourString = hour.toString();
+    }
+    if(minute!<10){
+      minuteString = "0$minute";
+    }else{
+      minuteString = minute.toString();
+    }
+    return "$hourString : $minuteString";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['hour'] = hour;
+    data['minute'] = minute;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'HourInDay{hour: $hour, minute: $minute}';
+  }
+}
+
+class LessonSchedules {
   Timestamp? startTime;
   Timestamp? endTime;
   Timestamp? attendanceTime;
   String? state;
 
-  LessonSchedules({this.startTime, this.endTime,this.attendanceTime,this.state});
+  LessonSchedules(
+      {this.startTime, this.endTime, this.attendanceTime, this.state});
 
   LessonSchedules.fromJson(Map<String, dynamic> json) {
-
     startTime = json['start_time'] != null ? (json['start_time']) : null;
     endTime = json['end_time'] != null ? (json['end_time']) : null;
-    attendanceTime = json['attendance_time'] != null ? (json['attendance_time']) : null;
+    attendanceTime =
+        json['attendance_time'] != null ? (json['attendance_time']) : null;
     state = json['state'] != null ? (json['state']) : null;
-
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +175,4 @@ class LessonSchedules{
   String toString() {
     return 'LessonSchedules{startTime: $startTime, endTime: $endTime, attendanceTime: $attendanceTime, state: $state}';
   }
-
 }
-
