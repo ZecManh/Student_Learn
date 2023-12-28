@@ -1,5 +1,5 @@
 import 'package:datn/database/firestore/firestore_service.dart';
-// import 'package:datn/screen/qr_code/qr_screen.dart';
+import 'package:datn/model/today_schdules.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/qr_code/qr_code_info_tutor.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
@@ -26,6 +26,8 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
   late TextEditingController nameController;
   late TextEditingController ageController;
+  FirestoreService firestoreService = FirestoreService();
+  List<TodaySchedules> todaySchedules = [];
 
   @override
   void initState() {
@@ -33,7 +35,15 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     initInto();
   }
 
-  void initInto() async {}
+  void initInto() async {
+    print("TODAY SCHEDULES");
+    todaySchedules = await firestoreService.getTodaySchedules();
+    todaySchedules.forEach((element) {
+
+      print(element.toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
@@ -110,11 +120,14 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                 {
                                   model_user.User? user = snapshot.data;
                                   if (user != null) {
-                                    return Text(
-                                      (snapshot.data!.displayName != null)
-                                          ? snapshot.data!.displayName!
-                                          : 'Tên bạn là gì?',
-                                      style: const TextStyle(fontSize: 24),
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        (snapshot.data!.displayName != null)
+                                            ? snapshot.data!.displayName!
+                                            : 'Tên bạn là gì?',
+                                        style: const TextStyle(fontSize: 24),
+                                      ),
                                     );
                                   } else {
                                     return const Text(
@@ -178,6 +191,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 10,)
                         ],
                       ),
                     )
@@ -321,7 +335,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const Text(
-                      'Lớp đang dạy',
+                      'Lịch dạy hôm nay',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
@@ -338,16 +352,19 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
             ),
             Container(
               height: 500,
-              child: Card(
+              child: Card(color: Theme.of(context).colorScheme.primaryContainer,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: SingleChildScrollView(
                     child: DynamicTimeline(
-                      firstDateTime: DateTime(1970, 1, 1, 7),
-                      lastDateTime: DateTime(1970, 1, 1, 24),
+                      firstDateTime: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day, 0, 0, 0),
+                      lastDateTime: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day, 23, 59, 0),
                       labelBuilder: DateFormat('HH:mm').format,
-                      intervalDuration: Duration(minutes: 30),
+                      intervalDuration: const Duration(minutes: 30),
                       items: [
+<<<<<<< HEAD
                         TimelineItem(
                           startDateTime: DateTime(1970, 1, 1, 7),
                           endDateTime: DateTime(1970, 1, 1, 8),
@@ -393,6 +410,30 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                             .onPrimary),
                                   ))),
                         ),
+=======
+                        ...todaySchedules.map((item) {
+                          return TimelineItem(
+                            startDateTime: item.startTime,
+                            endDateTime: item.endTime,
+                            child: Card(
+                                color: Theme.of(context).colorScheme.primary,
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          item.subject,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary),
+                                        ),
+                                        
+                                      ],
+                                    ))),
+                          );
+                        }),
+>>>>>>> 066a6827346bd4e5856282a4c76a85edc19c7a1a
                       ],
                     ),
                   ),

@@ -3,6 +3,7 @@ import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
 import 'package:datn/model/teach_classes/teach_class.dart';
+import 'package:datn/model/today_schdules.dart';
 import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -339,7 +340,7 @@ class FirestoreService extends ChangeNotifier {
     );
   }
 
-  Future<List<TeachClass>> getAllClassByID() async {
+  Future<List<TeachClass>> getAllClassTutorSide() async {
     List<TeachClass> teachClasses = [];
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -359,7 +360,27 @@ class FirestoreService extends ChangeNotifier {
     return teachClasses;
   }
 
-  Future<List<Map<String, dynamic>>> getTeachingInfo() async {
+  Future<List<TeachClass>> getAllClassLearnerSide() async {
+    List<TeachClass> teachClasses = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('classes') // Replace with your actual collection name
+          .where('learner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('state', isEqualTo: ClassesState.running.name)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        var teachClass = TeachClass.fromJson(data);
+        teachClasses.add(teachClass);
+      }
+    } catch (e) {}
+
+    return teachClasses;
+  }
+
+  Future<List<Map<String, dynamic>>> getTeachingInfoTutorSide() async {
     List<Map<String, dynamic>> teachingData = [];
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -404,4 +425,84 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {}
     return user;
   }
+
+  Future<List<Map<String, dynamic>>> getTeachingInfoLearnerSide() async {
+    List<Map<String, dynamic>> teachingData = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('classes') // Replace with your actual collection name
+          .where('learner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('state', isEqualTo: ClassesState.running.name)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> itemData = {};
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        var teachClass = TeachClass.fromJson(data);
+        user_model.User learnerInfo = await getUser(teachClass.learnerId!);
+        itemData.addAll({
+          'docId': document.id,
+          'teachClass': teachClass,
+          'learnerInfo': learnerInfo
+        });
+        teachingData.add(itemData);
+      }
+    } catch (e) {}
+
+    return teachingData;
+  }
+
+  Future<List<TodaySchedules>> getTodaySchedules() async {
+    DateTime today = DateTime.now();
+    List<TeachClass> teachClasses = await getAllClassTutorSide();
+    List<TodaySchedules> todaySchedules = [];
+    teachClasses.forEach((classItem) {
+      List<LessonSchedules>? lessonSchedules =
+          classItem.schedules?.lessonSchedules;
+      lessonSchedules?.forEach((itemLessonSchedules) {
+        if (isTheSameDay(itemLessonSchedules.startTime?.toDate(), today)) {
+          DateTime startTime = itemLessonSchedules.startTime!.toDate();
+          DateTime endTime = itemLessonSchedules.endTime!.toDate();
+          String subject = classItem.subject!;
+          String teachMethod = classItem.teachMethod!;
+          todaySchedules.add(TodaySchedules(
+              startTime: startTime,
+              endTime: endTime,
+              subject: subject,
+              teachMethod: teachMethod));
+        }
+      });
+    });
+    return todaySchedules;
+  }
+
+  bool isTheSameDay(DateTime? dateTime1, DateTime? dateTime2) {
+    if (dateTime1 != null && dateTime2 != null) {
+      bool isSameDay = dateTime1.year == dateTime2.year &&
+          dateTime1.month == dateTime2.month &&
+          dateTime1.day == dateTime2.day;
+      return isSameDay;
+    }
+    return false;
+  }
+  // Future<user_model.User?> getClassById(String uid) async {
+  //   user_model.User? user;
+  //   try {
+  //     QuerySnapshot querySnapshot = await firestore
+  //         .collection('classes') // Thay thế bằng tên collection thực tế của bạn
+  //         .where('uid', isEqualTo: uid)
+  //         .limit(1)
+  //         .get();
+  //     if (querySnapshot.size > 0) {
+  //       // Tìm thấy item với uid cụ thể
+  //       DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
+  //
+  //       Map<String, dynamic> data = documentSnapshot.data() as Map<String,
+  //           dynamic>;
+  //       user = user_model.User.fromJson(data);
+  //     }
+  //   } catch (e) {}
+  //   return user;
+  // }
 }
