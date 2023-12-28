@@ -404,4 +404,23 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {}
     return user;
   }
+  // Future<user_model.User?> getClassById(String uid) async {
+  //   user_model.User? user;
+  //   try {
+  //     QuerySnapshot querySnapshot = await firestore
+  //         .collection('classes') // Thay thế bằng tên collection thực tế của bạn
+  //         .where('uid', isEqualTo: uid)
+  //         .limit(1)
+  //         .get();
+  //     if (querySnapshot.size > 0) {
+  //       // Tìm thấy item với uid cụ thể
+  //       DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
+  //
+  //       Map<String, dynamic> data = documentSnapshot.data() as Map<String,
+  //           dynamic>;
+  //       user = user_model.User.fromJson(data);
+  //     }
+  //   } catch (e) {}
+  //   return user;
+  // }
 }
