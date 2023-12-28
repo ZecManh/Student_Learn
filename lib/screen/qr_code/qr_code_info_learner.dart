@@ -12,7 +12,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:datn/model/user/user.dart' as model_user;
-
+import 'dart:convert';
 class QrCodeInfo extends StatefulWidget {
   @override
   _QrCodeInfoState createState() => _QrCodeInfoState();
@@ -27,6 +27,11 @@ class _QrCodeInfoState extends State<QrCodeInfo> {
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
+    var info = {
+      "uid": user.uid,
+      "type": 'tutor'
+    };
+    String jsonInfo = jsonEncode(info);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quét QR qua ảnh'),
@@ -42,7 +47,7 @@ class _QrCodeInfoState extends State<QrCodeInfo> {
                           user.phone != null &&
                           user.email != null)
                       ? QrImageView(
-                          data: '$user',
+                          data: jsonInfo,
                           version: QrVersions.auto,
                           size: 200.0,
                         )
