@@ -39,7 +39,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     print("TODAY SCHEDULES");
     todaySchedules = await firestoreService.getTodaySchedules();
     todaySchedules.forEach((element) {
-
       print(element.toString());
     });
   }
@@ -191,7 +190,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,)
+                          SizedBox(
+                            height: 10,
+                          )
                         ],
                       ),
                     )
@@ -352,7 +353,8 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
             ),
             Container(
               height: 500,
-              child: Card(color: Theme.of(context).colorScheme.primaryContainer,
+              child: Card(
+                color: Theme.of(context).colorScheme.primaryContainer,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: SingleChildScrollView(
@@ -364,53 +366,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                       labelBuilder: DateFormat('HH:mm').format,
                       intervalDuration: const Duration(minutes: 30),
                       items: [
-<<<<<<< HEAD
-                        TimelineItem(
-                          startDateTime: DateTime(1970, 1, 1, 7),
-                          endDateTime: DateTime(1970, 1, 1, 8),
-                          child: Card(
-                              color: Theme.of(context).colorScheme.primary,
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text(
-                                    'Event 1',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ))),
-                        ),
-                        TimelineItem(
-                          startDateTime: DateTime(1970, 1, 1, 10),
-                          endDateTime: DateTime(1970, 1, 1, 12),
-                          child: Card(
-                              color: Theme.of(context).colorScheme.primary,
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text(
-                                    'Event 2',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ))),
-                        ),
-                        TimelineItem(
-                          startDateTime: DateTime(1970, 1, 1, 15),
-                          endDateTime: DateTime(1970, 1, 1, 17),
-                          child: Card(
-                              color: Theme.of(context).colorScheme.primary,
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text(
-                                    'Event 3',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ))),
-                        ),
-=======
                         ...todaySchedules.map((item) {
                           return TimelineItem(
                             startDateTime: item.startTime,
@@ -428,12 +383,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                                   .colorScheme
                                                   .onPrimary),
                                         ),
-                                        
                                       ],
                                     ))),
                           );
                         }),
->>>>>>> 066a6827346bd4e5856282a4c76a85edc19c7a1a
                       ],
                     ),
                   ),
