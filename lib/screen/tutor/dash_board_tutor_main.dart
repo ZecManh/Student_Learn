@@ -1,5 +1,5 @@
 import 'package:datn/database/firestore/firestore_service.dart';
-import 'package:datn/screen/qr_code/qr_screen.dart';
+import 'package:datn/model/today_schdules.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
@@ -25,6 +25,8 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
   late TextEditingController nameController;
   late TextEditingController ageController;
+  FirestoreService firestoreService = FirestoreService();
+  List<TodaySchedules> todaySchedules = [];
 
   @override
   void initState() {
@@ -32,7 +34,14 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     initInto();
   }
 
-  void initInto() async {}
+  void initInto() async {
+    print("TODAY SCHEDULES");
+    todaySchedules = await firestoreService.getTodaySchedules();
+    todaySchedules.forEach((element) {
+
+      print(element.toString());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +119,14 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                 {
                                   model_user.User? user = snapshot.data;
                                   if (user != null) {
-                                    return Text(
-                                      (snapshot.data!.displayName != null)
-                                          ? snapshot.data!.displayName!
-                                          : 'Tên bạn là gì?',
-                                      style: const TextStyle(fontSize: 24),
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        (snapshot.data!.displayName != null)
+                                            ? snapshot.data!.displayName!
+                                            : 'Tên bạn là gì?',
+                                        style: const TextStyle(fontSize: 24),
+                                      ),
                                     );
                                   } else {
                                     return const Text(
@@ -140,10 +152,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const DashBoardQr();
-                                  }));
+                                  // Navigator.push(context,
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return const DashBoardQr();
+                                  // }));
                                 },
                                 icon: const Icon(Icons.qr_code),
                               ),
@@ -178,6 +190,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 10,)
                         ],
                       ),
                     )
@@ -321,7 +334,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const Text(
-                      'Lớp đang dạy',
+                      'Lịch dạy hôm nay',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
@@ -338,61 +351,40 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
             ),
             Container(
               height: 500,
-              child: Card(
+              child: Card(color: Theme.of(context).colorScheme.primaryContainer,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: SingleChildScrollView(
                     child: DynamicTimeline(
-                      firstDateTime: DateTime(1970, 1, 1, 7),
-                      lastDateTime: DateTime(1970, 1, 1, 24),
+                      firstDateTime: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day, 0, 0, 0),
+                      lastDateTime: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day, 23, 59, 0),
                       labelBuilder: DateFormat('HH:mm').format,
-                      intervalDuration: Duration(minutes: 30),
+                      intervalDuration: const Duration(minutes: 30),
                       items: [
-                        TimelineItem(
-                          startDateTime: DateTime(1970, 1, 1, 7),
-                          endDateTime: DateTime(1970, 1, 1, 8),
-                          child: Card(
-                              color: Theme.of(context).colorScheme.primary,
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child:  Text(
-                                    'Event 1',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ))),
-                        ),
-                        TimelineItem(
-                          startDateTime: DateTime(1970, 1, 1, 10),
-                          endDateTime: DateTime(1970, 1, 1, 12),
-                          child:Card(
-                              color: Theme.of(context).colorScheme.primary,
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child:  Text(
-                                    'Event 2',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ))),
-                        ),
-                        TimelineItem(
-                          startDateTime: DateTime(1970, 1, 1, 15),
-                          endDateTime: DateTime(1970, 1, 1, 17),
-                          child: Card(
-                              color: Theme.of(context).colorScheme.primary,
-                              child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child:  Text(
-                                    'Event 3',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                  ))),
-                        ),
+                        ...todaySchedules.map((item) {
+                          return TimelineItem(
+                            startDateTime: item.startTime,
+                            endDateTime: item.endTime,
+                            child: Card(
+                                color: Theme.of(context).colorScheme.primary,
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          item.subject,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary),
+                                        ),
+                                        
+                                      ],
+                                    ))),
+                          );
+                        }),
                       ],
                     ),
                   ),

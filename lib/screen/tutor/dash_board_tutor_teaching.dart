@@ -19,7 +19,7 @@ class _DashBoardTutorTeachingState extends State<DashBoardTutorTeaching> {
   FirestoreService firestoreService = FirestoreService();
 
   Future<void> initInfo() async {
-    teachingData = await firestoreService.getTeachingInfo();
+    teachingData = await firestoreService.getTeachingInfoTutorSide();
     setState(() {
       teachingData = teachingData;
     });

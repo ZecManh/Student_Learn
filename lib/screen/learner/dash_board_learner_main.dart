@@ -105,10 +105,12 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 model_user.User? user = snapshot.data;
                                 if (user != null) {
                                   return (snapshot.data!.displayName != null)
-                                      ? Text(
-                                          snapshot.data!.displayName!,
-                                          style: const TextStyle(fontSize: 24),
-                                        )
+                                      ? Padding(padding: EdgeInsets.all(10),
+                                        child: Text(
+                                            snapshot.data!.displayName!,
+                                            style: const TextStyle(fontSize: 24),
+                                          ),
+                                      )
                                       : const Text('Tên bạn là gì?');
                                 } else {
                                   return const Text(
@@ -175,6 +177,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 20,)
                       ],
                     ),
                   )
