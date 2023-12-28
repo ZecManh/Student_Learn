@@ -543,31 +543,7 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
             ),
           ),
            Center(
-            child: SingleChildScrollView(
-              child: DynamicTimeline(
-                firstDateTime: DateTime(1970, 1, 1, 7),
-                lastDateTime: DateTime(1970, 1, 1, 22),
-                labelBuilder: DateFormat('HH:mm').format,
-                intervalDuration:  Duration(minutes: 30),
-                items: [
-                  TimelineItem(
-                    startDateTime: DateTime(1970, 1, 1, 7),
-                    endDateTime: DateTime(1970, 1, 1, 8),
-                    child: const Text('Event 1'),
-                  ),
-                  TimelineItem(
-                    startDateTime: DateTime(1970, 1, 1, 10),
-                    endDateTime: DateTime(1970, 1, 1, 12),
-                    child: const Text('Event 2'),
-                  ),
-                  TimelineItem(
-                    startDateTime: DateTime(1970, 1, 1, 15),
-                    endDateTime: DateTime(1970, 1, 1, 17),
-                    child: const Text('Event 3'),
-                  ),
-                ],
-              ),
-            ),
+            child: Text("It's rainy here")
           ),
           const Center(
             child: Text("It's sunny here"),

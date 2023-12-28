@@ -5,16 +5,16 @@ import 'package:provider/provider.dart';
 
 import '../../../model/user/user.dart';
 
-class ClassInfoScreen extends StatefulWidget {
-  const ClassInfoScreen({super.key});
+class ClassInfoTutorScreen extends StatefulWidget {
+  const ClassInfoTutorScreen({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _ClassInfoScreenState();
+    return _ClassInfoTutorScreenState();
   }
 }
 
-class _ClassInfoScreenState extends State<ClassInfoScreen> {
+class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
   Map<String, dynamic> learnerInfo = {};
   int lessonOnWeek = 0;
 
@@ -74,6 +74,7 @@ class _ClassInfoScreenState extends State<ClassInfoScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 10,),
                   CircleAvatar(
                       backgroundImage: (((learnerInfo['learnerInfo']) as User)
                                   .photoUrl !=

@@ -36,9 +36,11 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
 
   void initInto() async {
     print("TODAY SCHEDULES");
-    todaySchedules = await firestoreService.getTodaySchedules();
+    var todaySchedulesFetch = await firestoreService.getTodaySchedules();
+    setState(() {
+      todaySchedules = todaySchedulesFetch;
+    });
     todaySchedules.forEach((element) {
-
       print(element.toString());
     });
   }
@@ -190,7 +192,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,)
+                          SizedBox(
+                            height: 10,
+                          )
                         ],
                       ),
                     )
@@ -349,48 +353,16 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              height: 500,
-              child: Card(color: Theme.of(context).colorScheme.primaryContainer,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: SingleChildScrollView(
-                    child: DynamicTimeline(
-                      firstDateTime: DateTime(DateTime.now().year,
-                          DateTime.now().month, DateTime.now().day, 0, 0, 0),
-                      lastDateTime: DateTime(DateTime.now().year,
-                          DateTime.now().month, DateTime.now().day, 23, 59, 0),
-                      labelBuilder: DateFormat('HH:mm').format,
-                      intervalDuration: const Duration(minutes: 30),
-                      items: [
-                        ...todaySchedules.map((item) {
-                          return TimelineItem(
-                            startDateTime: item.startTime,
-                            endDateTime: item.endTime,
-                            child: Card(
-                                color: Theme.of(context).colorScheme.primary,
-                                child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          item.subject,
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onPrimary),
-                                        ),
-                                        
-                                      ],
-                                    ))),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   height: 500,
+            //   child: Card(
+            //     child: Padding(
+            //       padding: EdgeInsets.all(10),
+            //       child:
+            //         Text('ok')
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),
