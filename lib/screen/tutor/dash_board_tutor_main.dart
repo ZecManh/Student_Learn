@@ -158,7 +158,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return QrCodeInfoTutor();
+                                    return Provider.value(
+                                      value: user,
+                                      child: QrCodeInfoTutor(),
+                                    );
                                   }));
                                 },
                                 icon: const Icon(Icons.qr_code),
