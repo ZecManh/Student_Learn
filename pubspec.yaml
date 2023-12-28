@@ -63,6 +63,7 @@ dependencies:
   flutter_local_notifications: ^16.2.0
   firebase_messaging: ^14.7.9
   dynamic_timeline: ^0.1.2
+  calendar_view: ^1.0.4
 
 dev_dependencies:
   flutter_test:

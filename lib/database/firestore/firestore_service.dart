@@ -440,11 +440,11 @@ class FirestoreService extends ChangeNotifier {
         Map<String, dynamic> itemData = {};
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         var teachClass = TeachClass.fromJson(data);
-        user_model.User learnerInfo = await getUser(teachClass.learnerId!);
+        user_model.User tutorInfo = await getUser(teachClass.tutorId!);
         itemData.addAll({
           'docId': document.id,
           'teachClass': teachClass,
-          'learnerInfo': learnerInfo
+          'tutorInfo': tutorInfo
         });
         teachingData.add(itemData);
       }

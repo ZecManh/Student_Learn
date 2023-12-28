@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../database/firestore/firestore_service.dart';
 import '../../model/teach_classes/teach_class.dart';
 import '../../model/user/user.dart';
+import 'learning/class_info_learner.dart';
 
 class DashBoardLearnerLearning extends StatefulWidget {
   const DashBoardLearnerLearning({super.key});
@@ -36,9 +38,16 @@ class _DashBoardLearnerLearningState extends State<DashBoardLearnerLearning> {
           ...teachingData.map((teachingDataItem) {
             return GestureDetector(
               onLongPress: () {
-                //show dialog để remove và edit gì đó
+
               },
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                      return Provider(
+                          create: (context) => teachingDataItem,
+                          builder: (context, child) => ClassInfoLearnerScreen());
+                    }));
+              },
               child: Card(
                 color: Theme.of(context).colorScheme.primary,
                 child: Padding(
@@ -73,13 +82,14 @@ class _DashBoardLearnerLearningState extends State<DashBoardLearnerLearning> {
                               padding: EdgeInsets.all(10),
                               child: Row(
                                 children: [
+
                                   CircleAvatar(
                                       backgroundImage: (((teachingDataItem[
-                                                      'learnerInfo']) as User)
+                                                      'tutorInfo']) as User)
                                                   .photoUrl !=
                                               null)
                                           ? NetworkImage(
-                                              ((teachingDataItem['learnerInfo'])
+                                              ((teachingDataItem['tutorInfo'])
                                                       as User)
                                                   .photoUrl!)
                                           : const AssetImage('assets/bear.jpg')
@@ -89,10 +99,10 @@ class _DashBoardLearnerLearningState extends State<DashBoardLearnerLearning> {
                                     width: 10,
                                   ),
                                   Expanded(
-                                    child: Text(
-                                        (((teachingDataItem['learnerInfo'])
-                                                    as User)
-                                                .displayName ??
+                                    child: Text('Gia sư : '+
+                                        (((teachingDataItem['tutorInfo'])
+                                        as User)
+                                            .displayName ??
                                             ''),
                                         style: TextStyle(
                                           fontSize: 16,
