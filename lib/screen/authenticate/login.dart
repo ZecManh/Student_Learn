@@ -2,6 +2,7 @@ import 'package:datn/database/auth/firebase_auth_service.dart';
 import 'package:datn/screen/authenticate/forget_password.dart';
 import 'package:datn/screen/authenticate/sign_up.dart';
 import 'package:datn/screen/learner/dash_board_learner.dart';
+import 'package:datn/screen/qr_code/qr_scan_image.dart';
 import 'package:datn/screen/tutor/dash_board_tutor.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
