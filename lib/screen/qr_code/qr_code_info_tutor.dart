@@ -13,7 +13,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:datn/model/user/user.dart' as model_user;
-
+import 'dart:convert';
 class QrCodeInfoTutor extends StatefulWidget {
   @override
   _QrCodeInfoTutorState createState() => _QrCodeInfoTutorState();
@@ -30,8 +30,11 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
-    var info =
-        '\nName : ${user.displayName}\nSố điện thoại : ${user.phone}\nEmail : ${user.email}';
+    var info = {
+      "uid": user.uid,
+      "type": 'tutor'
+    };
+    String jsonInfo = jsonEncode(info);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quét QR qua ảnh'),
@@ -47,7 +50,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
                           user.phone != null &&
                           user.email != null)
                       ? QrImageView(
-                          data: info,
+                          data: jsonInfo,
                           version: QrVersions.auto,
                           size: 200.0,
                         )
@@ -57,6 +60,12 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
                           version: QrVersions.auto,
                           size: 200.0,
                         )),
+              // Center(
+              //   child: IconButton(
+              //     onPressed: () {},
+              //     icon: const Text('Tải QR về thiết bị'),
+              //   ),
+              // ),
               Center(
                 child: IconButton(
                   onPressed: () {
