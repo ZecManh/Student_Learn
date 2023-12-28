@@ -1,18 +1,20 @@
 import 'dart:io';
-
+import 'package:datn/screen/qr_code/info_learner.dart';
+import 'package:datn/screen/qr_code/info_tutor.dart';
+import 'package:datn/screen/tutor/update/tutor_info.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class DashBoardQrScanner extends StatefulWidget {
-  const DashBoardQrScanner({super.key});
+class DashBoardQrScannerTutor extends StatefulWidget {
+  const DashBoardQrScannerTutor({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _DashBoardQrScannerState();
+    return _DashBoardQrScannerTutorState();
   }
 }
 
-class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
+class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
@@ -31,7 +33,7 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Qr Scanner'),
+        title: Text('Qr Scanner'),
       ),
       body: Column(
         children: <Widget>[
@@ -65,8 +67,23 @@ class _DashBoardQrScannerState extends State<DashBoardQrScanner> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        if (result != null) {
+          // Chuyển hướng đến trang khác dựa trên dữ liệu từ mã QR
+          navigateToNewPage();
+        }
       });
     });
+  }
+
+  void navigateToNewPage() {
+    // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
+    // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const TutorInfo(),
+      ),
+    );
   }
 
   @override

@@ -1,12 +1,18 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
-import 'package:datn/screen/qr_code/qr_screen.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/qr_code/qr_code_info_learner.dart';
+import 'package:datn/screen/qr_code/qr_scan_image.dart';
+import 'package:datn/screen/qr_code/qr_scan_image_learner.dart';
+import 'package:datn/screen/qr_code/qr_screen_scanner_info_learner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
+import 'package:qr_flutter/qr_flutter.dart';
+
+import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
@@ -130,10 +136,13 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                           .colorScheme
                                           .background)),
                               onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const DashBoardQr();
-                                }));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return Provider.value(
+                                        value: user, child: QrCodeInfo());
+                                  }),
+                                );
                               },
                               icon: const Icon(Icons.qr_code),
                             ),

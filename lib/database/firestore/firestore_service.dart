@@ -406,6 +406,25 @@ class FirestoreService extends ChangeNotifier {
 
     return teachingData;
   }
+  Future<user_model.User?> getTutorById(String uid) async {
+    user_model.User? user;
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('users') // Thay thế bằng tên collection thực tế của bạn
+          .where('uid', isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+          .limit(1)
+          .get();
+      if (querySnapshot.size > 0) {
+        // Tìm thấy item với uid cụ thể
+        DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
+
+        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
+            dynamic>;
+        user = user_model.User.fromJson(data);
+      }
+    } catch (e) {}
+    return user;
+  }
 
   Future<List<Map<String, dynamic>>> getTeachingInfoLearnerSide() async {
     List<Map<String, dynamic>> teachingData = [];
