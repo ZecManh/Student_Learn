@@ -1,16 +1,15 @@
 import 'package:datn/database/firestore/firestore_service.dart';
-import 'package:datn/screen/learner/learner_update_info.dart';
+import 'package:datn/model/today_schdules.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/qr_code/qr_code_info_tutor.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
+import 'package:dynamic_timeline/dynamic_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
-import 'package:datn/screen/qr_code/qr_scan_image.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
@@ -27,6 +26,8 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
   late TextEditingController nameController;
   late TextEditingController ageController;
+  FirestoreService firestoreService = FirestoreService();
+  List<TodaySchedules> todaySchedules = [];
 
   @override
   void initState() {
@@ -34,7 +35,14 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     initInto();
   }
 
-  void initInto() async {}
+  void initInto() async {
+    print("TODAY SCHEDULES");
+    todaySchedules = await firestoreService.getTodaySchedules();
+    todaySchedules.forEach((element) {
+      print(element.toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
@@ -43,211 +51,170 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
-    return Container(
-      color: Theme.of(context).colorScheme.background,
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20))),
-            child: IntrinsicHeight(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: GestureDetector(
-                        onTap: () {
-                          print("TUTOR INFO");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return Provider.value(
-                                value: user,
-                                // child: UpdateInfoTutor()
-                                child: const TutorInfo(),
-                              );
-                            }),
-                          );
-                        },
-                        child: StreamBuilder<model_user.User>(
-                            stream:
-                                firestoreService.user(auth.currentUser!.uid),
-                            builder: (context,
-                                AsyncSnapshot<model_user.User> snapshot) {
-                              // var data=snapshot.data;
-                              model_user.User? user = snapshot.data;
-                              if (user != null) {
-                                return CircleAvatar(
-                                    backgroundImage: (user.photoUrl != null)
-                                        ? NetworkImage(user.photoUrl!)
-                                        : const AssetImage('assets/bear.jpg')
-                                            as ImageProvider,
-                                    radius: 50);
-                              } else {
-                                return const CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage('assets/bear.jpg'),
-                                  radius: 50,
+    return SingleChildScrollView(
+      child: Container(
+        color: Theme.of(context).colorScheme.background,
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20))),
+              child: IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: GestureDetector(
+                          onTap: () {
+                            print("TUTOR INFO");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Provider.value(
+                                  value: user,
+                                  // child: UpdateInfoTutor()
+                                  child: const TutorInfo(),
                                 );
-                              }
-                            })),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        StreamBuilder<model_user.User?>(
-                            stream:
-                                firestoreService.user(auth.currentUser!.uid),
-                            builder: (context,
-                                AsyncSnapshot<model_user.User?> snapshot) {
-                              {
+                              }),
+                            );
+                          },
+                          child: StreamBuilder<model_user.User>(
+                              stream:
+                                  firestoreService.user(auth.currentUser!.uid),
+                              builder: (context,
+                                  AsyncSnapshot<model_user.User> snapshot) {
+                                // var data=snapshot.data;
                                 model_user.User? user = snapshot.data;
                                 if (user != null) {
-                                  return Text(
-                                    (snapshot.data!.displayName != null)
-                                        ? snapshot.data!.displayName!
-                                        : 'Tên bạn là gì?',
-                                    style: const TextStyle(fontSize: 24),
-                                  );
+                                  return CircleAvatar(
+                                      backgroundImage: (user.photoUrl != null)
+                                          ? NetworkImage(user.photoUrl!)
+                                          : const AssetImage('assets/bear.jpg')
+                                              as ImageProvider,
+                                      radius: 50);
                                 } else {
-                                  return const Text(
-                                    'Loading',
-                                    style: TextStyle(fontSize: 24),
+                                  return const CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage('assets/bear.jpg'),
+                                    radius: 50,
                                   );
                                 }
-                              }
-                            }),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            IconButton(
-                              iconSize: 30,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              style: const ButtonStyle().copyWith(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context)
-                                          .colorScheme
-                                          .background)),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return Provider.value(
-                                        value: user, child: QrCodeInfoTutor());
-                                  }),
-                                );
-                              },
-                              icon: const Icon(Icons.qr_code),
-                            ),
-                            IconButton(
-                              iconSize: 30,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              style: const ButtonStyle().copyWith(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context)
-                                          .colorScheme
-                                          .background)),
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const DashBoardFaceID();
-                                }));
-                              },
-                              icon: const Icon(Icons.tag_faces_rounded),
-                            ),
-                            IconButton(
-                              iconSize: 30,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              style: const ButtonStyle().copyWith(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Theme.of(context)
-                                          .colorScheme
-                                          .background)),
-                              onPressed: () {},
-                              icon: const Icon(Icons.notifications),
-                            ),
-                          ],
-                        ),
-                      ],
+                              })),
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Card(
-            margin: const EdgeInsets.all(10),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.rectangle,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
-                            ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StreamBuilder<model_user.User?>(
+                              stream:
+                                  firestoreService.user(auth.currentUser!.uid),
+                              builder: (context,
+                                  AsyncSnapshot<model_user.User?> snapshot) {
+                                {
+                                  model_user.User? user = snapshot.data;
+                                  if (user != null) {
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        (snapshot.data!.displayName != null)
+                                            ? snapshot.data!.displayName!
+                                            : 'Tên bạn là gì?',
+                                        style: const TextStyle(fontSize: 24),
+                                      ),
+                                    );
+                                  } else {
+                                    return const Text(
+                                      'Loading',
+                                      style: TextStyle(fontSize: 24),
+                                    );
+                                  }
+                                }
+                              }),
+                          const SizedBox(
+                            height: 20,
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(18),
-                            child: Icon(
-                              Icons.add_outlined,
-                              color: Colors.white,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                iconSize: 30,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                style: const ButtonStyle().copyWith(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return QrCodeInfoTutor();
+                                  }));
+                                },
+                                icon: const Icon(Icons.qr_code),
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                style: const ButtonStyle().copyWith(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const DashBoardFaceID();
+                                  }));
+                                },
+                                icon: const Icon(Icons.tag_faces_rounded),
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                style: const ButtonStyle().copyWith(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                onPressed: () {},
+                                icon: const Icon(Icons.notifications),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          'Tạo lớp',
-                          style: TextStyle(fontSize: 16),
-                        )
-                      ],
-                    ),
-                  ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return Provider.value(
-                              value: user,
-                              // child: UpdateInfoTutor()
-                              child: const SubjectRequestScreen(),
-                            );
-                          }),
-                        );
-                      },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Card(
+              margin: const EdgeInsets.all(10),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Container(
@@ -261,7 +228,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             child: const Padding(
                               padding: EdgeInsets.all(18),
                               child: Icon(
-                                Icons.mark_email_unread_outlined,
+                                Icons.add_outlined,
                                 color: Colors.white,
                               ),
                             ),
@@ -270,76 +237,164 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                             height: 10,
                           ),
                           const Text(
-                            'Lời mời',
+                            'Tạo lớp',
                             style: TextStyle(fontSize: 16),
                           )
                         ],
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.rectangle,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return Provider.value(
+                                value: user,
+                                // child: UpdateInfoTutor()
+                                child: const SubjectRequestScreen(),
+                              );
+                            }),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                shape: BoxShape.rectangle,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(5),
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(18),
+                                child: Icon(
+                                  Icons.mark_email_unread_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Lời mời',
+                              style: TextStyle(fontSize: 16),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.rectangle,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(18),
+                              child: Icon(
+                                Icons.message_outlined,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(18),
-                            child: Icon(
-                              Icons.message_outlined,
-                              color: Colors.white,
-                            ),
+                          const SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          'Hỗ trợ',
-                          style: TextStyle(fontSize: 16),
-                        )
+                          const Text(
+                            'Hỗ trợ',
+                            style: TextStyle(fontSize: 16),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const Text(
+                      'Lịch dạy hôm nay',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      textAlign: TextAlign.end,
+                      'Xem tất cả',
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                  ]),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: 500,
+              child: Card(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: SingleChildScrollView(
+                    child: DynamicTimeline(
+                      firstDateTime: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day, 0, 0, 0),
+                      lastDateTime: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day, 23, 59, 0),
+                      labelBuilder: DateFormat('HH:mm').format,
+                      intervalDuration: const Duration(minutes: 30),
+                      items: [
+                        ...todaySchedules.map((item) {
+                          return TimelineItem(
+                            startDateTime: item.startTime,
+                            endDateTime: item.endTime,
+                            child: Card(
+                                color: Theme.of(context).colorScheme.primary,
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          item.subject,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary),
+                                        ),
+                                      ],
+                                    ))),
+                          );
+                        }),
                       ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const Text(
-                    'Lớp đang dạy',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    textAlign: TextAlign.end,
-                    'Xem tất cả',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                ]),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

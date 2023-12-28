@@ -2,6 +2,7 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:datn/screen/widget/mini_card.dart';
+import 'package:dynamic_timeline/dynamic_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -535,36 +536,38 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
                       const SizedBox(
                         height: 20,
                       ),
-                      // const Center(
-                      //   child: Text(
-                      //     'Phương thức giảng dạy',
-                      //     style: TextStyle(fontSize: 20),
-                      //   ),
-                      // ),
-                      // Padding(
-                      //     padding: const EdgeInsets.all(10),
-                      //     child: (user.teachMethod != null)
-                      //         ? Wrap(
-                      //             children: [
-                      //               ...user.teachMethod!.map(
-                      //                   (item) => MiniCard(cardName: item)),
-                      //             ],
-                      //           )
-                      //         : Text(
-                      //             'Chưa cập nhật',
-                      //             style: TextStyle(
-                      //                 fontSize: 20,
-                      //                 color:
-                      //                     Theme.of(context).colorScheme.error),
-                      //           ))
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          const Center(
-            child: Text("It's rainy here"),
+           Center(
+            child: SingleChildScrollView(
+              child: DynamicTimeline(
+                firstDateTime: DateTime(1970, 1, 1, 7),
+                lastDateTime: DateTime(1970, 1, 1, 22),
+                labelBuilder: DateFormat('HH:mm').format,
+                intervalDuration:  Duration(minutes: 30),
+                items: [
+                  TimelineItem(
+                    startDateTime: DateTime(1970, 1, 1, 7),
+                    endDateTime: DateTime(1970, 1, 1, 8),
+                    child: const Text('Event 1'),
+                  ),
+                  TimelineItem(
+                    startDateTime: DateTime(1970, 1, 1, 10),
+                    endDateTime: DateTime(1970, 1, 1, 12),
+                    child: const Text('Event 2'),
+                  ),
+                  TimelineItem(
+                    startDateTime: DateTime(1970, 1, 1, 15),
+                    endDateTime: DateTime(1970, 1, 1, 17),
+                    child: const Text('Event 3'),
+                  ),
+                ],
+              ),
+            ),
           ),
           const Center(
             child: Text("It's sunny here"),
