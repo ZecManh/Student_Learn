@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:datn/screen/learner/learner_update_info.dart';
-import 'package:datn/screen/qr_code/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';
@@ -75,20 +73,18 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         return;
       }
     }
-
-    // Chuyển hướng đến trang khác dựa trên dữ liệu từ mã QR
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) {
-    //     model_user.User user = Provider.of<model_user.User>(context);
-    //     return Provider.value(value: userFetch, child:TuTorShowInfo());)
-    //   }),
-    // );
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) =>
-    //             TuTorShowInfo(tutor: userFetch)));
+    if (dataScan['type'] == 'class') {
+      var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+      if (dataFetch != null) {
+        print(dataFetch);
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+        await this.controller!.pauseCamera();
+        return;
+      }
+    }
   }
 
   void _onQRViewCreated(QRViewController controller) async {

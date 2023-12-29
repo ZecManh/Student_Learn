@@ -29,7 +29,7 @@ class _QrCodeInfoState extends State<QrCodeInfo> {
     model_user.User user = Provider.of<model_user.User>(context);
     var info = {
       "uid": user.uid,
-      "type": 'tutor'
+      "type": 'learner'
     };
     String jsonInfo = jsonEncode(info);
     return Scaffold(

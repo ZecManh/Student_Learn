@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:datn/database/auth/firebase_auth_service.dart';
-import 'package:datn/screen/qr_code/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
@@ -52,6 +51,18 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
         }
 
       }
+      if (dataScan['type'] == 'class') {
+        var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+        if (dataFetch != null) {
+          print(dataFetch);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+          return;
+        }
+      }
+
     }
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +85,6 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
                           qrcode = str;
                           if (qrcode != null) {
                             _initInfo(qrcode);
-
                           }
                         });
                       }
