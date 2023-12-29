@@ -4,6 +4,8 @@ import 'package:datn/model/user/user.dart' as model_user;
 import 'package:intl/intl.dart';
 
 import '../../widget/mini_card.dart';
+import 'package:datn/screen/qr_code/components/qr_code_view.dart';
+import 'dart:convert';
 
 class TuTorShowInfo extends StatefulWidget {
   TuTorShowInfo({required this.tutor, super.key});
@@ -18,6 +20,38 @@ class TuTorShowInfo extends StatefulWidget {
 }
 
 class _TutorShowInfoState extends State<TuTorShowInfo> {
+
+  void _openModal(BuildContext context) {
+    var info = {
+      "uid": widget.tutor.uid,
+      "type": 'tutor'
+    };
+    String jsonInfo = widget.tutor.uid != null ? jsonEncode(info) : "";
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return
+          Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text : jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          // Container(
+          // child: ),);
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +103,23 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                     const SizedBox(
                       height: 10,
                     ),
+                    IconButton(
+                      iconSize: 30,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      style: const ButtonStyle().copyWith(
+                          backgroundColor: MaterialStatePropertyAll(
+                              Theme.of(context)
+                                  .colorScheme
+                                  .background)),
+                      onPressed: () {
+                        _openModal(context);
+                      },
+                      icon: const Icon(Icons.qr_code),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Card(
                       shape: const OutlineInputBorder(borderSide: BorderSide()),
                       color: Theme.of(context).colorScheme.background,
@@ -103,6 +154,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                 style: TextStyle(
                                     color: Theme.of(context).colorScheme.error),
                               ),
+
                       ),
                     ),
                     const SizedBox(

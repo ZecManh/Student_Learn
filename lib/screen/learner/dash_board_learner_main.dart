@@ -3,16 +3,10 @@ import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/qr_code/qr_code_info_learner.dart';
-import 'package:datn/screen/qr_code/qr_scan_image.dart';
-import 'package:datn/screen/qr_code/qr_scan_image_learner.dart';
-import 'package:datn/screen/qr_code/qr_screen_scanner_info_learner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
-import 'package:qr_flutter/qr_flutter.dart';
-
-import 'package:datn/screen/qr_code/qr_screen_scanner.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 
@@ -105,12 +99,14 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 model_user.User? user = snapshot.data;
                                 if (user != null) {
                                   return (snapshot.data!.displayName != null)
-                                      ? Padding(padding: EdgeInsets.all(10),
-                                        child: Text(
+                                      ? Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: Text(
                                             snapshot.data!.displayName!,
-                                            style: const TextStyle(fontSize: 24),
+                                            style:
+                                                const TextStyle(fontSize: 24),
                                           ),
-                                      )
+                                        )
                                       : const Text('Tên bạn là gì?');
                                 } else {
                                   return const Text(
@@ -177,7 +173,9 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20,)
+                        SizedBox(
+                          height: 20,
+                        )
                       ],
                     ),
                   )
@@ -219,7 +217,8 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                     context,
                                     MaterialPageRoute(builder: (context) {
                                       return Provider.value(
-                                          value: user, child: const FindTuTor());
+                                          value: user,
+                                          child: const FindTuTor());
                                     }),
                                   );
                                 },

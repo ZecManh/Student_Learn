@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:datn/screen/qr_code/qr_scan_image_learner.dart';
 import 'package:datn/screen/qr_code/qr_scan_image_tutor.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import 'package:datn/screen/qr_code/qr_screen_scanner_info_learner.dart';
 import 'package:datn/screen/qr_code/qr_screen_scanner_info_tutor.dart';
@@ -14,6 +15,8 @@ import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'dart:convert';
+import 'package:datn/screen/qr_code/components/qr_code_view.dart';
+
 class QrCodeInfoTutor extends StatefulWidget {
   @override
   _QrCodeInfoTutorState createState() => _QrCodeInfoTutorState();
@@ -34,7 +37,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
       "uid": user.uid,
       "type": 'tutor'
     };
-    String jsonInfo = jsonEncode(info);
+    String jsonInfo = user.uid != null ? jsonEncode(info) : "";
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quét QR qua ảnh'),
@@ -45,27 +48,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
           Wrap(
             children: [
               Center(child: Text('Mã QR của tôi')),
-              Center(
-                  child: (user.displayName != null &&
-                          user.phone != null &&
-                          user.email != null)
-                      ? QrImageView(
-                          data: jsonInfo,
-                          version: QrVersions.auto,
-                          size: 200.0,
-                        )
-                      : QrImageView(
-                          data:
-                              'Dữ liệu chưa được cập nhật khi chưa điền đủ thông tin',
-                          version: QrVersions.auto,
-                          size: 200.0,
-                        )),
-              // Center(
-              //   child: IconButton(
-              //     onPressed: () {},
-              //     icon: const Text('Tải QR về thiết bị'),
-              //   ),
-              // ),
+              Center(child: QRCodeView(text : jsonInfo)),
               Center(
                 child: IconButton(
                   onPressed: () {

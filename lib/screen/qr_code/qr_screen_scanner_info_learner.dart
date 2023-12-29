@@ -37,10 +37,9 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Qr Scanner kkkk'),
+        title: Text('Qr Scanner'),
       ),
       body: Column(
         children: <Widget>[
@@ -61,6 +60,7 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
       ),
     );
   }
+
   void _initInfo(dynamic scanData) async {
     var dataScan = jsonDecode(scanData);
     if (dataScan['type'] == 'tutor') {
@@ -70,12 +70,10 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    TuTorShowInfo(tutor: userFetch)));
+                builder: (context) => TuTorShowInfo(tutor: userFetch)));
         await this.controller!.pauseCamera();
         return;
       }
-
     }
 
     // Chuyển hướng đến trang khác dựa trên dữ liệu từ mã QR
@@ -102,7 +100,6 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
       if (result!.code != null) {
         _initInfo(result!.code);
       }
-
     });
   }
 
