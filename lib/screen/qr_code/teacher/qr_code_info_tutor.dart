@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:datn/screen/qr_code/qr_scan_image_learner.dart';
-import 'package:datn/screen/qr_code/qr_scan_image_tutor.dart';
+import 'package:datn/screen/qr_code/student/qr_scan_image_learner.dart';
+import 'package:datn/screen/qr_code/teacher/qr_scan_image_tutor.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import 'package:datn/screen/qr_code/qr_screen_scanner_info_learner.dart';
-import 'package:datn/screen/qr_code/qr_screen_scanner_info_tutor.dart';
+import 'package:datn/screen/qr_code/student/qr_screen_scanner_info_learner.dart';
+import 'package:datn/screen/qr_code/teacher/qr_screen_scanner_info_tutor.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -33,10 +33,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
-    var info = {
-      "uid": user.uid,
-      "type": 'tutor'
-    };
+    var info = {"uid": user.uid, "type": 'tutor'};
     String jsonInfo = user.uid != null ? jsonEncode(info) : "";
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +45,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
           Wrap(
             children: [
               Center(child: Text('Mã QR của tôi')),
-              Center(child: QRCodeView(text : jsonInfo)),
+              Center(child: QRCodeView(text: jsonInfo)),
               Center(
                 child: IconButton(
                   onPressed: () {

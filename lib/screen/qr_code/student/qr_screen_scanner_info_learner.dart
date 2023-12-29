@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:datn/screen/learner/learner_update_info.dart';
-import 'package:datn/screen/qr_code/info_learner.dart';
+import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';

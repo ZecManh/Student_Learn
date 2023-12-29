@@ -1,7 +1,4 @@
 import 'dart:io';
-
-import 'package:datn/screen/qr_code/info_tutor.dart';
-
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -47,13 +44,13 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
                         setState(() {
                           qrcode = str;
                           if (qrcode != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return Provider.value(
-                                    value: user, child: InfoTutor());
-                              }),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) {
+                            //     return Provider.value(
+                            //         value: user, child: InfoTutor());
+                            //   }),
+                            // );
                           }
                         });
                       }

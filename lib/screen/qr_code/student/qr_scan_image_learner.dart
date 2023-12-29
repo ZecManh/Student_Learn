@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:datn/database/auth/firebase_auth_service.dart';
-import 'package:datn/screen/qr_code/info_learner.dart';
+import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'dart:convert';
 import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
+
 class QrScanImgLearner extends StatefulWidget {
   @override
   _QrScanImgLearnerState createState() => _QrScanImgLearnerState();
@@ -50,9 +51,9 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
           );
           return;
         }
-
       }
     }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quét QR qua ảnh'),
@@ -74,7 +75,6 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
                           qrcode = str;
                           if (qrcode != null) {
                             _initInfo(qrcode);
-
                           }
                         });
                       }

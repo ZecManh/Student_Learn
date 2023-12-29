@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:provider/provider.dart';
-import '../../database/auth/firebase_auth_service.dart';
+import '../../../database/auth/firebase_auth_service.dart';
 
 List<String> genders = ['Nam', 'Nữ', 'Khác'];
 

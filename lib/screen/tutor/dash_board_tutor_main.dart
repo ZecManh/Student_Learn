@@ -1,7 +1,7 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/today_schdules.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
-import 'package:datn/screen/qr_code/qr_code_info_tutor.dart';
+import 'package:datn/screen/qr_code/teacher/qr_code_info_tutor.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
 import 'package:dynamic_timeline/dynamic_timeline.dart';
@@ -42,7 +42,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
       todaySchedules = todaySchedulesFetch;
     });
     todaySchedules.forEach((element) {
-
       print(element.toString());
     });
   }
