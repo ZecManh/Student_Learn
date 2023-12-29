@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "793994215134",
+    "project_id": "tlu-tutor",
+    "storage_bucket": "tlu-tutor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793994215134:android:1c5ad10ee02a20d2fecc4f",
+        "android_client_info": {
+          "package_name": "com.example.datn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjdrxnuC8plTbybCzKf1ZRXVqB0BLl7wU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
