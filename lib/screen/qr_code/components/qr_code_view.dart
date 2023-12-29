@@ -22,16 +22,16 @@ class _QRCodeView extends State<QRCodeView> {
   bool dirExists = false;
   dynamic externalDir = '/storage/emulated/0/Download';
 
-  Future<String> getGalleryPath() async {
-    final directory = await getDownloadsDirectory();
-    final galleryPath = '${directory?.path}';
-    // final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
-    // return downloadsDirectory.path;
-    print("galleryPath");
-    print(directory);
-    print(galleryPath);
-    return galleryPath;
-  }
+  // Future<String> getGalleryPath() async {
+  //   final directory = await getDownloadsDirectory();
+  //   final galleryPath = '${directory?.path}';
+  //   // final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+  //   // return downloadsDirectory.path;
+  //   print("galleryPath");
+  //   print(directory);
+  //   print(galleryPath);
+  //   return galleryPath;
+  // }
 
   Future<void> _captureAndSavePng() async {
     try{
