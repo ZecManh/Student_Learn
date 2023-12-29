@@ -26,11 +26,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
       "uid": user.uid,
       "type": 'tutor'
     };
-    print("user");
-    print(user);
     String jsonInfo = user.uid != null ? jsonEncode(info) : "";
-    print("======");
-    print(jsonInfo);
     showDialog(
       context: context,
       builder: (BuildContext context) {
