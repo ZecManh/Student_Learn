@@ -3,6 +3,10 @@ import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'dart:convert';
+import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DashBoardQrScannerTutor extends StatefulWidget {
   const DashBoardQrScannerTutor({super.key});
@@ -17,7 +21,8 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
-
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirestoreService firestoreService = FirestoreService();
   @override
   void reassemble() {
     super.reassemble();
@@ -61,16 +66,43 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _initInfo(dynamic scanData) async {
+    var dataScan = jsonDecode(scanData);
+    if (dataScan['type'] == 'tutor') {
+      var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+      if (userFetch != null) {
+        print(userFetch);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TuTorShowInfo(tutor: userFetch)));
+        await this.controller!.pauseCamera();
+        return;
+      }
+    }
+    if (dataScan['type'] == 'class') {
+      var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+      if (dataFetch != null) {
+        print(dataFetch);
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+        await this.controller!.pauseCamera();
+        return;
+      }
+    }
+  }
+
+  void _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
-        if (result != null) {
-          // Chuyển hướng đến trang khác dựa trên dữ liệu từ mã QR
-          navigateToNewPage();
-        }
       });
+      if (result!.code != null) {
+        _initInfo(result!.code);
+      }
     });
   }
 

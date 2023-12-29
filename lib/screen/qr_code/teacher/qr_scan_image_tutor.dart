@@ -7,6 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:datn/model/user/user.dart' as model_user;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
+import 'dart:convert';
+import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
 
 class QrScanImgTutor extends StatefulWidget {
   @override
@@ -24,6 +28,43 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirestoreService firestoreService = FirestoreService();
+    void _initInfo(dynamic scanData) async {
+      var dataScan = jsonDecode(scanData);
+      if (dataScan['type'] == 'tutor') {
+        var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+        if (userFetch != null) {
+          // print(userFetch);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>
+          //             TuTorShowInfo(tutor: userFetch)));
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Provider.value(
+                  value: user, child: TuTorShowInfo(tutor: userFetch));
+            }),
+          );
+          return;
+        }
+      }
+      if (dataScan['type'] == 'class') {
+        var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+        if (dataFetch != null) {
+          print(dataFetch);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+          return;
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quét QR qua ảnh'),
@@ -44,13 +85,7 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
                         setState(() {
                           qrcode = str;
                           if (qrcode != null) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) {
-                            //     return Provider.value(
-                            //         value: user, child: InfoTutor());
-                            //   }),
-                            // );
+                            _initInfo(qrcode);
                           }
                         });
                       }

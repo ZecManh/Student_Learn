@@ -46,35 +46,35 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
             children: [
               Center(child: Text('Mã QR của tôi')),
               Center(child: QRCodeView(text: jsonInfo)),
-              Center(
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return Provider.value(
-                            value: user,
-                            child: const DashBoardQrScannerTutor());
-                      }),
-                    );
-                  },
-                  icon: const Text('Quét Qr qua camera'),
-                ),
-              ),
-              Center(
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return Provider.value(
-                            value: user, child: QrScanImgTutor());
-                      }),
-                    );
-                  },
-                  icon: const Text('Quét Qr qua ảnh'),
-                ),
-              )
+              // Center(
+              //   child: IconButton(
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(builder: (context) {
+              //           return Provider.value(
+              //               value: user,
+              //               child: const DashBoardQrScannerTutor());
+              //         }),
+              //       );
+              //     },
+              //     icon: const Text('Quét Qr qua camera'),
+              //   ),
+              // ),
+              // Center(
+              //   child: IconButton(
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(builder: (context) {
+              //           return Provider.value(
+              //               value: user, child: QrScanImgTutor());
+              //         }),
+              //       );
+              //     },
+              //     icon: const Text('Quét Qr qua ảnh'),
+              //   ),
+              // )
             ],
           ),
           Text('$QrCodeInfoTutor'),

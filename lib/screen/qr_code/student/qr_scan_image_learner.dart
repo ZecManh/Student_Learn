@@ -52,6 +52,17 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
           return;
         }
       }
+      if (dataScan['type'] == 'class') {
+        var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+        if (dataFetch != null) {
+          print(dataFetch);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+          return;
+        }
+      }
     }
 
     return Scaffold(

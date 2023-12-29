@@ -28,7 +28,7 @@ class _QrCodeInfoState extends State<QrCodeInfo> {
   @override
   Widget build(BuildContext context) {
     model_user.User user = Provider.of<model_user.User>(context);
-    var info = {"uid": user.uid, "type": 'tutor'};
+    var info = {"uid": user.uid, "type": 'learner'};
     String jsonInfo = jsonEncode(info);
     return Scaffold(
       appBar: AppBar(

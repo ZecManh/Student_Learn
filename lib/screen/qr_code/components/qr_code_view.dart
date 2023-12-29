@@ -20,24 +20,24 @@ class _QRCodeView extends State<QRCodeView> {
   String data = '';
   final GlobalKey _qrkey = GlobalKey();
   bool dirExists = false;
-  // dynamic externalDir = '/storage/emulated/0/Download/Qr_code';
+  dynamic externalDir = '/storage/emulated/0/Download';
 
-  Future<String> getGalleryPath() async {
-    final directory = await getDownloadsDirectory();
-    final galleryPath = '${directory?.path}';
-    // final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
-    // return downloadsDirectory.path;
-    print("galleryPath");
-    print(directory);
-    print(galleryPath);
-    return galleryPath;
-  }
+  // Future<String> getGalleryPath() async {
+  //   final directory = await getDownloadsDirectory();
+  //   final galleryPath = '${directory?.path}';
+  //   // final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+  //   // return downloadsDirectory.path;
+  //   print("galleryPath");
+  //   print(directory);
+  //   print(galleryPath);
+  //   return galleryPath;
+  // }
 
   Future<void> _captureAndSavePng() async {
     try{
       RenderRepaintBoundary boundary = _qrkey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       var image = await boundary.toImage(pixelRatio: 3.0);
-      final externalDir = await getGalleryPath();
+      // final externalDir = await getGalleryPath();
       //Drawing White Background because Qr Code is Black
       final whitePaint = Paint()..color = Colors.white;
       final recorder = PictureRecorder();
