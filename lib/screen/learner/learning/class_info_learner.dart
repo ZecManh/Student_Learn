@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import '../../../model/teach_classes/teach_class.dart';
 import '../../../model/user/teach_schedules.dart';
 import '../../../model/user/user.dart';
-
+import 'package:datn/screen/qr_code/components/qr_code_view.dart';
+import 'dart:convert';
 class ClassInfoLearnerScreen extends StatefulWidget {
   const ClassInfoLearnerScreen({super.key});
 
@@ -58,6 +59,76 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     return count;
   }
 
+  void _openModalQrUser(BuildContext context, User user) {
+    var info = {
+      "uid": user.uid,
+      "type": 'tutor'
+    };
+    String jsonInfo = user.uid != null ? jsonEncode(info) : "";
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return
+          Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text : jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        // Container(
+        // child: ),);
+      },
+    );
+  }
+  void _openModalQrClass(BuildContext context, dynamic classInfo) {
+    print('classInfo');
+    print(classInfo);
+    print(classInfo["docId"]);
+    // return;
+    var info = {
+      "uid": classInfo["docId"],
+      "type": 'class'
+    };
+
+    String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+    print('jsonInfo');
+    print(jsonInfo);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return
+          Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text : jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        // Container(
+        // child: ),);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,6 +160,23 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                       radius: 50),
                   const SizedBox(
                     height: 20,
+                  ),
+                  IconButton(
+                    iconSize: 30,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    style: const ButtonStyle().copyWith(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context)
+                                .colorScheme
+                                .background)),
+                    onPressed: () {
+                      _openModalQrUser(context,((tutorInfo['tutorInfo']) as User));
+                    },
+                    icon: const Icon(Icons.qr_code),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   Card(
                     color: Theme.of(context).colorScheme.primary,
@@ -179,6 +267,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                           const SizedBox(
                             height: 10,
                           ),
+                          // jacksparrowdung@gmail.com
                           Row(
                             children: [
                               const Text(
@@ -235,7 +324,27 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                 style: OutlinedButton.styleFrom(
                                     backgroundColor:
                                     Theme.of(context).colorScheme.primary),
-                              )
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                style: const ButtonStyle().copyWith(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                onPressed: () {
+                                  _openModalQrClass(context,tutorInfo);
+                                },
+                                icon: const Icon(Icons.qr_code),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
                           Row(

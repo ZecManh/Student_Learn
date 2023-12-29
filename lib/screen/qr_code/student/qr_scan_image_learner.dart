@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:datn/database/auth/firebase_auth_service.dart';
-import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
@@ -11,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'dart:convert';
 import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
+import 'package:datn/screen/learner/learning/class_info_learner.dart';
 
 class QrScanImgLearner extends StatefulWidget {
   @override
@@ -55,11 +55,12 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
       if (dataScan['type'] == 'class') {
         var dataFetch = await firestoreService.getClassById(dataScan['uid']);
         if (dataFetch != null) {
-          print(dataFetch);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) {
+                return Provider(
+                    create: (context) => dataFetch,
+                    builder: (context, child) => ClassInfoLearnerScreen());
+              }));
           return;
         }
       }

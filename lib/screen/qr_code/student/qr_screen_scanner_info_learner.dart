@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:datn/screen/learner/learning/class_info_learner.dart';
 
 class DashBoardQrScannerLearner extends StatefulWidget {
   const DashBoardQrScannerLearner({super.key});
@@ -66,7 +67,6 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     if (dataScan['type'] == 'tutor') {
       var userFetch = await firestoreService.getTutorById(dataScan['uid']);
       if (userFetch != null) {
-        print(userFetch);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -79,10 +79,12 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
       var dataFetch = await firestoreService.getClassById(dataScan['uid']);
       if (dataFetch != null) {
         print(dataFetch);
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => TuTorShowInfo(tutor: userFetch)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) {
+              return Provider(
+                  create: (context) => dataFetch,
+                  builder: (context, child) => ClassInfoLearnerScreen());
+            }));
         await this.controller!.pauseCamera();
         return;
       }

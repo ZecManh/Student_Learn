@@ -486,12 +486,12 @@ class FirestoreService extends ChangeNotifier {
     }
     return false;
   }
-  Future<Map<String, dynamic>?> getClassById(String uid) async {
+  Future<Map<String, dynamic>> getClassById(String uid) async {
     Map<String, dynamic> classItem = {};
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Thay thế bằng tên collection thực tế của bạn
-          .where('docId', isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+          .where(FieldPath.documentId, isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
@@ -501,7 +501,6 @@ class FirestoreService extends ChangeNotifier {
 
         Map<String, dynamic> data = documentSnapshot.data() as Map<String,
             dynamic>;
-
         // Map<String, dynamic> itemData = {};
         var teachClass = TeachClass.fromJson(data);
         user_model.User tutorInfo = await getUser(teachClass.tutorId!);
