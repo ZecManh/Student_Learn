@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/user/user.dart';
-
+import 'package:datn/screen/qr_code/components/qr_code_view.dart';
+import 'dart:convert';
 class ClassInfoTutorScreen extends StatefulWidget {
   const ClassInfoTutorScreen({super.key});
 
@@ -53,6 +54,45 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       }
     }
     return count;
+  }
+
+  void _openModalQrClass(BuildContext context, dynamic classInfo) {
+    print('classInfo');
+    print(classInfo);
+    print(classInfo["docId"]);
+    // return;
+    var info = {
+      "uid": classInfo["docId"],
+      "type": 'class'
+    };
+
+    String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+    print('jsonInfo');
+    print(jsonInfo);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return
+          Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text : jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        // Container(
+        // child: ),);
+      },
+    );
   }
 
   @override
@@ -232,7 +272,27 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                 style: OutlinedButton.styleFrom(
                                     backgroundColor:
                                         Theme.of(context).colorScheme.primary),
-                              )
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                style: const ButtonStyle().copyWith(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                onPressed: () {
+                                  _openModalQrClass(context,learnerInfo);
+                                },
+                                icon: const Icon(Icons.qr_code),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
                           Row(

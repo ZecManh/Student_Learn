@@ -9,6 +9,7 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datn/screen/learner/learning/class_info_learner.dart';
 import 'package:provider/provider.dart';
+import 'package:datn/screen/tutor/teaching/class_info_tutor.dart';
 
 class DashBoardQrScannerTutor extends StatefulWidget {
   const DashBoardQrScannerTutor({super.key});
@@ -89,7 +90,7 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
             MaterialPageRoute(builder: (context) {
               return Provider(
                   create: (context) => dataFetch,
-                  builder: (context, child) => ClassInfoLearnerScreen());
+                  builder: (context, child) => ClassInfoTutorScreen());
             }));
         await this.controller!.pauseCamera();
         return;
