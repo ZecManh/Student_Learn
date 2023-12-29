@@ -24,7 +24,9 @@ class _QRCodeView extends State<QRCodeView> {
 
   Future<String> getGalleryPath() async {
     final directory = await getExternalStorageDirectory();
-    final galleryPath = '${directory?.path}/DCIM/Camera';
+    final galleryPath = '${directory?.path}/Download';
+    print("galleryPath");
+    print(galleryPath);
     return galleryPath;
   }
 
