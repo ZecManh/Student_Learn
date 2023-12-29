@@ -1,7 +1,7 @@
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/teach_classes/teach_class.dart';
 import 'package:datn/model/user/user.dart';
-import 'package:datn/screen/tutor/teaching/class_info.dart';
+import 'package:datn/screen/tutor/teaching/class_info_tutor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,18 +19,29 @@ class _DashBoardTutorTeachingState extends State<DashBoardTutorTeaching> {
   FirestoreService firestoreService = FirestoreService();
 
   Future<void> initInfo() async {
-    teachingData = await firestoreService.getTeachingInfoTutorSide();
+   var teachingDataFetch = await firestoreService.getTeachingInfoTutorSide();
     setState(() {
-      teachingData = teachingData;
+      teachingData = teachingDataFetch;
     });
     // teachingData.forEach((element) {
     //   print(element.toString());
     // });
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initInfo();
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    teachingData = [];
+  }
   @override
   Widget build(BuildContext context) {
-    initInfo();
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -44,7 +55,7 @@ class _DashBoardTutorTeachingState extends State<DashBoardTutorTeaching> {
                     MaterialPageRoute(builder: (context) {
                       return Provider(
                           create: (context) => teachingDataItem,
-                          builder: (context, child) => const ClassInfoScreen());
+                          builder: (context, child) => const ClassInfoTutorScreen());
                     }));
               },
               child: Card(
