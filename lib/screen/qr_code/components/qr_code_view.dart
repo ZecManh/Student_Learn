@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:path_provider/path_provider.dart';
 class QRCodeView extends StatefulWidget {
   final String? text;
+
   QRCodeView({ this.text});
 
   @override
@@ -15,7 +16,6 @@ class QRCodeView extends StatefulWidget {
 
 
 class _QRCodeView extends State<QRCodeView> {
-  String? textQr;
 
   String data = '';
   final GlobalKey _qrkey = GlobalKey();
@@ -76,9 +76,6 @@ class _QRCodeView extends State<QRCodeView> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      textQr : widget?.text != null ||widget?.text != "" ? widget.text : "Dữ liệu chưa được cập nhật khi chưa điền đủ thông tin";
-    });
     return Container(
       child:
       Column(
@@ -88,7 +85,7 @@ class _QRCodeView extends State<QRCodeView> {
                   key: _qrkey,
                   child:
                    QrImageView(
-        data: "$textQr",
+        data: (widget?.text != null ||widget?.text != "" ? "${widget.text}" : "Dữ liệu chưa được cập nhật khi chưa điền đủ thông tin"),
         version: QrVersions.auto,
         size: 200.0,
                      gapless: true,

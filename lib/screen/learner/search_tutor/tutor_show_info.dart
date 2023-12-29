@@ -21,12 +21,16 @@ class TuTorShowInfo extends StatefulWidget {
 
 class _TutorShowInfoState extends State<TuTorShowInfo> {
 
-  void _openModal(BuildContext context) {
+  void _openModal(BuildContext context, model_user.User user) {
     var info = {
-      "uid": widget.tutor.uid,
+      "uid": user.uid,
       "type": 'tutor'
     };
-    String jsonInfo = widget.tutor.uid != null ? jsonEncode(info) : "";
+    print("user");
+    print(user);
+    String jsonInfo = user.uid != null ? jsonEncode(info) : "";
+    print("======");
+    print(jsonInfo);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -113,7 +117,7 @@ class _TutorShowInfoState extends State<TuTorShowInfo> {
                                   .colorScheme
                                   .background)),
                       onPressed: () {
-                        _openModal(context);
+                        _openModal(context,widget.tutor);
                       },
                       icon: const Icon(Icons.qr_code),
                     ),
