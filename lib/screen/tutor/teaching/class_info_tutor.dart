@@ -1,7 +1,10 @@
+import 'dart:collection';
+
 import 'package:datn/model/teach_classes/teach_class.dart';
 import 'package:datn/model/user/teach_schedules.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../../model/user/user.dart';
 
@@ -17,7 +20,13 @@ class ClassInfoTutorScreen extends StatefulWidget {
 class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
   Map<String, dynamic> learnerInfo = {};
   int lessonOnWeek = 0;
-
+  List<LessonSchedules> lessonSchedules = [];
+  late DateTime startDate;
+  late DateTime endDate;
+  DateTime? _selectedDay =  DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  Map<DateTime, List> _eventsList = {};
   @override
   void initState() {
     super.initState();
@@ -25,7 +34,27 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     WeekSchedules? weekSchedules =
         (learnerInfo['teachClass'] as TeachClass).schedules?.weekSchedules;
     lessonOnWeek = countDayOnWeek(weekSchedules);
+    if ((learnerInfo['teachClass'] as TeachClass).schedules != null) {
+      lessonSchedules =
+          (learnerInfo['teachClass'] as TeachClass).schedules!.lessonSchedules!;
+    }
+    startDate = DateTime.fromMillisecondsSinceEpoch(
+        lessonSchedules[0].startTime!.millisecondsSinceEpoch);
+    endDate = DateTime.fromMillisecondsSinceEpoch(
+        lessonSchedules[lessonSchedules.length - 1]
+            .startTime!
+            .millisecondsSinceEpoch);
+    print("START TIME ${startDate.toString()}");
+    print("END TIME ${endDate.toString()}");
+    lessonSchedules.forEach((itemLesson) {
+      _eventsList.addAll({DateTime.fromMillisecondsSinceEpoch(itemLesson.startTime!.millisecondsSinceEpoch):['Thời gian điểm danh :  ${itemLesson.attendanceTime??''} Trạng thái : ${itemLesson.state??''}',]});
+    });
+
+
   }
+
+
+
 
   int countDayOnWeek(WeekSchedules? weekSchedules) {
     int count = 0;
@@ -54,9 +83,19 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     }
     return count;
   }
-
+  int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
   @override
   Widget build(BuildContext context) {
+    final _events = LinkedHashMap<DateTime, List>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_eventsList);
+
+    List getEventForDay(DateTime day) {
+      return _events[day] ?? [];
+    }
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -74,7 +113,9 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   CircleAvatar(
                       backgroundImage: (((learnerInfo['learnerInfo']) as User)
                                   .photoUrl !=
@@ -196,6 +237,26 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                           const SizedBox(
                             height: 10,
                           ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Địa chỉ :',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  (((learnerInfo['teachClass']) as TeachClass)
+                                          .address) ??
+                                      '',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 10),
                           const Row(
                             children: [
                               Text(
@@ -213,6 +274,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                               )
                             ],
                           ),
+                          SizedBox(height: 10),
                           Row(
                             children: [
                               OutlinedButton.icon(
@@ -235,31 +297,67 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                               )
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Card(
+                    color: Theme.of(context).colorScheme.background,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
                           Row(
                             children: [
-                              OutlinedButton.icon(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.calendar_month,
-                                  color:
-                                  Theme.of(context).colorScheme.onPrimary,
-                                ),
-                                label: Text(
-                                  'Lịch dạy',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                    backgroundColor:
-                                    Theme.of(context).colorScheme.primary),
-                              )
+                              Text(
+                                'Lịch dạy ',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
+                  ),
+                  TableCalendar(
+                    focusedDay: _focusedDay,
+                    firstDay: startDate,
+                    lastDay: endDate,
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    calendarFormat: _calendarFormat,
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        // Call `setState()` when updating calendar format
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      print(selectedDay.toString());
+                      print(focusedDay.toString());
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                      // getDaySchedules(selectedDay);
+                    },
+                    eventLoader: (day){
+                      return getEventForDay(day);
+                    },
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: getEventForDay(_selectedDay!)
+                        .map((event) => ListTile(
+                      title: Text(event.toString()),
+                    ))
+                        .toList(),
                   )
                 ],
               ),

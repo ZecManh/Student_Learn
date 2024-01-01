@@ -3,7 +3,7 @@ import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
 import 'package:datn/model/teach_classes/teach_class.dart';
-import 'package:datn/model/today_schdules.dart';
+import 'package:datn/model/today_schedules.dart';
 import 'package:datn/model/user/user.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -365,7 +365,8 @@ class FirestoreService extends ChangeNotifier {
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Replace with your actual collection name
-          .where('learner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('learner_id',
+              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('state', isEqualTo: ClassesState.running.name)
           .get();
 
@@ -381,6 +382,7 @@ class FirestoreService extends ChangeNotifier {
   }
 
   Future<List<Map<String, dynamic>>> getTeachingInfoTutorSide() async {
+    //lay thong tin cua lop hoc và thong tin hoc vien
     List<Map<String, dynamic>> teachingData = [];
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -406,20 +408,23 @@ class FirestoreService extends ChangeNotifier {
 
     return teachingData;
   }
+
   Future<user_model.User?> getTutorById(String uid) async {
     user_model.User? user;
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('users') // Thay thế bằng tên collection thực tế của bạn
-          .where('uid', isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+          .where('uid',
+              isEqualTo:
+                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
         // Tìm thấy item với uid cụ thể
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-            dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         user = user_model.User.fromJson(data);
       }
     } catch (e) {}
@@ -431,7 +436,8 @@ class FirestoreService extends ChangeNotifier {
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Replace with your actual collection name
-          .where('learner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('learner_id',
+              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('state', isEqualTo: ClassesState.running.name)
           .get();
 
@@ -460,17 +466,75 @@ class FirestoreService extends ChangeNotifier {
     teachClasses.forEach((classItem) {
       List<LessonSchedules>? lessonSchedules =
           classItem.schedules?.lessonSchedules;
+      // user_model.User learnerInfo = await getUser(classItem.learnerId!);
       lessonSchedules?.forEach((itemLessonSchedules) {
         if (isTheSameDay(itemLessonSchedules.startTime?.toDate(), today)) {
           DateTime startTime = itemLessonSchedules.startTime!.toDate();
           DateTime endTime = itemLessonSchedules.endTime!.toDate();
           String subject = classItem.subject!;
           String teachMethod = classItem.teachMethod!;
-          todaySchedules.add(TodaySchedules(
-              startTime: startTime,
-              endTime: endTime,
-              subject: subject,
-              teachMethod: teachMethod));
+          TodaySchedules todaySchedule = TodaySchedules(
+            startTime: startTime,
+            endTime: endTime,
+            subject: subject,
+            teachMethod: teachMethod,
+          );
+          todaySchedule.address = classItem.address;
+          todaySchedules.add(todaySchedule);
+        }
+      });
+    });
+    return todaySchedules;
+  }
+
+  Future<List<TodaySchedules>> getSchedulesByDayTutorSide(DateTime day) async {
+    List<TeachClass> teachClasses = await getAllClassTutorSide();
+    List<TodaySchedules> todaySchedules = [];
+    teachClasses.forEach((classItem) {
+      List<LessonSchedules>? lessonSchedules =
+          classItem.schedules?.lessonSchedules;
+
+      lessonSchedules?.forEach((itemLessonSchedules) {
+        if (isTheSameDay(itemLessonSchedules.startTime?.toDate(), day)) {
+          DateTime startTime = itemLessonSchedules.startTime!.toDate();
+          DateTime endTime = itemLessonSchedules.endTime!.toDate();
+          String subject = classItem.subject!;
+          String teachMethod = classItem.teachMethod!;
+          TodaySchedules todaySchedule = TodaySchedules(
+            startTime: startTime,
+            endTime: endTime,
+            subject: subject,
+            teachMethod: teachMethod,
+          );
+          todaySchedule.address = classItem.address;
+          todaySchedules.add(todaySchedule);
+        }
+      });
+    });
+    return todaySchedules;
+  }
+
+  Future<List<TodaySchedules>> getSchedulesByDayLearnerSide(DateTime day) async {
+    List<TeachClass> teachClasses = await getAllClassLearnerSide();
+    List<TodaySchedules> todaySchedules = [];
+    teachClasses.forEach((classItem) {
+      List<LessonSchedules>? lessonSchedules =
+          classItem.schedules?.lessonSchedules;
+
+      lessonSchedules?.forEach((itemLessonSchedules) {
+        if (isTheSameDay(itemLessonSchedules.startTime?.toDate(), day)) {
+          DateTime startTime = itemLessonSchedules.startTime!.toDate();
+          DateTime endTime = itemLessonSchedules.endTime!.toDate();
+          String subject = classItem.subject!;
+          String teachMethod = classItem.teachMethod!;
+          TodaySchedules todaySchedule = TodaySchedules(
+            startTime: startTime,
+            endTime: endTime,
+            subject: subject,
+            teachMethod: teachMethod,
+          );
+          todaySchedule.address = classItem.address;
+          todaySchedules.add(todaySchedule);
         }
       });
     });
@@ -486,23 +550,104 @@ class FirestoreService extends ChangeNotifier {
     }
     return false;
   }
-  // Future<user_model.User?> getClassById(String uid) async {
-  //   user_model.User? user;
-  //   try {
-  //     QuerySnapshot querySnapshot = await firestore
-  //         .collection('classes') // Thay thế bằng tên collection thực tế của bạn
-  //         .where('uid', isEqualTo: uid)
-  //         .limit(1)
-  //         .get();
-  //     if (querySnapshot.size > 0) {
-  //       // Tìm thấy item với uid cụ thể
-  //       DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
-  //
-  //       Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-  //           dynamic>;
-  //       user = user_model.User.fromJson(data);
-  //     }
-  //   } catch (e) {}
-  //   return user;
-  // }
+
+  Future<bool> isTeachClassOverlap(SubjectRequest subjectRequest) async {
+    bool isOverlap = false;
+    List<TeachClass> teachClasses = await getAllClassTutorSide();
+    teachClasses.forEach((itemTeachClass) {
+      WeekSchedules weekSchedulesTutor =
+          itemTeachClass.schedules!.weekSchedules!;
+      WeekSchedules weekSchedulesSubjectRequest = subjectRequest.weekSchedules!;
+      if (isWeekSchedulesOverlap(
+          weekSchedulesTutor, weekSchedulesSubjectRequest)) {
+        isOverlap = true;
+      }
+    });
+    return isOverlap;
+  }
+
+  bool isWeekSchedulesOverlap(WeekSchedules wsOne, WeekSchedules wsTwo) {
+    if (wsOne.monday != null && wsTwo.monday != null) {
+      if (isPeriodOverlap(wsOne.monday!, wsTwo.monday!)) {
+        return true;
+      }
+    }
+    if (wsOne.tuesday != null && wsTwo.tuesday != null) {
+      if (isPeriodOverlap(wsOne.tuesday!, wsTwo.tuesday!)) {
+        return true;
+      }
+    }
+    if (wsOne.wednesday != null && wsTwo.wednesday != null) {
+      if (isPeriodOverlap(wsOne.wednesday!, wsTwo.wednesday!)) {
+        return true;
+      }
+    }
+    if (wsOne.thursday != null && wsTwo.thursday != null) {
+      if (isPeriodOverlap(wsOne.thursday!, wsTwo.thursday!)) {
+        return true;
+      }
+    }
+    if (wsOne.friday != null && wsTwo.friday != null) {
+      if (isPeriodOverlap(wsOne.friday!, wsTwo.friday!)) {
+        return true;
+      }
+    }
+    if (wsOne.saturday != null && wsTwo.saturday != null) {
+      if (isPeriodOverlap(wsOne.saturday!, wsTwo.saturday!)) {
+        return true;
+      }
+    }
+    if (wsOne.sunday != null && wsTwo.sunday != null) {
+      if (isPeriodOverlap(wsOne.sunday!, wsTwo.sunday!)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isPeriodOverlap(Period period1, Period period2) {
+    double start1 =
+        calculteTime(period1.startTime?.hour, period1.startTime?.minute);
+    double end1 = calculteTime(period1.endTime?.hour, period1.endTime?.minute);
+    double start2 =
+        calculteTime(period2.startTime?.hour, period2.startTime?.minute);
+    double end2 = calculteTime(period2.endTime?.hour, period2.endTime?.minute);
+
+    bool overlapCondition1 = (start1 < end2) && (end1 > start2);
+    bool overlapCondition2 = (start2 < end1) && (end2 > start1);
+
+    return overlapCondition1 || overlapCondition2;
+  }
+
+  double calculteTime(int? hour, int? minute) {
+    int hourCal = 0;
+    double minuteCal = 0;
+    if (hour != null) {
+      hourCal = hour;
+    }
+    if (minute != null) {
+      minuteCal = minute / 60;
+    }
+    return hourCal + minuteCal;
+  }
+
+// Future<user_model.User?> getClassById(String uid) async {
+//   user_model.User? user;
+//   try {
+//     QuerySnapshot querySnapshot = await firestore
+//         .collection('classes') // Thay thế bằng tên collection thực tế của bạn
+//         .where('uid', isEqualTo: uid)
+//         .limit(1)
+//         .get();
+//     if (querySnapshot.size > 0) {
+//       // Tìm thấy item với uid cụ thể
+//       DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
+//
+//       Map<String, dynamic> data = documentSnapshot.data() as Map<String,
+//           dynamic>;
+//       user = user_model.User.fromJson(data);
+//     }
+//   } catch (e) {}
+//   return user;
+// }
 }

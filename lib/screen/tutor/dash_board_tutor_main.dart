@@ -1,5 +1,5 @@
 import 'package:datn/database/firestore/firestore_service.dart';
-import 'package:datn/model/today_schdules.dart';
+import 'package:datn/model/today_schedules.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/qr_code/qr_code_info_tutor.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:datn/model/user/user.dart' as model_user;
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
+import '../../model/user/teach_schedules.dart';
 
 class DashBoardTutorMain extends StatefulWidget {
   const DashBoardTutorMain({super.key});
@@ -27,7 +29,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   late TextEditingController nameController;
   late TextEditingController ageController;
   FirestoreService firestoreService = FirestoreService();
-  List<TodaySchedules> todaySchedules = [];
+  List<TodaySchedules> daySchedules = [];
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
 
   @override
   void initState() {
@@ -36,14 +41,40 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
   }
 
   void initInto() async {
-    print("TODAY SCHEDULES");
-    var todaySchedulesFetch = await firestoreService.getTodaySchedules();
+    var daySchedulesFetch =
+    await firestoreService.getSchedulesByDayTutorSide(DateTime.now());
+    daySchedulesFetch.sort(
+          (a, b) {
+        if (a.startTime.isAfter(b.startTime))
+          return 1;
+        else
+          return 0;
+      },
+    );
     setState(() {
-      todaySchedules = todaySchedulesFetch;
+      daySchedules = daySchedulesFetch;
     });
-    todaySchedules.forEach((element) {
+    print("TODAY SCHEDULES");
+    daySchedules.forEach((element) {
+      print("SCHEDULES " + element.toString());
+    });
+  }
 
-      print(element.toString());
+  void getDaySchedules(DateTime day) async {
+    var daySchedulesFetch = await firestoreService.getSchedulesByDayTutorSide(day);
+    daySchedulesFetch.sort(
+          (a, b) {
+        if (a.startTime.isAfter(b.startTime))
+          return 1;
+        else
+          return 0;
+      },
+    );
+    setState(() {
+      daySchedules = daySchedulesFetch;
+      daySchedules.forEach((element) {
+        print("SCHEDULES " + element.toString());
+      });
     });
   }
 
@@ -55,14 +86,21 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
+
     return SingleChildScrollView(
       child: Container(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme
+            .of(context)
+            .colorScheme
+            .background,
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .primaryContainer,
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20))),
@@ -88,7 +126,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                           },
                           child: StreamBuilder<model_user.User>(
                               stream:
-                                  firestoreService.user(auth.currentUser!.uid),
+                              firestoreService.user(auth.currentUser!.uid),
                               builder: (context,
                                   AsyncSnapshot<model_user.User> snapshot) {
                                 // var data=snapshot.data;
@@ -98,12 +136,12 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                       backgroundImage: (user.photoUrl != null)
                                           ? NetworkImage(user.photoUrl!)
                                           : const AssetImage('assets/bear.jpg')
-                                              as ImageProvider,
+                                      as ImageProvider,
                                       radius: 50);
                                 } else {
                                   return const CircleAvatar(
                                     backgroundImage:
-                                        AssetImage('assets/bear.jpg'),
+                                    AssetImage('assets/bear.jpg'),
                                     radius: 50,
                                   );
                                 }
@@ -117,7 +155,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                         children: [
                           StreamBuilder<model_user.User?>(
                               stream:
-                                  firestoreService.user(auth.currentUser!.uid),
+                              firestoreService.user(auth.currentUser!.uid),
                               builder: (context,
                                   AsyncSnapshot<model_user.User?> snapshot) {
                                 {
@@ -152,17 +190,18 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                     vertical: 10, horizontal: 10),
                                 style: const ButtonStyle().copyWith(
                                     backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context)
+                                        Theme
+                                            .of(context)
                                             .colorScheme
                                             .background)),
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return Provider.value(
-                                      value: user,
-                                      child: QrCodeInfoTutor(),
-                                    );
-                                  }));
+                                        return Provider.value(
+                                          value: user,
+                                          child: QrCodeInfoTutor(),
+                                        );
+                                      }));
                                 },
                                 icon: const Icon(Icons.qr_code),
                               ),
@@ -172,14 +211,15 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                     vertical: 10, horizontal: 10),
                                 style: const ButtonStyle().copyWith(
                                     backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context)
+                                        Theme
+                                            .of(context)
                                             .colorScheme
                                             .background)),
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return const DashBoardFaceID();
-                                  }));
+                                        return const DashBoardFaceID();
+                                      }));
                                 },
                                 icon: const Icon(Icons.tag_faces_rounded),
                               ),
@@ -189,7 +229,8 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                     vertical: 10, horizontal: 10),
                                 style: const ButtonStyle().copyWith(
                                     backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context)
+                                        Theme
+                                            .of(context)
                                             .colorScheme
                                             .background)),
                                 onPressed: () {},
@@ -226,7 +267,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -271,7 +315,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme
+                                    .of(context)
+                                    .colorScheme
+                                    .primary,
                                 shape: BoxShape.rectangle,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(5),
@@ -304,7 +351,10 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
                               shape: BoxShape.rectangle,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(5),
@@ -336,38 +386,171 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const Text(
-                      'Lịch dạy hôm nay',
+                      'Lịch dạy',
                       style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      textAlign: TextAlign.end,
-                      'Xem tất cả',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Theme.of(context).colorScheme.primary),
                     ),
                   ]),
             ),
             const SizedBox(
               height: 20,
             ),
-            // Container(
-            //   height: 500,
-            //   child: Card(
-            //     child: Padding(
-            //       padding: EdgeInsets.all(10),
-            //       child:
-            //         Text('ok')
-            //     ),
-            //   ),
-            // )
+            Container(
+              height: 500,
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: TableCalendar(
+                    focusedDay: DateTime.now(),
+                    firstDay: DateTime.utc(2023, 1, 1),
+                    lastDay: DateTime.utc(2024, 12, 31),
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      print(selectedDay.toString());
+                      print(focusedDay.toString());
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                      getDaySchedules(selectedDay);
+                    },
+                    calendarFormat: _calendarFormat,
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        // Call `setState()` when updating calendar format
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Card(
+              child: Column(
+                children: [
+                  ...daySchedules
+                      .map(
+                        (item) =>
+                        Row(children: [
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // Return the dialog widget
+                                  return AlertDialog(
+                                    title: const Text('Thông tin chi tiết'),
+                                    content: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Môn học : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Expanded(
+                                              child: Card(
+                                                color: Theme
+                                                    .of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Text(
+                                                    '${item.subject}',
+                                                    style: TextStyle(
+                                                        color: Theme
+                                                            .of(context)
+                                                            .colorScheme
+                                                            .onPrimary),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Địa chỉ : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Expanded(
+                                              child: Card(
+                                                color: Theme
+                                                    .of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Text(
+                                                    '${item.address ?? ''}',
+                                                    style: TextStyle(
+                                                        color: Theme
+                                                            .of(context)
+                                                            .colorScheme
+                                                            .onPrimary),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Card(
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primary,
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  '${DateFormat.Hm().format(
+                                      item.startTime)} - ${DateFormat.Hm()
+                                      .format(item.endTime)}',
+                                  style: TextStyle(
+                                      color: Theme
+                                          .of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                  )
+                      .toList()
+                ],
+              ),
+            )
           ],
         ),
       ),

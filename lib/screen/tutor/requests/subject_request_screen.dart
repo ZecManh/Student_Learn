@@ -80,14 +80,26 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .background,
-                                      onPressed: () {
-                                        firestoreService.addClass(mapItem.key);
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                          content: Text("Bạn có một lớp học mới"),
-                                        ));
-                                        setState(() {
-                                          mapInfo.remove(mapItem.key);
-                                        });
+                                      onPressed: () async {
+                                        bool isOverlap = await firestoreService
+                                            .isTeachClassOverlap(mapItem.key);
+                                        if (isOverlap) {
+                                          const snackBar = SnackBar(
+                                            content: Text('Không thể tạo lớp do trùng lặp lịch học'),
+                                          );
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        } else {
+                                          firestoreService
+                                              .addClass(mapItem.key);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            content:
+                                                Text("Bạn có một lớp học mới"),
+                                          ));
+                                          setState(() {
+                                            mapInfo.remove(mapItem.key);
+                                          });
+                                        }
                                       },
                                       icon: const Icon(Icons.done)),
                                   IconButton(
@@ -95,7 +107,8 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           .colorScheme
                                           .background,
                                       onPressed: () {
-                                        firestoreService.removeSubjectRequest(mapItem.key);
+                                        firestoreService
+                                            .removeSubjectRequest(mapItem.key);
                                         setState(() {
                                           mapInfo.remove(mapItem.key);
                                         });
@@ -136,18 +149,14 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.monday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules?.monday
+                                                  ?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.monday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules?.monday
+                                                  ?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -166,18 +175,14 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.tuesday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.tuesday?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.tuesday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.tuesday?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -196,18 +201,14 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.wednesday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.wednesday?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.wednesday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.wednesday?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -226,18 +227,14 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.thursday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.thursday?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.thursday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.thursday?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
                                     const SizedBox(
@@ -256,70 +253,66 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.friday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules?.friday
+                                                  ?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.friday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules?.friday
+                                                  ?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     const Text(
                                       'Thứ 7',
                                       style: TextStyle(fontSize: 20),
                                     ),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     Center(
                                         child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.saturday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.saturday?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.saturday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules
+                                                  ?.saturday?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     const Text(
                                       'Chủ nhật',
                                       style: TextStyle(fontSize: 20),
                                     ),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                     Center(
                                         child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
                                           const Text("Từ "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.sunday
-                                                  ?.startTime?.format() ??
+                                          Text(mapItem.key.weekSchedules?.sunday
+                                                  ?.startTime
+                                                  ?.format() ??
                                               ''),
                                           const Text(" Đến "),
-                                          Text(mapItem
-                                                  .key
-                                                  .weekSchedules
-                                                  ?.sunday
-                                                  ?.endTime?.format() ??
+                                          Text(mapItem.key.weekSchedules?.sunday
+                                                  ?.endTime
+                                                  ?.format() ??
                                               '')
                                         ])),
                                   ],

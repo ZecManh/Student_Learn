@@ -1,8 +1,11 @@
 
 
 
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../../model/teach_classes/teach_class.dart';
 import '../../../model/user/teach_schedules.dart';
@@ -16,11 +19,19 @@ class ClassInfoLearnerScreen extends StatefulWidget {
     return _ClassInfoScreenState();
   }
 }
-
+int getHashCode(DateTime key) {
+  return key.day * 1000000 + key.month * 10000 + key.year;
+}
 class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
   Map<String, dynamic> tutorInfo = {};
   int lessonOnWeek = 0;
-
+  List<LessonSchedules> lessonSchedules = [];
+  late DateTime startDate;
+  late DateTime endDate;
+  DateTime? _selectedDay =  DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  Map<DateTime, List> _eventsList = {};
   @override
   void initState() {
     super.initState();
@@ -28,6 +39,21 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     WeekSchedules? weekSchedules =
         (tutorInfo['teachClass'] as TeachClass).schedules?.weekSchedules;
     lessonOnWeek = countDayOnWeek(weekSchedules);
+    if ((tutorInfo['teachClass'] as TeachClass).schedules != null) {
+      lessonSchedules =
+      (tutorInfo['teachClass'] as TeachClass).schedules!.lessonSchedules!;
+    }
+    startDate = DateTime.fromMillisecondsSinceEpoch(
+        lessonSchedules[0].startTime!.millisecondsSinceEpoch);
+    endDate = DateTime.fromMillisecondsSinceEpoch(
+        lessonSchedules[lessonSchedules.length - 1]
+            .startTime!
+            .millisecondsSinceEpoch);
+    print("START TIME ${startDate.toString()}");
+    print("END TIME ${endDate.toString()}");
+    lessonSchedules.forEach((itemLesson) {
+      _eventsList.addAll({DateTime.fromMillisecondsSinceEpoch(itemLesson.startTime!.millisecondsSinceEpoch):['Thời gian điểm danh :  ${itemLesson.attendanceTime??''} Trạng thái : ${itemLesson.state??''}',]});
+    });
   }
 
   int countDayOnWeek(WeekSchedules? weekSchedules) {
@@ -60,6 +86,15 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _events = LinkedHashMap<DateTime, List>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_eventsList);
+
+    List getEventForDay(DateTime day) {
+      return _events[day] ?? [];
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -263,6 +298,43 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                         ],
                       ),
                     ),
+                  ),
+                  TableCalendar(
+                    focusedDay: _focusedDay,
+                    firstDay: startDate,
+                    lastDay: endDate,
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    calendarFormat: _calendarFormat,
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        // Call `setState()` when updating calendar format
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      print(selectedDay.toString());
+                      print(focusedDay.toString());
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                      // getDaySchedules(selectedDay);
+                    },
+                    eventLoader: (day){
+                      return getEventForDay(day);
+                    },
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: getEventForDay(_selectedDay!)
+                        .map((event) => ListTile(
+                      title: Text(event.toString()),
+                    ))
+                        .toList(),
                   )
                 ],
               ),

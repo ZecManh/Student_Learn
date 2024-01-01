@@ -1,3 +1,4 @@
+import 'package:calendar_view/calendar_view.dart';
 import 'package:datn/screen/wrapper.dart';
 import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _TluTutorState extends State<TluTutor> {
             create: (_) => FirestoreService()),
         ChangeNotifierProvider<UserTypeModel>(
           create: (_) => UserTypeModel(),
-        )
+        ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

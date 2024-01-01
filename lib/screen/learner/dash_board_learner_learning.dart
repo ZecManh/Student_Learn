@@ -20,33 +20,37 @@ class _DashBoardLearnerLearningState extends State<DashBoardLearnerLearning> {
   FirestoreService firestoreService = FirestoreService();
 
   Future<void> initInfo() async {
-    teachingData = await firestoreService.getTeachingInfoLearnerSide();
+    var teachingDataFetch = await firestoreService.getTeachingInfoLearnerSide();
     print("TEACHING INFO LEARNER SIDE");
-    teachingData.forEach((element) {print(element.toString());});
-    setState(() {
-      teachingData = teachingData;
+    teachingDataFetch.forEach((element) {
+      print(element.toString());
     });
+    setState(() {
+      teachingData = teachingDataFetch;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initInfo();
 
   }
-
   @override
   Widget build(BuildContext context) {
-    initInfo();
+
     return SingleChildScrollView(
       child: Column(
         children: [
           ...teachingData.map((teachingDataItem) {
             return GestureDetector(
-              onLongPress: () {
-
-              },
+              onLongPress: () {},
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                      return Provider(
-                          create: (context) => teachingDataItem,
-                          builder: (context, child) => ClassInfoLearnerScreen());
-                    }));
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Provider(
+                      create: (context) => teachingDataItem,
+                      builder: (context, child) => ClassInfoLearnerScreen());
+                }));
               },
               child: Card(
                 color: Theme.of(context).colorScheme.primary,
@@ -82,7 +86,6 @@ class _DashBoardLearnerLearningState extends State<DashBoardLearnerLearning> {
                               padding: EdgeInsets.all(10),
                               child: Row(
                                 children: [
-
                                   CircleAvatar(
                                       backgroundImage: (((teachingDataItem[
                                                       'tutorInfo']) as User)
@@ -99,11 +102,12 @@ class _DashBoardLearnerLearningState extends State<DashBoardLearnerLearning> {
                                     width: 10,
                                   ),
                                   Expanded(
-                                    child: Text('Gia sư : '+
-                                        (((teachingDataItem['tutorInfo'])
-                                        as User)
-                                            .displayName ??
-                                            ''),
+                                    child: Text(
+                                        'Gia sư : ' +
+                                            (((teachingDataItem['tutorInfo'])
+                                                        as User)
+                                                    .displayName ??
+                                                ''),
                                         style: TextStyle(
                                           fontSize: 16,
                                         )),
