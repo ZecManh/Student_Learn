@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:datn/screen/tutor/update/tutor_update_info.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -33,7 +34,7 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
     FirestoreService firestoreService = FirestoreService();
     void _initInfo(dynamic scanData) async {
       var dataScan = jsonDecode(scanData);
-      if (dataScan['type'] == 'tutor') {
+      if (dataScan['type'] == 'learner') {
         var userFetch = await firestoreService.getTutorById(dataScan['uid']);
         if (userFetch != null) {
           // print(userFetch);
@@ -47,7 +48,8 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
             context,
             MaterialPageRoute(builder: (context) {
               return Provider.value(
-                  value: user, child: TuTorShowInfo(tutor: userFetch));
+                  value: user,
+                  child: learnerShowInfoLearner(learner: userFetch));
             }),
           );
           return;
@@ -56,12 +58,11 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
       if (dataScan['type'] == 'class') {
         var dataFetch = await firestoreService.getClassById(dataScan['uid']);
         if (dataFetch != null) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-                return Provider(
-                    create: (context) => dataFetch,
-                    builder: (context, child) => ClassInfoTutorScreen());
-              }));
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return Provider(
+                create: (context) => dataFetch,
+                builder: (context, child) => ClassInfoTutorScreen());
+          }));
           return;
         }
       }

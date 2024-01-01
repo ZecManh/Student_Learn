@@ -71,14 +71,15 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
 
   void _initInfo(dynamic scanData) async {
     var dataScan = jsonDecode(scanData);
-    if (dataScan['type'] == 'tutor') {
+    if (dataScan['type'] == 'learner') {
       var userFetch = await firestoreService.getTutorById(dataScan['uid']);
       if (userFetch != null) {
         print(userFetch);
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => TuTorShowInfo(tutor: userFetch)));
+                builder: (context) =>
+                    learnerShowInfoLearner(learner: userFetch)));
         await this.controller!.pauseCamera();
         return;
       }
@@ -86,12 +87,11 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
     if (dataScan['type'] == 'class') {
       var dataFetch = await firestoreService.getClassById(dataScan['uid']);
       if (dataFetch != null) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) {
-              return Provider(
-                  create: (context) => dataFetch,
-                  builder: (context, child) => ClassInfoTutorScreen());
-            }));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Provider(
+              create: (context) => dataFetch,
+              builder: (context, child) => ClassInfoTutorScreen());
+        }));
         await this.controller!.pauseCamera();
         return;
       }
