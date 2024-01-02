@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../model/user/user.dart';
+import 'package:datn/screen/qr_code/components/qr_code_view.dart';
+import 'dart:convert';
 
 class ClassInfoTutorScreen extends StatefulWidget {
   const ClassInfoTutorScreen({super.key});
@@ -96,6 +98,39 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
+    void _openModalQrClass(BuildContext context, dynamic classInfo) {
+    // return;
+    var info = {
+      "uid": classInfo["docId"],
+      "type": 'class'
+    };
+
+    String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return
+          Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text : jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        // Container(
+        // child: ),);
+      },
+    );
+  }
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -294,7 +329,24 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                 style: OutlinedButton.styleFrom(
                                     backgroundColor:
                                         Theme.of(context).colorScheme.primary),
-                              )
+                              ),
+                              IconButton(
+                                iconSize: 30,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                style: const ButtonStyle().copyWith(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background)),
+                                onPressed: () {
+                                  _openModalQrClass(context,learnerInfo);
+                                },
+                                icon: const Icon(Icons.qr_code),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
                         ],

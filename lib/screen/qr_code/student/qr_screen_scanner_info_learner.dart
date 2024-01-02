@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:datn/screen/learner/learner_update_info.dart';
-import 'package:datn/screen/qr_code/info_learner.dart';
+import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:datn/screen/learner/learning/class_info_learner.dart';
 
 class DashBoardQrScannerLearner extends StatefulWidget {
   const DashBoardQrScannerLearner({super.key});
@@ -66,7 +67,6 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     if (dataScan['type'] == 'tutor') {
       var userFetch = await firestoreService.getTutorById(dataScan['uid']);
       if (userFetch != null) {
-        print(userFetch);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -75,20 +75,20 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         return;
       }
     }
-
-    // Chuyển hướng đến trang khác dựa trên dữ liệu từ mã QR
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) {
-    //     model_user.User user = Provider.of<model_user.User>(context);
-    //     return Provider.value(value: userFetch, child:TuTorShowInfo());)
-    //   }),
-    // );
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) =>
-    //             TuTorShowInfo(tutor: userFetch)));
+    if (dataScan['type'] == 'class') {
+      var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+      if (dataFetch != null) {
+        print(dataFetch);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) {
+              return Provider(
+                  create: (context) => dataFetch,
+                  builder: (context, child) => ClassInfoLearnerScreen());
+            }));
+        await this.controller!.pauseCamera();
+        return;
+      }
+    }
   }
 
   void _onQRViewCreated(QRViewController controller) async {
