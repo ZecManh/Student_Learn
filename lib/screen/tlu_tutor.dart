@@ -1,9 +1,10 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:calendar_view/calendar_view.dart';
+import 'package:datn/notification/notification_controller.dart';
 import 'package:datn/screen/wrapper.dart';
 import 'package:datn/viewmodel/user_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../database/auth/firebase_auth_service.dart';
 import '../database/firestore/firestore_service.dart';
 
@@ -27,6 +28,14 @@ class TluTutor extends StatefulWidget {
 }
 
 class _TluTutorState extends State<TluTutor> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    AwesomeNotifications().setListeners(onActionReceivedMethod: NotificationController.onActionReceivedMethod);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
