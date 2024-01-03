@@ -56,7 +56,7 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
         }
       }
       if (dataScan['type'] == 'class') {
-        var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+        var dataFetch = await firestoreService.getClassByIdLearner(dataScan['uid']);
         if (dataFetch != null) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return Provider(
