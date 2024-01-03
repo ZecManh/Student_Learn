@@ -631,23 +631,34 @@ class FirestoreService extends ChangeNotifier {
     return hourCal + minuteCal;
   }
 
-// Future<user_model.User?> getClassById(String uid) async {
-//   user_model.User? user;
-//   try {
-//     QuerySnapshot querySnapshot = await firestore
-//         .collection('classes') // Thay thế bằng tên collection thực tế của bạn
-//         .where('uid', isEqualTo: uid)
-//         .limit(1)
-//         .get();
-//     if (querySnapshot.size > 0) {
-//       // Tìm thấy item với uid cụ thể
-//       DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
-//
-//       Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-//           dynamic>;
-//       user = user_model.User.fromJson(data);
-//     }
-//   } catch (e) {}
-//   return user;
-// }
+ Future<Map<String, dynamic>> getClassById(String uid) async {
+    Map<String, dynamic> classItem = {};
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('classes') // Thay thế bằng tên collection thực tế của bạn
+          .where(FieldPath.documentId, isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+          .limit(1)
+          .get();
+      if (querySnapshot.size > 0) {
+        // Tìm thấy item với uid cụ thể
+
+        DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
+
+        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
+            dynamic>;
+        // Map<String, dynamic> itemData = {};
+        var teachClass = TeachClass.fromJson(data);
+        user_model.User tutorInfo = await getUser(teachClass.tutorId!);
+        classItem.addAll({
+          'docId': documentSnapshot.id,
+          'teachClass': teachClass,
+          'tutorInfo': tutorInfo
+        });
+
+
+        // classItem = user_model.User.fromJson(data);
+      }
+    } catch (e) {}
+    return classItem;
+  }
 }
