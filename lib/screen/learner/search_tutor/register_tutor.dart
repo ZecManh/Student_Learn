@@ -94,7 +94,6 @@ class _RegisterTutorState extends State<RegisterTutor> {
   var addressTextController = TextEditingController();
 
   bool checkTime() {
-
     if (isMondayChosen) {
       if (!mondayStartDateTime.isBefore(mondayEndDateTime)) {
         return false;
@@ -188,8 +187,10 @@ class _RegisterTutorState extends State<RegisterTutor> {
     print("START DATE ${startDate}");
     print("END DATE ${endDate}");
     timetable.forEach((element) {
-      print("Start time ${DateTime.fromMillisecondsSinceEpoch(element.startTime!.millisecondsSinceEpoch)}");
-      print("End time ${DateTime.fromMillisecondsSinceEpoch(element.endTime!.millisecondsSinceEpoch)}");
+      print(
+          "Start time ${DateTime.fromMillisecondsSinceEpoch(element.startTime!.millisecondsSinceEpoch)}");
+      print(
+          "End time ${DateTime.fromMillisecondsSinceEpoch(element.endTime!.millisecondsSinceEpoch)}");
     });
     if (timetable.length > 0) {
       return true;
@@ -628,12 +629,14 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isMondayChosen = newVal;
-                                          if(isMondayChosen==false){
-                                            studySchedule.remove(['Monday']);
-
+                                          if (isMondayChosen == false) {
+                                            var deleteData =
+                                                studySchedule.remove('Monday');
+                                            mondayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            mondayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-                                            mondayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            mondayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -738,12 +741,13 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isTuesdayChosen = newVal;
-                                          if(isTuesdayChosen==false){
-                                            studySchedule.remove(['Tuesday']);
+                                          if (isTuesdayChosen == false) {
+                                            studySchedule.remove('Tuesday');
+                                            tuesdayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            tuesdayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-                                            tuesdayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            tuesdayEndTime = Time(hour: 0,minute: 0,second: 0);
-
                                         });
                                       },
                                     )
@@ -848,12 +852,13 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isWednesdayChosen = newVal;
-                                          if(isWednesdayChosen==false){
-                                            studySchedule.remove(['Wednesday']);
+                                          if (isWednesdayChosen == false) {
+                                            studySchedule.remove('Wednesday');
+                                            wednesdayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            wednesdayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-
-                                            wednesdayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            wednesdayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -960,11 +965,13 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                         setState(() {
                                           isThursdayChosen = newVal;
                                           print("Is isThursdayChosen $newVal");
-                                          if(isThursdayChosen==false){
-                                            studySchedule.remove(['Thursday']);
+                                          if (isThursdayChosen == false) {
+                                            studySchedule.remove('Thursday');
+                                            thursdayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            thursdayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-                                            thursdayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            thursdayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1070,12 +1077,13 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isFridayChosen = newVal;
-                                          if(isFridayChosen==false){
-                                            studySchedule.remove(['Friday']);
+                                          if (isFridayChosen == false) {
+                                            studySchedule.remove('Friday');
+                                            fridayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            fridayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-
-                                            fridayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            fridayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1181,12 +1189,13 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isSaturdayChosen = newVal;
-                                          if(isSaturdayChosen==false){
-                                            studySchedule.remove(['Saturday']);
+                                          if (isSaturdayChosen == false) {
+                                            studySchedule.remove('Saturday');
+                                            saturdayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            saturdayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-
-                                            saturdayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            saturdayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1292,12 +1301,13 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isSundayChosen = newVal;
-                                          if(isSundayChosen==false){
-                                            studySchedule.remove(['Sunday']);
-
+                                          if (isSundayChosen == false) {
+                                            studySchedule.remove('Sunday');
+                                            sundayStartTime = Time(
+                                                hour: 0, minute: 0, second: 0);
+                                            sundayEndTime = Time(
+                                                hour: 0, minute: 0, second: 0);
                                           }
-                                            sundayStartTime = Time(hour: 0,minute: 0,second: 0);
-                                            sundayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1390,7 +1400,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
             Center(
                 child: OutlinedButton(
                     onPressed: () {
-                      print("ON PRESS");
+
 
                       if (startDateController.text != "" &&
                           startDateController.text != null &&

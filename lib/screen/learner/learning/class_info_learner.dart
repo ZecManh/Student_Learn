@@ -51,6 +51,8 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
         lessonSchedules[lessonSchedules.length - 1]
             .startTime!
             .millisecondsSinceEpoch);
+    _focusedDay = startDate;
+    _selectedDay = startDate;
     print("START TIME ${startDate.toString()}");
     print("END TIME ${endDate.toString()}");
     lessonSchedules.forEach((itemLesson) {
