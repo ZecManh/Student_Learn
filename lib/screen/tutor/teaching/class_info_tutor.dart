@@ -144,8 +144,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                   ),
                   const SizedBox(
                     height: 20,
-                  ),
-                  Card(
+                  ), Card(
                     color: Theme.of(context).colorScheme.background,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
