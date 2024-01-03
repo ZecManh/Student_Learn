@@ -1,4 +1,5 @@
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/firebase_options.dart';
 import 'package:datn/screen/tlu_tutor.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -8,6 +9,20 @@ import 'package:flutter/services.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(channelGroupKey: "basic_channel_group",
+          channelKey: "basic_channel", channelName: "Basic Channel", channelDescription: "Test Notification")
+    ],
+    channelGroups:[
+      NotificationChannelGroup(channelGroupKey: "basic_channel_group", channelGroupName: "Basic Group")
+    ]
+  );
+  bool isAllowedToSendNotification = await AwesomeNotifications().isNotificationAllowed();
+  if(!isAllowedToSendNotification){
+    AwesomeNotifications().requestPermissionToSendNotifications();
+  }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,

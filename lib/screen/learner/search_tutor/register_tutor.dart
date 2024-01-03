@@ -52,20 +52,34 @@ class _RegisterTutorState extends State<RegisterTutor> {
   Time sundayStartTime = Time(hour: 00, minute: 00, second: 00);
   Time sundayEndTime = Time(hour: 00, minute: 00, second: 00);
 
-  DateTime mondayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime mondayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime tuesdayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime tuesdayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime wednesdayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime wednesdayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime thursdayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime thursdayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime fridayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime fridayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime saturdayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime saturdayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime sundayStartDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
-  DateTime sundayEndDateTime = DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,0,0,0);
+  DateTime mondayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime mondayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime tuesdayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime tuesdayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime wednesdayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime wednesdayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime thursdayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime thursdayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime fridayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime fridayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime saturdayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime saturdayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime sundayStartDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
+  DateTime sundayEndDateTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0, 0);
 
   bool isMondayChosen = false;
   bool isTuesdayChosen = false;
@@ -80,33 +94,34 @@ class _RegisterTutorState extends State<RegisterTutor> {
   var addressTextController = TextEditingController();
 
   bool checkTime() {
+
     if (isMondayChosen) {
-      if (!mondayStartDateTime.isBefore(mondayEndDateTime)){
+      if (!mondayStartDateTime.isBefore(mondayEndDateTime)) {
         return false;
       }
     }
     if (isTuesdayChosen) {
-      if (!tuesdayStartDateTime.isBefore(tuesdayEndDateTime)){
+      if (!tuesdayStartDateTime.isBefore(tuesdayEndDateTime)) {
         return false;
       }
     }
     if (isWednesdayChosen) {
-      if (!wednesdayStartDateTime.isBefore(wednesdayEndDateTime)){
+      if (!wednesdayStartDateTime.isBefore(wednesdayEndDateTime)) {
         return false;
       }
     }
     if (isThursdayChosen) {
-      if (!thursdayStartDateTime.isBefore(thursdayEndDateTime)){
+      if (!thursdayStartDateTime.isBefore(thursdayEndDateTime)) {
         return false;
       }
     }
     if (isFridayChosen) {
-      if (!fridayStartDateTime.isBefore(fridayEndDateTime)){
+      if (!fridayStartDateTime.isBefore(fridayEndDateTime)) {
         return false;
       }
     }
     if (isSaturdayChosen) {
-      if (!saturdayStartDateTime.isBefore(saturdayEndDateTime)){
+      if (!saturdayStartDateTime.isBefore(saturdayEndDateTime)) {
         return false;
       }
     }
@@ -114,11 +129,72 @@ class _RegisterTutorState extends State<RegisterTutor> {
       print("sundayStartDateTime ${sundayStartDateTime.toString()}");
       print("sundayEndDateTime ${sundayEndDateTime.toString()}");
 
-      if (!sundayStartDateTime.isBefore(sundayEndDateTime)){
+      if (!sundayStartDateTime.isBefore(sundayEndDateTime)) {
         return false;
       }
     }
     return true;
+  }
+
+  bool checkLesson() {
+    LessonSchedules lessonSchedules = LessonSchedules();
+    Map<String, Map<String, TimeOfDay>> studySchedule = {};
+    if (isMondayChosen) {
+      studySchedule["Monday"] = {
+        'startTime': mondayStartTime,
+        'endTime': mondayEndTime
+      };
+    }
+    if (isTuesdayChosen) {
+      studySchedule["Tuesday"] = {
+        'startTime': tuesdayStartTime,
+        'endTime': tuesdayEndTime
+      };
+    }
+    if (isWednesdayChosen) {
+      studySchedule["Wednesday"] = {
+        'startTime': wednesdayStartTime,
+        'endTime': wednesdayEndTime
+      };
+    }
+    if (isThursdayChosen) {
+      studySchedule["Thursday"] = {
+        'startTime': thursdayStartTime,
+        'endTime': thursdayEndTime
+      };
+    }
+    if (isFridayChosen) {
+      studySchedule["Friday"] = {
+        'startTime': fridayStartTime,
+        'endTime': fridayEndTime
+      };
+    }
+    if (isSaturdayChosen) {
+      studySchedule["Saturday"] = {
+        'startTime': saturdayStartTime,
+        'endTime': saturdayEndTime
+      };
+    }
+    if (isSundayChosen) {
+      studySchedule["Sunday"] = {
+        'startTime': sundayStartTime,
+        'endTime': sundayEndTime
+      };
+    }
+
+    List<LessonSchedules> timetable =
+        generateTimetable(startDate, endDate, studySchedule);
+    print("TEST TIME TABLE");
+    print("START DATE ${startDate}");
+    print("END DATE ${endDate}");
+    timetable.forEach((element) {
+      print("Start time ${DateTime.fromMillisecondsSinceEpoch(element.startTime!.millisecondsSinceEpoch)}");
+      print("End time ${DateTime.fromMillisecondsSinceEpoch(element.endTime!.millisecondsSinceEpoch)}");
+    });
+    if (timetable.length > 0) {
+      return true;
+    }
+    return false;
   }
 
   String convertTime(Time time) {
@@ -139,7 +215,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
     List<LessonSchedules> timetable = [];
     DateTime currentDate = startDate;
 
-    while (currentDate.isBefore(endDate.add(Duration(days: 1)))) {
+    // print("START GENERATE TIMETABLE")
+    // while (currentDate.isBefore(endDate.add(Duration(days: 1)))) {
+    while (currentDate.isBefore(endDate)) {
       String dayOfWeek = DateFormat('EEEE')
           .format(currentDate); // Get the day of the week (e.g., Tuesday)
 
@@ -283,7 +361,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
     if (response.statusCode == 200) {
       var jsonDecoded = convert.utf8.decoder.convert(response.body.codeUnits);
       var jsonResponse =
-      convert.jsonDecode(jsonDecoded) as Map<String, dynamic>;
+          convert.jsonDecode(jsonDecoded) as Map<String, dynamic>;
       Province province = Province.fromJson(jsonResponse);
       setState(() {
         districts = List.from(province.districts!);
@@ -305,15 +383,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
                     style: BorderStyle.solid,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary),
+                    color: Theme.of(context).colorScheme.primary),
               ),
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .background,
+              color: Theme.of(context).colorScheme.background,
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -331,23 +403,22 @@ class _RegisterTutorState extends State<RegisterTutor> {
                     children: [
                       Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.all(30),
-                            child: DropdownMenu<String>(
-                              initialSelection: subjects.first,
-                              onSelected: (String? value) {
-                                // This is called when the user selects an item.
-                                setState(() {
-                                  initSubject = value!;
-                                });
-                              },
-                              dropdownMenuEntries: subjects
-                                  .map<DropdownMenuEntry<String>>((
-                                  String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList(),
-                            ),
-                          ))
+                        padding: const EdgeInsets.all(30),
+                        child: DropdownMenu<String>(
+                          initialSelection: subjects.first,
+                          onSelected: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              initSubject = value!;
+                            });
+                          },
+                          dropdownMenuEntries: subjects
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                                value: value, label: value);
+                          }).toList(),
+                        ),
+                      ))
                     ],
                   ),
                 ],
@@ -358,15 +429,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
                     style: BorderStyle.solid,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary),
+                    color: Theme.of(context).colorScheme.primary),
               ),
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .background,
+              color: Theme.of(context).colorScheme.background,
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -384,23 +449,22 @@ class _RegisterTutorState extends State<RegisterTutor> {
                     children: [
                       Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.all(30),
-                            child: DropdownMenu<String>(
-                              initialSelection: teachMethod.first,
-                              onSelected: (String? value) {
-                                // This is called when the user selects an item.
-                                setState(() {
-                                  initTeachMethod = value!;
-                                });
-                              },
-                              dropdownMenuEntries: teachMethod
-                                  .map<DropdownMenuEntry<String>>((
-                                  String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList(),
-                            ),
-                          ))
+                        padding: const EdgeInsets.all(30),
+                        child: DropdownMenu<String>(
+                          initialSelection: teachMethod.first,
+                          onSelected: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              initTeachMethod = value!;
+                            });
+                          },
+                          dropdownMenuEntries: teachMethod
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                                value: value, label: value);
+                          }).toList(),
+                        ),
+                      ))
                     ],
                   ),
                 ],
@@ -419,10 +483,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                       )),
                   Center(
                     child: DropdownMenu<Districts>(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width - 40,
+                        width: MediaQuery.of(context).size.width - 40,
                         initialSelection: dropDownDistrict,
                         onSelected: (Districts? newDistricts) {
                           setState(() {
@@ -458,15 +519,9 @@ class _RegisterTutorState extends State<RegisterTutor> {
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
                     style: BorderStyle.solid,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary),
+                    color: Theme.of(context).colorScheme.primary),
               ),
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .background,
+              color: Theme.of(context).colorScheme.background,
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -487,7 +542,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                     child: Column(
                       children: [
                         TextFormField(
-                          // validator: validateEmail,
+                            // validator: validateEmail,
                             controller: startDateController,
                             readOnly: true,
                             keyboardType: TextInputType.datetime,
@@ -507,7 +562,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 print("START DATE " + startDate.toString());
 
                                 String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
                                 startDateController.text = formattedDate;
                               }
                             }),
@@ -515,7 +570,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                           height: 10,
                         ),
                         TextFormField(
-                          // validator: validateEmail,
+                            // validator: validateEmail,
                             controller: endDateController,
                             readOnly: true,
                             keyboardType: TextInputType.datetime,
@@ -541,7 +596,7 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 endDate = pickedDate;
                                 print("END DATE " + endDate.toString());
                                 String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
                                 endDateController.text = formattedDate;
                               }
                             }),
@@ -554,14 +609,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isMondayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -579,6 +628,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isMondayChosen = newVal;
+                                          if(isMondayChosen==false){
+                                            studySchedule.remove(['Monday']);
+
+                                          }
+                                            mondayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            mondayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -586,23 +641,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${mondayStartTime.hour}:${mondayStartTime
-                                    .minute} ${mondayStartTime.period.name}"
+                                "${mondayStartTime.hour}:${mondayStartTime.minute} ${mondayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -631,23 +679,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${mondayEndTime.hour}:${mondayEndTime
-                                    .minute} ${mondayEndTime.period.name}"
+                                "${mondayEndTime.hour}:${mondayEndTime.minute} ${mondayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -678,14 +719,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isTuesdayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -703,6 +738,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isTuesdayChosen = newVal;
+                                          if(isTuesdayChosen==false){
+                                            studySchedule.remove(['Tuesday']);
+                                          }
+                                            tuesdayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            tuesdayEndTime = Time(hour: 0,minute: 0,second: 0);
+
                                         });
                                       },
                                     )
@@ -710,23 +751,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${tuesdayStartTime.hour}:${tuesdayStartTime
-                                    .minute} ${tuesdayStartTime.period.name}"
+                                "${tuesdayStartTime.hour}:${tuesdayStartTime.minute} ${tuesdayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -755,23 +789,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${tuesdayEndTime.hour}:${tuesdayEndTime
-                                    .minute} ${tuesdayEndTime.period.name}"
+                                "${tuesdayEndTime.hour}:${tuesdayEndTime.minute} ${tuesdayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -802,14 +829,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isWednesdayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -827,6 +848,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isWednesdayChosen = newVal;
+                                          if(isWednesdayChosen==false){
+                                            studySchedule.remove(['Wednesday']);
+                                          }
+
+                                            wednesdayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            wednesdayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -834,23 +861,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${wednesdayStartTime.hour}:${wednesdayStartTime
-                                    .minute} ${wednesdayStartTime.period.name}"
+                                "${wednesdayStartTime.hour}:${wednesdayStartTime.minute} ${wednesdayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -879,23 +899,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${wednesdayEndTime.hour}:${wednesdayEndTime
-                                    .minute} ${wednesdayEndTime.period.name}"
+                                "${wednesdayEndTime.hour}:${wednesdayEndTime.minute} ${wednesdayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -927,14 +940,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isThursdayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -952,6 +959,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isThursdayChosen = newVal;
+                                          print("Is isThursdayChosen $newVal");
+                                          if(isThursdayChosen==false){
+                                            studySchedule.remove(['Thursday']);
+                                          }
+                                            thursdayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            thursdayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -959,23 +972,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${thursdayStartTime.hour}:${thursdayStartTime
-                                    .minute} ${thursdayStartTime.period.name}"
+                                "${thursdayStartTime.hour}:${thursdayStartTime.minute} ${thursdayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1004,23 +1010,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${thursdayEndTime.hour}:${thursdayEndTime
-                                    .minute} ${thursdayEndTime.period.name}"
+                                "${thursdayEndTime.hour}:${thursdayEndTime.minute} ${thursdayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1052,14 +1051,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isFridayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -1077,6 +1070,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isFridayChosen = newVal;
+                                          if(isFridayChosen==false){
+                                            studySchedule.remove(['Friday']);
+                                          }
+
+                                            fridayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            fridayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1084,23 +1083,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${fridayStartTime.hour}:${fridayStartTime
-                                    .minute} ${fridayStartTime.period.name}"
+                                "${fridayStartTime.hour}:${fridayStartTime.minute} ${fridayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1129,23 +1121,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${fridayEndTime.hour}:${fridayEndTime
-                                    .minute} ${fridayEndTime.period.name}"
+                                "${fridayEndTime.hour}:${fridayEndTime.minute} ${fridayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1177,14 +1162,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isSaturdayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -1202,6 +1181,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isSaturdayChosen = newVal;
+                                          if(isSaturdayChosen==false){
+                                            studySchedule.remove(['Saturday']);
+                                          }
+
+                                            saturdayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            saturdayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1209,23 +1194,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${saturdayStartTime.hour}:${saturdayStartTime
-                                    .minute} ${saturdayStartTime.period.name}"
+                                "${saturdayStartTime.hour}:${saturdayStartTime.minute} ${saturdayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1254,23 +1232,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${saturdayEndTime.hour}:${saturdayEndTime
-                                    .minute} ${saturdayEndTime.period.name}"
+                                "${saturdayEndTime.hour}:${saturdayEndTime.minute} ${saturdayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1302,14 +1273,8 @@ class _RegisterTutorState extends State<RegisterTutor> {
                         ),
                         Card(
                           color: (isSundayChosen)
-                              ? (Theme
-                              .of(context)
-                              .colorScheme
-                              .primaryContainer)
-                              : (Theme
-                              .of(context)
-                              .colorScheme
-                              .onPrimary),
+                              ? (Theme.of(context).colorScheme.primaryContainer)
+                              : (Theme.of(context).colorScheme.onPrimary),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -1327,6 +1292,12 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                       onChanged: (newVal) {
                                         setState(() {
                                           isSundayChosen = newVal;
+                                          if(isSundayChosen==false){
+                                            studySchedule.remove(['Sunday']);
+
+                                          }
+                                            sundayStartTime = Time(hour: 0,minute: 0,second: 0);
+                                            sundayEndTime = Time(hour: 0,minute: 0,second: 0);
                                         });
                                       },
                                     )
@@ -1334,23 +1305,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                                 ),
                               ),
                               Text(
-                                "${sundayStartTime.hour}:${sundayStartTime
-                                    .minute} ${sundayStartTime.period.name}"
+                                "${sundayStartTime.hour}:${sundayStartTime.minute} ${sundayStartTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1379,23 +1343,16 @@ class _RegisterTutorState extends State<RegisterTutor> {
                               const Divider(),
                               const SizedBox(height: 10),
                               Text(
-                                "${sundayEndTime.hour}:${sundayEndTime
-                                    .minute} ${sundayEndTime.period.name}"
+                                "${sundayEndTime.hour}:${sundayEndTime.minute} ${sundayEndTime.period.name}"
                                     .toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .displaySmall,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                               const SizedBox(height: 10),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   backgroundColor:
-                                  Theme
-                                      .of(context)
-                                      .colorScheme
-                                      .secondary,
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1433,170 +1390,174 @@ class _RegisterTutorState extends State<RegisterTutor> {
             Center(
                 child: OutlinedButton(
                     onPressed: () {
+                      print("ON PRESS");
+
                       if (startDateController.text != "" &&
                           startDateController.text != null &&
                           endDateController.text != "" &&
                           endDateController.text != null &&
-                          startDate.isBefore(endDate)  &&
-                      checkTime() == true
-                      ) {
+                          startDate.isBefore(endDate) &&
+                          checkTime() == true &&
+                          checkLesson() == true) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Xác nhận'),
+                                content: const Text(
+                                    'Bạn chắc chắn với sự thay đổi này?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Cancel'),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      WeekSchedules weekSchedules =
+                                          WeekSchedules();
+                                      LessonSchedules lessonSchedules =
+                                          LessonSchedules();
+                                      if (isMondayChosen) {
+                                        studySchedule["Monday"] = {
+                                          'startTime': mondayStartTime,
+                                          'endTime': mondayEndTime
+                                        };
+                                        weekSchedules.monday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                mondayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                mondayEndTime));
+                                      }
+                                      if (isTuesdayChosen) {
+                                        studySchedule["Tuesday"] = {
+                                          'startTime': tuesdayStartTime,
+                                          'endTime': tuesdayEndTime
+                                        };
+                                        weekSchedules.tuesday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                tuesdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                tuesdayEndTime));
+                                      }
+                                      if (isWednesdayChosen) {
+                                        studySchedule["Wednesday"] = {
+                                          'startTime': wednesdayStartTime,
+                                          'endTime': wednesdayEndTime
+                                        };
+                                        weekSchedules.wednesday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                wednesdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                wednesdayEndTime));
+                                      }
+                                      if (isThursdayChosen) {
+                                        studySchedule["Thursday"] = {
+                                          'startTime': thursdayStartTime,
+                                          'endTime': thursdayEndTime
+                                        };
+                                        weekSchedules.thursday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                thursdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                thursdayEndTime));
+                                      }
+                                      if (isFridayChosen) {
+                                        studySchedule["Friday"] = {
+                                          'startTime': fridayStartTime,
+                                          'endTime': fridayEndTime
+                                        };
+                                        weekSchedules.friday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                fridayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                fridayEndTime));
+                                      }
+                                      if (isSaturdayChosen) {
+                                        studySchedule["Saturday"] = {
+                                          'startTime': saturdayStartTime,
+                                          'endTime': saturdayEndTime
+                                        };
+                                        weekSchedules.saturday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                saturdayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                saturdayEndTime));
+                                      }
+                                      if (isSundayChosen) {
+                                        studySchedule["Sunday"] = {
+                                          'startTime': sundayStartTime,
+                                          'endTime': sundayEndTime
+                                        };
+                                        weekSchedules.sunday = Period(
+                                            startTime: HourInDay.fromTime(
+                                                sundayStartTime),
+                                            endTime: HourInDay.fromTime(
+                                                sundayEndTime));
+                                      }
+                                      studySchedule.forEach((key, value) {
+                                        print("KEY ${key.toString()}");
+                                        print("VALUE ${value.toString()}");
+                                      });
+                                      List<LessonSchedules> timetable =
+                                          generateTimetable(startDate, endDate,
+                                              studySchedule);
+                                      studySchedule.forEach((key, value) {
+                                        print(key + value.toString());
+                                      });
+                                      timetable.forEach((element) {
+                                        print(element.toString());
+                                      });
 
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Xác nhận'),
-                                  content: const Text(
-                                      'Bạn chắc chắn với sự thay đổi này?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'Cancel'),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        WeekSchedules weekSchedules =
-                                        WeekSchedules();
-                                        LessonSchedules lessonSchedules =
-                                        LessonSchedules();
-                                        if (isMondayChosen) {
-                                          studySchedule["Monday"] = {
-                                            'startTime': mondayStartTime,
-                                            'endTime': mondayEndTime
-                                          };
-                                          weekSchedules.monday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  mondayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  mondayEndTime));
-                                        }
-                                        if (isTuesdayChosen) {
-                                          studySchedule["Tuesday"] = {
-                                            'startTime': tuesdayStartTime,
-                                            'endTime': tuesdayEndTime
-                                          };
-                                          weekSchedules.tuesday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  tuesdayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  tuesdayEndTime));
-                                        }
-                                        if (isWednesdayChosen) {
-                                          studySchedule["Wednesday"] = {
-                                            'startTime': wednesdayStartTime,
-                                            'endTime': wednesdayEndTime
-                                          };
-                                          weekSchedules.wednesday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  wednesdayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  wednesdayEndTime));
-                                        }
-                                        if (isThursdayChosen) {
-                                          studySchedule["Thursday"] = {
-                                            'startTime': thursdayStartTime,
-                                            'endTime': thursdayEndTime
-                                          };
-                                          weekSchedules.thursday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  thursdayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  thursdayEndTime));
-                                        }
-                                        if (isFridayChosen) {
-                                          studySchedule["Friday"] = {
-                                            'startTime': fridayStartTime,
-                                            'endTime': fridayEndTime
-                                          };
-                                          weekSchedules.friday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  fridayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  fridayEndTime));
-                                        }
-                                        if (isSaturdayChosen) {
-                                          studySchedule["Saturday"] = {
-                                            'startTime': saturdayStartTime,
-                                            'endTime': saturdayEndTime
-                                          };
-                                          weekSchedules.saturday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  saturdayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  saturdayEndTime));
-                                        }
-                                        if (isSundayChosen) {
-                                          studySchedule["Sunday"] = {
-                                            'startTime': sundayStartTime,
-                                            'endTime': sundayEndTime
-                                          };
-                                          weekSchedules.sunday = Period(
-                                              startTime: HourInDay.fromTime(
-                                                  sundayStartTime),
-                                              endTime: HourInDay.fromTime(
-                                                  sundayEndTime));
-                                        }
+                                      Schedules schedules = Schedules(
+                                          lessonSchedules: timetable,
+                                          weekSchedules: weekSchedules);
 
-                                        List<LessonSchedules> timetable =
-                                        generateTimetable(startDate, endDate,
-                                            studySchedule);
-                                        studySchedule.forEach((key, value) {
-                                          print(key + value.toString());
-                                        });
-                                        timetable.forEach((element) {
-                                          print(element.toString());
-                                        });
+                                      // var dateFormated = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                      Timestamp startTime = Timestamp.fromDate(
+                                          DateTime.parse(
+                                              startDateController.text));
+                                      Timestamp endTime = Timestamp.fromDate(
+                                          DateTime.parse(
+                                              endDateController.text));
 
-                                        Schedules schedules = Schedules(
-                                            lessonSchedules: timetable,
-                                            weekSchedules: weekSchedules);
+                                      FirestoreService firestoreService =
+                                          FirestoreService();
+                                      var finalAddress =
+                                          (addressTextController.text != '')
+                                              ? addressTextController.text +
+                                                  " , " +
+                                                  (dropDownDistrict!.name ?? '')
+                                              : (dropDownDistrict!.name ?? '');
+                                      var list = TeachClass.generateTimetable(
+                                          startDate, endDate, weekSchedules);
+                                      print("LESSON SCHEDULES");
+                                      list.forEach((element) {
+                                        print(element.toString());
+                                      });
+                                      var myTimestamp = Timestamp.now();
+                                      var myDateTime =
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              myTimestamp
+                                                  .millisecondsSinceEpoch);
+                                      print(
+                                          "MY DATE TIME ${myDateTime.toString()}");
+                                      firestoreService.addSubjectRequest(
+                                          widget.tutor.uid!,
+                                          initSubject,
+                                          initTeachMethod,
+                                          weekSchedules,
+                                          finalAddress,
+                                          startTime,
+                                          endTime);
 
-                                        // var dateFormated = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                        Timestamp startTime = Timestamp
-                                            .fromDate(
-                                            DateTime.parse(
-                                                startDateController.text));
-                                        Timestamp endTime = Timestamp.fromDate(
-                                            DateTime.parse(
-                                                endDateController.text));
-
-                                        FirestoreService firestoreService =
-                                        FirestoreService();
-                                        var finalAddress =
-                                        (addressTextController.text != '')
-                                            ? addressTextController.text +
-                                            " , " +
-                                            (dropDownDistrict!.name ?? '')
-                                            : (dropDownDistrict!.name ?? '');
-                                        var list = TeachClass.generateTimetable(
-                                            startDate, endDate, weekSchedules);
-                                        print("LESSON SCHEDULES");
-                                        list.forEach((element) {
-                                          print(element.toString());
-                                        });
-                                        var myTimestamp = Timestamp.now();
-                                        var myDateTime = DateTime
-                                            .fromMillisecondsSinceEpoch(
-                                            myTimestamp.millisecondsSinceEpoch);
-                                        print("MY DATE TIME ${myDateTime
-                                            .toString()}");
-                                        firestoreService.addSubjectRequest(
-                                            widget.tutor.uid!,
-                                            initSubject,
-                                            initTeachMethod,
-                                            weekSchedules,
-                                            finalAddress,
-                                            startTime,
-                                            endTime);
-
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              });
+                                      Navigator.pop(context, 'OK');
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            });
                       } else {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
