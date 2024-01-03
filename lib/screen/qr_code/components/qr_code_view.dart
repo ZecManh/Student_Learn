@@ -19,7 +19,7 @@ class _QRCodeView extends State<QRCodeView> {
   String data = '';
   final GlobalKey _qrkey = GlobalKey();
   bool dirExists = false;
-  dynamic externalDir = '/storage/emulated/0/DCIM/Camera';
+  dynamic externalDir = '/storage/emulated/0/Download';
 
   // Future<String> getGalleryPath() async {
   //   final directory = await getDownloadsDirectory();

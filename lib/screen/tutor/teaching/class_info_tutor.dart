@@ -131,6 +131,37 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       },
     );
   }
+  void _openModalQrUser(BuildContext context, User user) {
+    var info = {
+      "uid": user.uid,
+      "type": 'learner'
+    };
+    String jsonInfo = user.uid != null ? jsonEncode(info) : "";
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return
+          Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text : jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        // Container(
+        // child: ),);
+      },
+    );
+  }
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -162,6 +193,23 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                       radius: 50),
                   const SizedBox(
                     height: 20,
+                  ),
+                   IconButton(
+                    iconSize: 30,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    style: const ButtonStyle().copyWith(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context)
+                                .colorScheme
+                                .background)),
+                    onPressed: () {
+                      _openModalQrUser(context,((learnerInfo['learnerInfo']) as User));
+                    },
+                    icon: const Icon(Icons.qr_code),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   Card(
                     color: Theme.of(context).colorScheme.primary,
