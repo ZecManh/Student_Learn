@@ -79,7 +79,7 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    learnerShowInfoLearner(learner: userFetch)));
+                    ShowInfoLearner(learner: userFetch)));
         await this.controller!.pauseCamera();
         return;
       }
@@ -110,16 +110,6 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
     });
   }
 
-  void navigateToNewPage() {
-    // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
-    // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const TutorInfo(),
-      ),
-    );
-  }
 
   @override
   void dispose() {

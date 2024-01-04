@@ -37,19 +37,12 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
       if (dataScan['type'] == 'learner') {
         var userFetch = await firestoreService.getTutorById(dataScan['uid']);
         if (userFetch != null) {
-          // print(userFetch);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>
-          //             TuTorShowInfo(tutor: userFetch)));
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
               return Provider.value(
                   value: user,
-                  child: learnerShowInfoLearner(learner: userFetch));
+                  child: ShowInfoLearner(learner: userFetch));
             }),
           );
           return;
@@ -96,31 +89,13 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
                   },
                 ),
               )
-              // ElevatedButton(
-              //   child: Text('go scan page'),
-              //   onPressed: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (_) {
-              //       return DashBoardQrGenerate();
-              //     }));
-              //   },
-              // ),
+            
             ],
           ),
-          Text('$qrcode'),
+        
         ],
       ),
     );
   }
 
-  // void navigateToNewPage() {
-  //   // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
-  //   // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const TutorInfo(),
-  //     ),
-  //   );
-  // }
 }

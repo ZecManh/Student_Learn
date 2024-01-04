@@ -102,12 +102,6 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
       }
     });
   }
-
-  void navigateToNewPage() {
-    // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
-    // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
-  }
-
   @override
   void dispose() {
     controller?.dispose();
