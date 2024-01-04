@@ -66,6 +66,9 @@ dependencies:
   calendar_view: ^1.0.4
   table_calendar: ^3.0.9
   awesome_notifications: ^0.8.2
+  cron: ^0.6.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 
 dev_dependencies:

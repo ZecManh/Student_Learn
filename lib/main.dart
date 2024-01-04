@@ -1,19 +1,23 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/firebase_options.dart';
+import 'package:datn/notification/notification_controller.dart';
 import 'package:datn/screen/tlu_tutor.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/adapters.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox("lesson_schedules");
   await AwesomeNotifications().initialize(
     null,
     [
       NotificationChannel(channelGroupKey: "basic_channel_group",
-          channelKey: "basic_channel", channelName: "Basic Channel", channelDescription: "Test Notification")
+          channelKey: NotificationController.BASIC_CHANNEL_KEY, channelName: "Basic Channel", channelDescription: "Basic Notification")
     ],
     channelGroups:[
       NotificationChannelGroup(channelGroupKey: "basic_channel_group", channelGroupName: "Basic Group")

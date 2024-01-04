@@ -23,9 +23,7 @@ class _DashBoardTutorTeachingState extends State<DashBoardTutorTeaching> {
     setState(() {
       teachingData = teachingDataFetch;
     });
-    // teachingData.forEach((element) {
-    //   print(element.toString());
-    // });
+
   }
   @override
   void initState() {

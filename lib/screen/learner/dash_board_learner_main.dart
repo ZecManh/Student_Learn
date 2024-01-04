@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
@@ -12,6 +13,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 import '../../model/today_schedules.dart';
+import '../../notification/notification_controller.dart';
 
 class DashBoardLearnerMain extends StatefulWidget {
   const DashBoardLearnerMain({super.key});
@@ -50,6 +52,15 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     );
     setState(() {
       daySchedules = daySchedulesFetch;
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: NotificationController.TODAY_SCHEDULES_NOTI,
+          channelKey: NotificationController.BASIC_CHANNEL_KEY,
+          title: "Hôm nay bạn có ${daySchedules.length} ca học !",
+          body: "",
+          autoDismissible: false,
+        ),
+      );
     });
     print("TODAY SCHEDULES");
     daySchedules.forEach((element) {
