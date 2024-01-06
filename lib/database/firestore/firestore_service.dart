@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
@@ -132,7 +131,7 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<SubjectRequest>> getAllSubjectRequest() async {
+  Future<List<SubjectRequest>> getAllPendingSubjectRequest() async {
     List<SubjectRequest> subjectRequests = [];
     print("GET ALL SUBJECT REQUEST");
     firestore.collection("subject_requests").get().then(
@@ -188,7 +187,11 @@ class FirestoreService extends ChangeNotifier {
       String address,
       Timestamp startTime,
       Timestamp endTime) async {
+
+    // await firestore.collection('subject_requests').add(subjectRequest.toJson());
+    final docSubjectRequest =  await firestore.collection('subject_requests').doc();
     SubjectRequest subjectRequest = SubjectRequest(
+      id: docSubjectRequest.id,
         learnerId: FirebaseAuth.instance.currentUser!.uid,
         tutorId: tutorId,
         subject: subject,
@@ -200,7 +203,7 @@ class FirestoreService extends ChangeNotifier {
         startTime: startTime,
         endTime: endTime);
     print(subjectRequest.toJson().toString());
-    await firestore.collection('subject_requests').add(subjectRequest.toJson());
+    await docSubjectRequest.set(subjectRequest.toJson());
   }
 
   Future<void> updateTeachAddress(List<String> chosenDistricts) async {
@@ -211,7 +214,7 @@ class FirestoreService extends ChangeNotifier {
             SetOptions(merge: true)).catchError((error) {});
   }
 
-  Future<List<SubjectRequest>> getAllSubjectRequestByID() async {
+  Future<List<SubjectRequest>> getAllSubjectRequestByIDTutorSide() async {
     List<SubjectRequest> subjectRequests = [];
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -231,16 +234,51 @@ class FirestoreService extends ChangeNotifier {
 
     return subjectRequests;
   }
+  Future<List<SubjectRequest>> getAllSubjectRequestByIDLearnerSide() async {
+    List<SubjectRequest> subjectRequests = [];
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection(
+          'subject_requests') // Replace with your actual collection name
+          .where('learner_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('state', isEqualTo: SubjectRequestState.pending.name)
+          .get();
+
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+        // Access the data of the matching document
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        var subjectRequest = SubjectRequest.fromJson(data);
+        subjectRequests.add(subjectRequest);
+      }
+    } catch (e) {}
+
+    return subjectRequests;
+  }
 
   Future<Map<SubjectRequest, user_model.User>>
       getLearnerInfoWithListSubjectRequest() async {
     List<user_model.User> leaners = [];
-    List<SubjectRequest> subjectRequests = await getAllSubjectRequestByID();
+    List<SubjectRequest> subjectRequests = await getAllSubjectRequestByIDTutorSide();
     Map<SubjectRequest, user_model.User> data = {};
     try {
       for (SubjectRequest subjectRequest in subjectRequests) {
         user_model.User learner = await getUser(subjectRequest.learnerId!);
         Map<SubjectRequest, user_model.User> map = {subjectRequest: learner};
+        data.addAll(map);
+      }
+    } catch (e) {}
+    return data;
+  }
+
+  Future<Map<SubjectRequest, user_model.User>>
+  getTutorInfoWithListSubjectRequest() async {
+    List<user_model.User> tutors = [];
+    List<SubjectRequest> subjectRequests = await getAllSubjectRequestByIDLearnerSide();
+    Map<SubjectRequest, user_model.User> data = {};
+    try {
+      for (SubjectRequest subjectRequest in subjectRequests) {
+        user_model.User tutor = await getUser(subjectRequest.tutorId!);
+        Map<SubjectRequest, user_model.User> map = {subjectRequest: tutor};
         data.addAll(map);
       }
     } catch (e) {}
@@ -262,8 +300,19 @@ class FirestoreService extends ChangeNotifier {
   }
 
   Future<void> addClass(SubjectRequest subjectRequest) async {
-    TeachClass teachClass = TeachClass();
 
+
+    // await _firestore
+    //     .collection('classes')
+    //     .add(teachClass.toJson())
+    //     .then((value) => print(value));
+
+    final classDoc =  await _firestore
+        .collection('classes')
+        .doc();
+
+    TeachClass teachClass = TeachClass();
+    teachClass.id = classDoc.id;
     teachClass.createdTime = Timestamp.now();
     teachClass.startTime = subjectRequest.startTime;
     teachClass.endTime = subjectRequest.endTime;
@@ -275,22 +324,18 @@ class FirestoreService extends ChangeNotifier {
     teachClass.teachMethod = subjectRequest.teachMethod;
 
     List<LessonSchedules> lessonSchedules =
-        TeachClass.generateTimetableTimestamp(subjectRequest.startTime!,
-            subjectRequest.endTime!, subjectRequest.weekSchedules!);
+    TeachClass.generateTimetableTimestamp(subjectRequest.startTime!,
+        subjectRequest.endTime!, subjectRequest.weekSchedules!);
 
     teachClass.schedules = Schedules(
         weekSchedules: subjectRequest.weekSchedules,
         lessonSchedules: lessonSchedules);
 
-    await _firestore
-        .collection('classes')
-        .add(teachClass.toJson())
-        .then((value) => print(value));
+    await classDoc.set(teachClass.toJson());
 
     _firestore
         .collection("subject_requests")
-        .where("learner_id", isEqualTo: subjectRequest.learnerId)
-        .where("tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where("id", isEqualTo: subjectRequest.id)
         .get()
         .then(
       (querySnapshot) {
@@ -314,12 +359,10 @@ class FirestoreService extends ChangeNotifier {
     });
   }
 
-  Future<void> removeSubjectRequest(SubjectRequest subjectRequest) async {
+  Future<void> removeSubjectRequestLearnerSide(SubjectRequest subjectRequest) async {
     _firestore
         .collection("subject_requests")
-        .where("learner_id", isEqualTo: subjectRequest.learnerId)
-        .where("tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where("created_time", isEqualTo: subjectRequest.createdTime)
+        .where("id", isEqualTo: subjectRequest.id)
         .get()
         .then(
       (querySnapshot) {
@@ -728,16 +771,13 @@ class FirestoreService extends ChangeNotifier {
     });
   }
 
-  Future<void> listenSubjectRequestFromTutor(Function showNotification) async {
-    user_model.User userInfo =
-        await getUser(FirebaseAuth.instance.currentUser!.uid);
+  Future<void> listenSubjectRequestDeniedLearnerSide(Function showNotification) async {
     firestore
         .collection("subject_requests")
         .where(
-          "learner_id)",
-          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
-        )
-        .where("state",isEqualTo:"denied")
+      "learner_id)",
+      isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+    )
         .snapshots()
         .listen((event) {
       for (var change in event.docChanges) {
@@ -745,11 +785,10 @@ class FirestoreService extends ChangeNotifier {
           case DocumentChangeType.added:
             print("NEW SUBJECT REQUEST: ${change.doc.data()}");
             print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
-
-            showNotification();
             break;
           case DocumentChangeType.modified:
             print("Modified SUBJECT REQUEST: ${change.doc.data()}");
+            showNotification();
             break;
           case DocumentChangeType.removed:
             print("Removed SUBJECT REQUEST: ${change.doc.data()}");
@@ -758,4 +797,16 @@ class FirestoreService extends ChangeNotifier {
       }
     });
   }
+
+  Future<void> changeSubjectRequestStateToDenied(
+      SubjectRequest subjectRequest) async {
+   final subjectRequestDoc =  _firestore
+        .collection("subject_requests")
+        .doc(subjectRequest.id);
+    subjectRequestDoc.update({'state':'denied'});
+
+  }
+
+
+
 }

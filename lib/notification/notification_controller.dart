@@ -4,6 +4,7 @@ class NotificationController{
   static String BASIC_CHANNEL_KEY = "basic_channel";
   static int TODAY_SCHEDULES_NOTI = 1;
   static int NEW_SCHEDULES_NOTI = 2;
+  static int DENIED_SCHEDULES_NOTI = 3;
 
   /// Use this method to detect when a new notification or a schedule is created
   @pragma("vm:entry-point")

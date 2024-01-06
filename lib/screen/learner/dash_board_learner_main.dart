@@ -96,6 +96,16 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
+
+    firestoreService.listenSubjectRequestDeniedLearnerSide((){
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: NotificationController.DENIED_SCHEDULES_NOTI,
+              channelKey: "basic_channel",
+              title: "Gia sư đã từ chối yêu cầu học của bạn!",
+              body:
+              "Yay! I have local notifications working now!"));
+    });
     return SingleChildScrollView(
       child: Container(
         color: Theme.of(context).colorScheme.background,

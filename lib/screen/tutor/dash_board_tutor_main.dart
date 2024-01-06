@@ -112,9 +112,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
-    Cron().schedule(Schedule.parse('*/1 * * * *'), () async {
-      print('every 1 minutes');
-    });
+    // Cron().schedule(Schedule.parse('*/1 * * * *'), () async {
+    //   print('every 1 minutes');
+    // });
     firestoreService.listenNewSubjectRequest((){
       AwesomeNotifications().createNotification(
           content: NotificationContent(
