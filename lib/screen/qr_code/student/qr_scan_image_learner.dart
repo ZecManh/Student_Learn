@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
@@ -33,15 +34,8 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
     void _initInfo(dynamic scanData) async {
       var dataScan = jsonDecode(scanData);
       if (dataScan['type'] == 'tutor') {
-        var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
         if (userFetch != null) {
-          // print(userFetch);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>
-          //             TuTorShowInfo(tutor: userFetch)));
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
@@ -52,8 +46,22 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
           return;
         }
       }
+      if (dataScan['type'] == 'learner') {
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
+        if (userFetch != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Provider.value(
+                  value: user,
+                  child: ShowInfoLearner(learner: userFetch));
+            }),
+          );
+          return;
+        }
+      }
       if (dataScan['type'] == 'class') {
-        var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+        var dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
         if (dataFetch != null) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) {
@@ -94,14 +102,6 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
                   },
                 ),
               ),
-              // ElevatedButton(
-              //   child: Text('go scan page'),
-              //   onPressed: () {
-              //     Navigator.push(context, MaterialPageRoute(builder: (_) {
-              //       return InfoLearner();
-              //     }));
-              //   },
-              // ),
             ],
           ),
           // Text('${qrcode}'),

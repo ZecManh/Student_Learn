@@ -40,7 +40,7 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Qr Scanner'),
+        title: Text('Quét Qr Qua Camera'),
       ),
       body: Column(
         children: <Widget>[
@@ -72,7 +72,7 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
   void _initInfo(dynamic scanData) async {
     var dataScan = jsonDecode(scanData);
     if (dataScan['type'] == 'learner') {
-      var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+      var userFetch = await firestoreService.getUserById(dataScan['uid']);
       if (userFetch != null) {
         print(userFetch);
         Navigator.push(
@@ -80,6 +80,19 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
             MaterialPageRoute(
                 builder: (context) =>
                     ShowInfoLearner(learner: userFetch)));
+        await this.controller!.pauseCamera();
+        return;
+      }
+    }
+     if (dataScan['type'] == 'tutor') {
+      var userFetch = await firestoreService.getUserById(dataScan['uid']);
+      if (userFetch != null) {
+        print(userFetch);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    TuTorShowInfo(tutor: userFetch)));
         await this.controller!.pauseCamera();
         return;
       }

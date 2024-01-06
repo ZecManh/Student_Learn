@@ -35,7 +35,7 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
     void _initInfo(dynamic scanData) async {
       var dataScan = jsonDecode(scanData);
       if (dataScan['type'] == 'learner') {
-        var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
         if (userFetch != null) {
           Navigator.push(
             context,
@@ -43,6 +43,19 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
               return Provider.value(
                   value: user,
                   child: ShowInfoLearner(learner: userFetch));
+            }),
+          );
+          return;
+        }
+      }
+      if (dataScan['type'] == 'tutor') {
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
+        if (userFetch != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Provider.value(
+                  value: user, child: TuTorShowInfo(tutor: userFetch));
             }),
           );
           return;

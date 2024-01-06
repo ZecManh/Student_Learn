@@ -410,7 +410,7 @@ class FirestoreService extends ChangeNotifier {
     return teachingData;
   }
 
-  Future<user_model.User?> getTutorById(String uid) async {
+  Future<user_model.User?> getUserById(String uid) async {
     user_model.User? user;
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -633,7 +633,7 @@ class FirestoreService extends ChangeNotifier {
     return hourCal + minuteCal;
   }
 
-  Future<Map<String, dynamic>> getClassById(String uid) async {
+  Future<Map<String, dynamic>> getClassByIdTutor(String uid) async {
     Map<String, dynamic> classItem = {};
     try {
       QuerySnapshot querySnapshot = await firestore
