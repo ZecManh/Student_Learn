@@ -1,5 +1,6 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:datn/database/firebase_cloud_messaging/firebase_messaging.dart';
 import 'package:datn/firebase_options.dart';
 import 'package:datn/notification/notification_controller.dart';
 import 'package:datn/screen/tlu_tutor.dart';
@@ -28,6 +29,7 @@ Future main() async {
     AwesomeNotifications().requestPermissionToSendNotifications();
   }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,

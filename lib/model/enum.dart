@@ -1,6 +1,7 @@
 enum SubjectRequestState{
   pending,
   accepted,
+  denied,
   deleted
 }
 

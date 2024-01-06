@@ -107,8 +107,7 @@ class _SubjectRequestScreenState extends State<SubjectRequestScreen> {
                                           .colorScheme
                                           .background,
                                       onPressed: () {
-                                        firestoreService
-                                            .removeSubjectRequest(mapItem.key);
+                                        firestoreService.changeSubjectRequestStateToDenied(mapItem.key);
                                         setState(() {
                                           mapInfo.remove(mapItem.key);
                                         });

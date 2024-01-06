@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../user/teach_schedules.dart';
 
 class TeachClass {
+  String? id;
   String? learnerId;
   String? tutorId;
   Timestamp? createdTime;
@@ -18,7 +19,8 @@ class TeachClass {
   String? state;
 
   TeachClass(
-      {this.learnerId,
+      {this.id,
+      this.learnerId,
       this.tutorId,
       this.subject,
       this.state,
@@ -30,6 +32,7 @@ class TeachClass {
       this.endTime});
 
   TeachClass.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     learnerId = json['learner_id'];
     tutorId = json['tutor_id'];
     subject = json['subject'];
@@ -46,6 +49,7 @@ class TeachClass {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
     data['learner_id'] = learnerId;
     data['tutor_id'] = tutorId;
     data['subject'] = subject;
@@ -61,32 +65,32 @@ class TeachClass {
     return data;
   }
 
-  static List<LessonSchedules> generateTimetable(DateTime startDate, DateTime endDate,
-      WeekSchedules schedule) {
+  static List<LessonSchedules> generateTimetable(
+      DateTime startDate, DateTime endDate, WeekSchedules schedule) {
     List<LessonSchedules> timetable = [];
     DateTime currentDate = startDate;
-    Map<String,Period> mapSchedules = {};
+    Map<String, Period> mapSchedules = {};
 
-    if(schedule.monday!=null){
-      mapSchedules.addAll({"Monday":schedule.monday!});
+    if (schedule.monday != null) {
+      mapSchedules.addAll({"Monday": schedule.monday!});
     }
-    if(schedule.tuesday!=null){
-      mapSchedules.addAll({"Tuesday":schedule.tuesday!});
+    if (schedule.tuesday != null) {
+      mapSchedules.addAll({"Tuesday": schedule.tuesday!});
     }
-    if(schedule.wednesday!=null){
-      mapSchedules.addAll({"Wednesday":schedule.wednesday!});
+    if (schedule.wednesday != null) {
+      mapSchedules.addAll({"Wednesday": schedule.wednesday!});
     }
-    if(schedule.thursday!=null){
-      mapSchedules.addAll({"Thursday":schedule.thursday!});
+    if (schedule.thursday != null) {
+      mapSchedules.addAll({"Thursday": schedule.thursday!});
     }
-    if(schedule.friday!=null){
-      mapSchedules.addAll({"Friday":schedule.friday!});
+    if (schedule.friday != null) {
+      mapSchedules.addAll({"Friday": schedule.friday!});
     }
-    if(schedule.saturday!=null){
-      mapSchedules.addAll({"Saturday":schedule.saturday!});
+    if (schedule.saturday != null) {
+      mapSchedules.addAll({"Saturday": schedule.saturday!});
     }
-    if(schedule.sunday!=null){
-      mapSchedules.addAll({"Sunday":schedule.sunday!});
+    if (schedule.sunday != null) {
+      mapSchedules.addAll({"Sunday": schedule.sunday!});
     }
     while (currentDate.isBefore(endDate.add(Duration(days: 1)))) {
       String dayOfWeek = DateFormat('EEEE')
@@ -122,34 +126,39 @@ class TeachClass {
 
     return timetable;
   }
-  static List<LessonSchedules> generateTimetableTimestamp(Timestamp startTimestamp, Timestamp endTimestamp,
+
+  static List<LessonSchedules> generateTimetableTimestamp(
+      Timestamp startTimestamp,
+      Timestamp endTimestamp,
       WeekSchedules schedule) {
-    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startTimestamp.millisecondsSinceEpoch);
-    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTimestamp.millisecondsSinceEpoch);
+    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(
+        startTimestamp.millisecondsSinceEpoch);
+    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(
+        endTimestamp.millisecondsSinceEpoch);
     List<LessonSchedules> timetable = [];
     DateTime currentDate = startDate;
-    Map<String,Period> mapSchedules = {};
+    Map<String, Period> mapSchedules = {};
 
-    if(schedule.monday!=null){
-      mapSchedules.addAll({"Monday":schedule.monday!});
+    if (schedule.monday != null) {
+      mapSchedules.addAll({"Monday": schedule.monday!});
     }
-    if(schedule.tuesday!=null){
-      mapSchedules.addAll({"Tuesday":schedule.tuesday!});
+    if (schedule.tuesday != null) {
+      mapSchedules.addAll({"Tuesday": schedule.tuesday!});
     }
-    if(schedule.wednesday!=null){
-      mapSchedules.addAll({"Wednesday":schedule.wednesday!});
+    if (schedule.wednesday != null) {
+      mapSchedules.addAll({"Wednesday": schedule.wednesday!});
     }
-    if(schedule.thursday!=null){
-      mapSchedules.addAll({"Thursday":schedule.thursday!});
+    if (schedule.thursday != null) {
+      mapSchedules.addAll({"Thursday": schedule.thursday!});
     }
-    if(schedule.friday!=null){
-      mapSchedules.addAll({"Friday":schedule.friday!});
+    if (schedule.friday != null) {
+      mapSchedules.addAll({"Friday": schedule.friday!});
     }
-    if(schedule.saturday!=null){
-      mapSchedules.addAll({"Saturday":schedule.saturday!});
+    if (schedule.saturday != null) {
+      mapSchedules.addAll({"Saturday": schedule.saturday!});
     }
-    if(schedule.sunday!=null){
-      mapSchedules.addAll({"Sunday":schedule.sunday!});
+    if (schedule.sunday != null) {
+      mapSchedules.addAll({"Sunday": schedule.sunday!});
     }
     while (currentDate.isBefore(endDate.add(Duration(days: 1)))) {
       String dayOfWeek = DateFormat('EEEE')
@@ -188,6 +197,6 @@ class TeachClass {
 
   @override
   String toString() {
-    return 'TeachClass{learnerId: $learnerId, tutorId: $tutorId, createdTime: $createdTime, startTime: $startTime, endTime: $endTime, teachMethod: $teachMethod, subject: $subject, schedules: $schedules, address: $address, state: $state}';
+    return 'TeachClass{id: $id, learnerId: $learnerId, tutorId: $tutorId, createdTime: $createdTime, startTime: $startTime, endTime: $endTime, teachMethod: $teachMethod, subject: $subject, schedules: $schedules, address: $address, state: $state}';
   }
 }
