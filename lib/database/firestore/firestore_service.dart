@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
@@ -514,7 +515,8 @@ class FirestoreService extends ChangeNotifier {
     return todaySchedules;
   }
 
-  Future<List<TodaySchedules>> getSchedulesByDayLearnerSide(DateTime day) async {
+  Future<List<TodaySchedules>> getSchedulesByDayLearnerSide(
+      DateTime day) async {
     List<TeachClass> teachClasses = await getAllClassLearnerSide();
     List<TodaySchedules> todaySchedules = [];
     teachClasses.forEach((classItem) {
@@ -631,12 +633,14 @@ class FirestoreService extends ChangeNotifier {
     return hourCal + minuteCal;
   }
 
- Future<Map<String, dynamic>> getClassById(String uid) async {
+  Future<Map<String, dynamic>> getClassById(String uid) async {
     Map<String, dynamic> classItem = {};
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Thay thế bằng tên collection thực tế của bạn
-          .where(FieldPath.documentId, isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+          .where(FieldPath.documentId,
+              isEqualTo:
+                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
@@ -644,8 +648,8 @@ class FirestoreService extends ChangeNotifier {
 
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-            dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         // Map<String, dynamic> itemData = {};
         var teachClass = TeachClass.fromJson(data);
         user_model.User tutorInfo = await getUser(teachClass.tutorId!);
@@ -655,18 +659,20 @@ class FirestoreService extends ChangeNotifier {
           'tutorInfo': tutorInfo
         });
 
-
         // classItem = user_model.User.fromJson(data);
       }
     } catch (e) {}
     return classItem;
   }
-   Future<Map<String, dynamic>> getClassByIdLearner(String uid) async {
+
+  Future<Map<String, dynamic>> getClassByIdLearner(String uid) async {
     Map<String, dynamic> classItem = {};
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Thay thế bằng tên collection thực tế của bạn
-          .where(FieldPath.documentId, isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+          .where(FieldPath.documentId,
+              isEqualTo:
+                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
@@ -674,8 +680,8 @@ class FirestoreService extends ChangeNotifier {
 
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-            dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         // Map<String, dynamic> itemData = {};
         var teachClass = TeachClass.fromJson(data);
         user_model.User learnerInfo= await getUser(teachClass.learnerId!);
@@ -685,10 +691,71 @@ class FirestoreService extends ChangeNotifier {
           'learnerInfo': learnerInfo
         });
 
-
         // classItem = user_model.User.fromJson(data);
       }
     } catch (e) {}
     return classItem;
+  }
+
+  Future<void> listenNewSubjectRequest(Function showNotification) async {
+    user_model.User userInfo =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
+    firestore
+        .collection("subject_requests")
+        .where(
+          "tutor_id",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .where("created_time", isGreaterThan: userInfo.lastLogin)
+        .snapshots()
+        .listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("NEW SUBJECT REQUEST: ${change.doc.data()}");
+            print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
+
+            showNotification();
+            break;
+          case DocumentChangeType.modified:
+            print("Modified SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+          case DocumentChangeType.removed:
+            print("Removed SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
+  }
+
+  Future<void> listenSubjectRequestFromTutor(Function showNotification) async {
+    user_model.User userInfo =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
+    firestore
+        .collection("subject_requests")
+        .where(
+          "learner_id)",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .where("state",isEqualTo:"denied")
+        .snapshots()
+        .listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("NEW SUBJECT REQUEST: ${change.doc.data()}");
+            print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
+
+            showNotification();
+            break;
+          case DocumentChangeType.modified:
+            print("Modified SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+          case DocumentChangeType.removed:
+            print("Removed SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
   }
 }

@@ -33,15 +33,15 @@ class _UpdateEducationState extends State<UpdateEducation> {
     universityController = TextEditingController(
         text: (sendUser.education?.university != null)
             ? (sendUser.education!.university)
-            : ('Vui lòng cập nhật'));
+            : (''));
     majorController = TextEditingController(
         text: (sendUser.education?.major != null)
             ? (sendUser.education!.major)
-            : ('Vui lòng cập nhật'));
+            : (''));
     yearController = TextEditingController(
         text: (sendUser.education?.year != null)
             ? (sendUser.education!.year)
-            : ('Vui lòng cập nhật'));
+            : (''));
   }
 
   @override
@@ -143,16 +143,16 @@ class _UpdateEducationState extends State<UpdateEducation> {
                                                 university:
                                                     (universityController
                                                                 .text !=
-                                                            "Vui lòng cập nhật")
+                                                            "")
                                                         ? universityController
                                                             .text
                                                         : null,
                                                 major: (majorController.text !=
-                                                        "Vui lòng cập nhật")
+                                                        "")
                                                     ? majorController.text
                                                     : null,
                                                 year: (yearController.text !=
-                                                        "Vui lòng cập nhật")
+                                                        "")
                                                     ? yearController.text
                                                     : null);
                                         firestoreService.updateEducation(

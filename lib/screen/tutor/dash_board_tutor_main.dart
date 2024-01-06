@@ -112,6 +112,19 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
+    Cron().schedule(Schedule.parse('*/1 * * * *'), () async {
+      print('every 1 minutes');
+    });
+    firestoreService.listenNewSubjectRequest((){
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+              id: NotificationController.NEW_SCHEDULES_NOTI,
+              channelKey: "basic_channel",
+              title: "Bạn có một lời mời dạy học mới!",
+              body:
+              "Yay! I have local notifications working now!"));
+
+    });
 
     return SingleChildScrollView(
       child: Container(

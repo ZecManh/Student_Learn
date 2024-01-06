@@ -51,11 +51,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       await firestore.collection('users').doc(user.uid).set({
         'uid': user.uid,
         'email': user.email,
+        'last_login' : Timestamp.now(),
+        'created_time' : Timestamp.now()
       });
 
       SnackBar snackBar = SnackBar(
           content: Text('${user.email.toString()} đăng kí thành công'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.pop(context);
+      });
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
@@ -109,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
-                      obscureText: passwordVisible,
+                      obscureText: !passwordVisible,
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           labelText: 'Nhập mật khẩu',
@@ -144,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: passwordReassignController,
                       keyboardType: TextInputType.text,
-                      obscureText: passwordReAssignVisible,
+                      obscureText: !passwordReAssignVisible,
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           labelText: 'Nhập lại mật khẩu',

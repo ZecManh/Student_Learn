@@ -32,26 +32,24 @@ class _UpdateProfileState extends State<UpdateProfile> {
   }
 
   initInfo() {
-    // final model_user.User sendUser=Provider<model_user.User>(context);
+
     model_user.User sendUser =
         Provider.of<model_user.User>(context, listen: false);
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   model_user.User sendUser=Provider.of<model_user.User>(context,listen:false);
-    // });
+
     nameController = TextEditingController(
         text: (sendUser.displayName != null)
             ? (sendUser.displayName!)
-            : ('Vui lòng cập nhật'));
+            : (''));
     phoneController = TextEditingController(
         text: (sendUser.phone != null)
             ? (sendUser.phone!)
-            : ('Vui lòng cập nhật'));
+            : (''));
     emailController = TextEditingController(text: sendUser.email!);
     dateController = TextEditingController(
         text: (sendUser.born != null)
             ? DateFormat('yyyy-MM-dd').format(sendUser.born!.toDate())
         // ?sendUser.born.toString()
-            : 'Vui lòng cập nhật');
+            : '');
     dropDownGender = (sendUser.gender != null) ? sendUser.gender! : 'Nam';
   }
 
@@ -81,18 +79,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: CircleAvatar(
-                            backgroundImage: (user.photoUrl != null)
-                                ? NetworkImage(user.photoUrl!)
-                                : const AssetImage('assets/bear.jpg')
-                                    as ImageProvider,
-                            radius: 80),
-                      ),
+
                       const SizedBox(
                         height: 20,
                       ),

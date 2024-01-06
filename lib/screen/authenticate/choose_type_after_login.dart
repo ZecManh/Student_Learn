@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'choose_type.dart';
 
-
 class ChooseTypeAfterLogin extends StatefulWidget {
   const ChooseTypeAfterLogin({super.key});
 
@@ -24,6 +23,7 @@ class _ChooseTypeAfterLoginState extends State<ChooseTypeAfterLogin> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UserTypeModel>(
@@ -31,6 +31,7 @@ class _ChooseTypeAfterLoginState extends State<ChooseTypeAfterLogin> {
         return UserTypeModel();
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Consumer<UserTypeModel>(
           builder: (context, UserTypeModel value, child) {
             return Container(
@@ -86,7 +87,6 @@ class _ChooseTypeAfterLoginState extends State<ChooseTypeAfterLogin> {
                                             const EdgeInsets.all(20))),
                                 onPressed: () async {
                                   value.changeUserType(UserType.tutor);
-
                                 },
                                 icon: Image.asset('assets/ic_teacher.png',
                                     width: 50),
@@ -137,20 +137,19 @@ class _ChooseTypeAfterLoginState extends State<ChooseTypeAfterLogin> {
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
-                        if(value.userType==UserType.tutor){
+                        if (value.userType == UserType.tutor) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const DashBoardTutor(),
                               ));
-                        }else{
+                        } else {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const DashBoardLearner(),
                               ));
                         }
-
                       },
                       icon: Icon(Icons.arrow_forward_rounded,
                           color: Theme.of(context).colorScheme.background),

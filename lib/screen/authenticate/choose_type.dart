@@ -24,8 +24,6 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UserTypeModel>(
@@ -33,6 +31,7 @@ class _ChooseTypeScreenState extends State<ChooseTypeScreen> {
         return UserTypeModel();
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Consumer<UserTypeModel>(
           builder: (context, UserTypeModel value, child) {
             return Container(
