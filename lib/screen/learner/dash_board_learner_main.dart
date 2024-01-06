@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:datn/model/subject_request/subject_request.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
@@ -40,11 +43,12 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     super.initState();
     initInto();
   }
+
   void initInto() async {
     var daySchedulesFetch =
-    await firestoreService.getSchedulesByDayLearnerSide(DateTime.now());
+        await firestoreService.getSchedulesByDayLearnerSide(DateTime.now());
     daySchedulesFetch.sort(
-          (a, b) {
+      (a, b) {
         if (a.startTime.isAfter(b.startTime))
           return 1;
         else
@@ -96,16 +100,48 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
-
-    firestoreService.listenSubjectRequestDeniedLearnerSide((){
+    void acceptNoti(model_user.User tutor, SubjectRequest subjectRequest) {
       AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: NotificationController.DENIED_SCHEDULES_NOTI,
-              channelKey: "basic_channel",
-              title: "Gia sư đã từ chối yêu cầu học của bạn!",
-              body:
-              "Yay! I have local notifications working now!"));
-    });
+        content: NotificationContent(
+            id:Random().nextInt(100),
+            channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
+            title:
+                "Gia sư ${tutor.displayName ?? ''} đã đồng ý yêu cầu học của bạn!",
+            body:
+                "Môn học ${subjectRequest.subject ?? ''} - Phương thức ${subjectRequest.teachMethod} "),
+      );
+    }
+
+    void deniedNoti(model_user.User tutor, SubjectRequest subjectRequest) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: Random().nextInt(100),
+            channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
+            title:
+                "Gia sư ${tutor.displayName ?? ''} đã từ chối yêu cầu học của bạn!",
+            body:
+                "Môn học ${subjectRequest.subject ?? ''} - Phương thức ${subjectRequest.teachMethod} "),
+      );
+    }
+
+    // firestoreService.listenSubjectRequestDeniedLearnerSide(() {
+    //   AwesomeNotifications().createNotification(
+    //       content: NotificationContent(
+    //           id: NotificationController.ACCEPT_SCHEDULES_NOTI,
+    //           channelKey: "basic_channel",
+    //           title: "Gia sư đã đồng ý yêu cầu học của bạn!",
+    //           body: "Yay! I have local notifications working now!"));
+    // }, () {
+    //   AwesomeNotifications().createNotification(
+    //       content: NotificationContent(
+    //           id: NotificationController.DENIED_SCHEDULES_NOTI,
+    //           channelKey: "basic_channel",
+    //           title: "Gia sư đã từ chối yêu cầu học của bạn!",
+    //           body: "Yay! I have local notifications working now!"));
+    // });
+
+    firestoreService.listenSubjectRequestDeniedLearnerSide(acceptNoti, deniedNoti);
+
     return SingleChildScrollView(
       child: Container(
         color: Theme.of(context).colorScheme.background,
