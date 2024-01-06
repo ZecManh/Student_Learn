@@ -52,15 +52,15 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     );
     setState(() {
       daySchedules = daySchedulesFetch;
-      AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: NotificationController.TODAY_SCHEDULES_NOTI,
-          channelKey: NotificationController.BASIC_CHANNEL_KEY,
-          title: "Hôm nay bạn có ${daySchedules.length} ca học !",
-          body: "",
-          autoDismissible: false,
-        ),
-      );
+      // AwesomeNotifications().createNotification(
+      //   content: NotificationContent(
+      //     id: NotificationController.TODAY_SCHEDULES_NOTI,
+      //     channelKey: NotificationController.BASIC_CHANNEL_KEY,
+      //     title: "Hôm nay bạn có ${daySchedules.length} ca học !",
+      //     body: "",
+      //     autoDismissible: false,
+      //   ),
+      // );
     });
     print("TODAY SCHEDULES");
     daySchedules.forEach((element) {

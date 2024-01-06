@@ -15,6 +15,8 @@ class User {
   String? uid;
   bool? verify;
   String? experience;
+  Timestamp? lastLogin;
+  Timestamp? createdTime;
 
   User(
       {this.address,
@@ -31,7 +33,8 @@ class User {
       this.uid,
       this.verify,
       this.experience,
-      });
+      this.lastLogin,
+      this.createdTime});
 
   User.fromJson(Map<dynamic, dynamic> json) {
     address =
@@ -56,7 +59,8 @@ class User {
     uid = json['uid'];
     verify = json['verify'];
     experience = json['experience'];
-
+    lastLogin = json['last_login'] != null ? (json['last_login']) : null;
+    createdTime = json['created_time'] != null ? (json['created_time']) : null;
 
     // print("JSON" + json.toString());
     // print("TO STRING " + toString());
@@ -82,13 +86,14 @@ class User {
     data['uid'] = uid;
     data['verify'] = verify;
     data['experience'] = experience;
-
+    data['last_login'] = lastLogin;
+    data['created_time'] = createdTime;
     return data;
   }
 
   @override
   String toString() {
-    return 'User{address: $address, born: $born, displayName: $displayName, education: $education, email: $email, gender: $gender, phone: $phone, photoUrl: $photoUrl, subjects: $subjects, teachAddress: $teachAddress, teachMethod: $teachMethod, uid: $uid, verify: $verify, experience: $experience}';
+    return 'User{address: $address, born: $born, displayName: $displayName, education: $education, email: $email, gender: $gender, phone: $phone, photoUrl: $photoUrl, subjects: $subjects, teachAddress: $teachAddress, teachMethod: $teachMethod, uid: $uid, verify: $verify, experience: $experience, lastLogin: $lastLogin, createdTime: $createdTime}';
   }
 }
 
