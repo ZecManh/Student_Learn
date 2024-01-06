@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
@@ -41,8 +42,8 @@ class FirestoreService extends ChangeNotifier {
     return docRef.snapshots().map((json) => json as Map);
   }
 
-  Future updateInfo(String displayName, String phone, Timestamp born,
-      String gender) async {
+  Future updateInfo(
+      String displayName, String phone, Timestamp born, String gender) async {
     await firestore
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -62,8 +63,8 @@ class FirestoreService extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'display_name': displayName}, SetOptions(merge: true)).catchError(
             (error) {
-          print('FIRESTORE UPLOAD DISPLAYNAME' + error);
-        });
+      print('FIRESTORE UPLOAD DISPLAYNAME' + error);
+    });
   }
 
   Future updateImageUrl(String url) async {
@@ -81,8 +82,8 @@ class FirestoreService extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'address': address.toJson()}, SetOptions(merge: true)).catchError(
             (error) {
-          print('FIRESTORE UPDATE ADDRESS' + error);
-        });
+      print('FIRESTORE UPDATE ADDRESS' + error);
+    });
   }
 
   void updateEducation(user_model.Education education) async {
@@ -90,7 +91,7 @@ class FirestoreService extends ChangeNotifier {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'education': education.toJson()},
-        SetOptions(merge: true)).catchError((error) {
+            SetOptions(merge: true)).catchError((error) {
       print('FIRESTORE UPDATE EDUCATION' + error);
     });
   }
@@ -101,8 +102,8 @@ class FirestoreService extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'subjects': subject}, SetOptions(merge: true)).catchError(
             (error) {
-          print('FIRESTORE UPDATE SUBJECTS' + error);
-        });
+      print('FIRESTORE UPDATE SUBJECTS' + error);
+    });
   }
 
   void updateExperience(String experience) async {
@@ -117,9 +118,9 @@ class FirestoreService extends ChangeNotifier {
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection(
-          'subject_requests') // Replace with your actual collection name
+              'subject_requests') // Replace with your actual collection name
           .where('learner_id',
-          isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
 
       // Loop through the query results
@@ -135,12 +136,12 @@ class FirestoreService extends ChangeNotifier {
     List<SubjectRequest> subjectRequests = [];
     print("GET ALL SUBJECT REQUEST");
     firestore.collection("subject_requests").get().then(
-          (querySnapshot) {
+      (querySnapshot) {
         print("Successfully completed");
         for (var docSnapshot in querySnapshot.docs) {
           print('${docSnapshot.id} => ${docSnapshot.data()}');
           Map<String, dynamic> data =
-          docSnapshot.data() as Map<String, dynamic>;
+              docSnapshot.data() as Map<String, dynamic>;
           var subjectRequest = SubjectRequest.fromJson(data);
           subjectRequests.add(subjectRequest);
           print("SUBJECT REQUEST $subjectRequest");
@@ -179,7 +180,8 @@ class FirestoreService extends ChangeNotifier {
     return users;
   }
 
-  Future<void> addSubjectRequest(String tutorId,
+  Future<void> addSubjectRequest(
+      String tutorId,
       String subject,
       String teachMethod,
       WeekSchedules schedules,
@@ -206,7 +208,7 @@ class FirestoreService extends ChangeNotifier {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'teach_address': chosenDistricts},
-        SetOptions(merge: true)).catchError((error) {});
+            SetOptions(merge: true)).catchError((error) {});
   }
 
   Future<List<SubjectRequest>> getAllSubjectRequestByID() async {
@@ -214,7 +216,7 @@ class FirestoreService extends ChangeNotifier {
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection(
-          'subject_requests') // Replace with your actual collection name
+              'subject_requests') // Replace with your actual collection name
           .where('tutor_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('state', isEqualTo: SubjectRequestState.pending.name)
           .get();
@@ -231,7 +233,7 @@ class FirestoreService extends ChangeNotifier {
   }
 
   Future<Map<SubjectRequest, user_model.User>>
-  getLearnerInfoWithListSubjectRequest() async {
+      getLearnerInfoWithListSubjectRequest() async {
     List<user_model.User> leaners = [];
     List<SubjectRequest> subjectRequests = await getAllSubjectRequestByID();
     Map<SubjectRequest, user_model.User> data = {};
@@ -273,8 +275,8 @@ class FirestoreService extends ChangeNotifier {
     teachClass.teachMethod = subjectRequest.teachMethod;
 
     List<LessonSchedules> lessonSchedules =
-    TeachClass.generateTimetableTimestamp(subjectRequest.startTime!,
-        subjectRequest.endTime!, subjectRequest.weekSchedules!);
+        TeachClass.generateTimetableTimestamp(subjectRequest.startTime!,
+            subjectRequest.endTime!, subjectRequest.weekSchedules!);
 
     teachClass.schedules = Schedules(
         weekSchedules: subjectRequest.weekSchedules,
@@ -291,7 +293,7 @@ class FirestoreService extends ChangeNotifier {
         .where("tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then(
-          (querySnapshot) {
+      (querySnapshot) {
         print("Successfully completed SUBJECT REQUEST");
         for (var docSnapshot in querySnapshot.docs) {
           print('${docSnapshot.id} => ${docSnapshot.data()}');
@@ -320,7 +322,7 @@ class FirestoreService extends ChangeNotifier {
         .where("created_time", isEqualTo: subjectRequest.createdTime)
         .get()
         .then(
-          (querySnapshot) {
+      (querySnapshot) {
         print("Successfully completed SUBJECT REQUEST");
         for (var docSnapshot in querySnapshot.docs) {
           print('${docSnapshot.id} => ${docSnapshot.data()}');
@@ -331,8 +333,8 @@ class FirestoreService extends ChangeNotifier {
               .delete()
               .then(
                 (doc) => print("Document $subjectRequestId deleted"),
-            onError: (e) => print("Error updating subject request $e"),
-          );
+                onError: (e) => print("Error updating subject request $e"),
+              );
         }
       },
       onError: (e) => print("Error completing: $e"),
@@ -365,7 +367,7 @@ class FirestoreService extends ChangeNotifier {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Replace with your actual collection name
           .where('learner_id',
-          isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('state', isEqualTo: ClassesState.running.name)
           .get();
 
@@ -414,8 +416,8 @@ class FirestoreService extends ChangeNotifier {
       QuerySnapshot querySnapshot = await firestore
           .collection('users') // Thay thế bằng tên collection thực tế của bạn
           .where('uid',
-          isEqualTo:
-          uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+              isEqualTo:
+                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
@@ -423,7 +425,7 @@ class FirestoreService extends ChangeNotifier {
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
         Map<String, dynamic> data =
-        documentSnapshot.data() as Map<String, dynamic>;
+            documentSnapshot.data() as Map<String, dynamic>;
         user = user_model.User.fromJson(data);
       }
     } catch (e) {}
@@ -436,7 +438,7 @@ class FirestoreService extends ChangeNotifier {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Replace with your actual collection name
           .where('learner_id',
-          isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .where('state', isEqualTo: ClassesState.running.name)
           .get();
 
@@ -556,7 +558,7 @@ class FirestoreService extends ChangeNotifier {
     List<TeachClass> teachClasses = await getAllClassTutorSide();
     teachClasses.forEach((itemTeachClass) {
       WeekSchedules weekSchedulesTutor =
-      itemTeachClass.schedules!.weekSchedules!;
+          itemTeachClass.schedules!.weekSchedules!;
       WeekSchedules weekSchedulesSubjectRequest = subjectRequest.weekSchedules!;
       if (isWeekSchedulesOverlap(
           weekSchedulesTutor, weekSchedulesSubjectRequest)) {
@@ -607,10 +609,10 @@ class FirestoreService extends ChangeNotifier {
 
   bool isPeriodOverlap(Period period1, Period period2) {
     double start1 =
-    calculteTime(period1.startTime?.hour, period1.startTime?.minute);
+        calculteTime(period1.startTime?.hour, period1.startTime?.minute);
     double end1 = calculteTime(period1.endTime?.hour, period1.endTime?.minute);
     double start2 =
-    calculteTime(period2.startTime?.hour, period2.startTime?.minute);
+        calculteTime(period2.startTime?.hour, period2.startTime?.minute);
     double end2 = calculteTime(period2.endTime?.hour, period2.endTime?.minute);
 
     bool overlapCondition1 = (start1 < end2) && (end1 > start2);
@@ -637,7 +639,8 @@ class FirestoreService extends ChangeNotifier {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Thay thế bằng tên collection thực tế của bạn
           .where(FieldPath.documentId,
-          isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+              isEqualTo:
+                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
@@ -645,8 +648,8 @@ class FirestoreService extends ChangeNotifier {
 
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-            dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         // Map<String, dynamic> itemData = {};
         var teachClass = TeachClass.fromJson(data);
         user_model.User tutorInfo = await getUser(teachClass.tutorId!);
@@ -655,7 +658,6 @@ class FirestoreService extends ChangeNotifier {
           'teachClass': teachClass,
           'tutorInfo': tutorInfo
         });
-
 
         // classItem = user_model.User.fromJson(data);
       }
@@ -669,7 +671,8 @@ class FirestoreService extends ChangeNotifier {
       QuerySnapshot querySnapshot = await firestore
           .collection('classes') // Thay thế bằng tên collection thực tế của bạn
           .where(FieldPath.documentId,
-          isEqualTo: uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+              isEqualTo:
+                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
@@ -677,8 +680,8 @@ class FirestoreService extends ChangeNotifier {
 
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String,
-            dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         // Map<String, dynamic> itemData = {};
         var teachClass = TeachClass.fromJson(data);
         user_model.User learnerInfo = await getUser(teachClass.tutorId!);
@@ -688,34 +691,71 @@ class FirestoreService extends ChangeNotifier {
           'learnerInfo': learnerInfo
         });
 
-
         // classItem = user_model.User.fromJson(data);
       }
     } catch (e) {}
     return classItem;
   }
 
-  void listenNewSubjectRequest(Function showNotification) {
-    firestore.collection("subject_requests").where(
-        "tutor_id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  Future<void> listenNewSubjectRequest(Function showNotification) async {
+    user_model.User userInfo =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
+    firestore
+        .collection("subject_requests")
+        .where(
+          "tutor_id",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .where("created_time", isGreaterThan: userInfo.lastLogin)
         .snapshots()
-        .listen(
-            (event) {
-          for (var change in event.docChanges) {
-            switch (change.type) {
-              case DocumentChangeType.added:
-                print("NEW SUBJECT REQUEST: ${change.doc.data()}");
-                showNotification();
-                break;
-              case DocumentChangeType.modified:
-                print("Modified SUBJECT REQUEST: ${change.doc.data()}");
-                break;
-              case DocumentChangeType.removed:
-                print("Removed SUBJECT REQUEST: ${change.doc.data()}");
-                break;
-            }
-          }
+        .listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("NEW SUBJECT REQUEST: ${change.doc.data()}");
+            print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
+
+            showNotification();
+            break;
+          case DocumentChangeType.modified:
+            print("Modified SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+          case DocumentChangeType.removed:
+            print("Removed SUBJECT REQUEST: ${change.doc.data()}");
+            break;
         }
-    );
+      }
+    });
+  }
+
+  Future<void> listenSubjectRequestFromTutor(Function showNotification) async {
+    user_model.User userInfo =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
+    firestore
+        .collection("subject_requests")
+        .where(
+          "learner_id)",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .where("state",isEqualTo:"denied")
+        .snapshots()
+        .listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("NEW SUBJECT REQUEST: ${change.doc.data()}");
+            print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
+
+            showNotification();
+            break;
+          case DocumentChangeType.modified:
+            print("Modified SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+          case DocumentChangeType.removed:
+            print("Removed SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
   }
 }

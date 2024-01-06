@@ -3,6 +3,7 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/learner/search_tutor/my_subject_request.dart';
 import 'package:datn/screen/qr_code/student/qr_code_info_learner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -316,7 +317,16 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return Provider.value(
+                                            value: user,
+                                            child: const MySubjectRequest());
+                                      }),
+                                    );
+                                  },
                                   icon: const Icon(Icons.edit_calendar),
                                   color: Colors.white,
                                 ),
