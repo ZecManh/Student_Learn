@@ -2,9 +2,11 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 class NotificationController{
   static String BASIC_CHANNEL_KEY = "basic_channel";
+  static String SUBJECT_REQUEST_CHANNEL_KEY = "subject_request_channel";
   static int TODAY_SCHEDULES_NOTI = 1;
   static int NEW_SCHEDULES_NOTI = 2;
   static int DENIED_SCHEDULES_NOTI = 3;
+  static int ACCEPT_SCHEDULES_NOTI = 3;
 
   /// Use this method to detect when a new notification or a schedule is created
   @pragma("vm:entry-point")
