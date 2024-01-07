@@ -42,9 +42,32 @@ class FirebaseAuthService extends ChangeNotifier {
 
   Future<User?> createUserWithEmailAndPassword(
       String email, String password) async {
-    firebase_auth.UserCredential userCredential = await _firebaseAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
-    return userFromFirebase(userCredential.user);
+    // firebase_auth.UserCredential userCredential = await _firebaseAuth
+    //     .createUserWithEmailAndPassword(email: email, password: password);
+    // return userFromFirebase(userCredential.user);
+
+    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then(
+            (userCredential)  {
+             return userFromFirebase(userCredential.user);
+    }).catchError((error){
+      if (error.code == "auth/email-already-in-use") {
+        print("The email address is already in use");
+        return null;
+      } else if (error.code == "auth/invalid-email") {
+        print("The email address is not valid.");
+        return null;
+
+      } else if (error.code == "auth/operation-not-allowed") {
+        print("Operation not allowed.");
+        return null;
+
+      } else if (error.code == "auth/weak-password") {
+        print("The password is too weak.");
+        return null;
+
+      }
+    });
+        
   }
 
   Future<void> signOut() async {

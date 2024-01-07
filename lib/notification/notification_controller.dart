@@ -6,7 +6,9 @@ class NotificationController{
   static int TODAY_SCHEDULES_NOTI = 1;
   static int NEW_SCHEDULES_NOTI = 2;
   static int DENIED_SCHEDULES_NOTI = 3;
-  static int ACCEPT_SCHEDULES_NOTI = 3;
+  static int ACCEPT_SCHEDULES_NOTI = 4;
+  static int NEW_CLASS_NOTI = 5;
+  static int SIGN_UP_SUCCESSFULLY = 6;
 
   /// Use this method to detect when a new notification or a schedule is created
   @pragma("vm:entry-point")

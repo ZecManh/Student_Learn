@@ -1,5 +1,7 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/model/user/noti.dart';
 import 'package:datn/model/user/user.dart';
 import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 import '../../database/firestore/firestore_service.dart';
+import '../../notification/notification_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
   final UserType userType;
@@ -36,6 +39,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   FirestoreService firestoreService = FirestoreService();
 
+  Future<void> _showSuccessDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Đăng kí tài khoản thành công'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Bạn hãy đăng nhập để cập nhật thông tin của mình nhé'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showFailureDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Đăng kí thất bại'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Kiểm tra lại email,tài khoản có thể đã tồn tại '),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _signUp() async {
     await Firebase.initializeApp();
     String email = emailController.text;
@@ -45,26 +102,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (email != '' && (password == passwordReassign)) {
       user = await firebaseAuthService.createUserWithEmailAndPassword(
           email, password);
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Vui lòng kiểm tra lại định dạng email và mật khẩu')));
+      _showFailureDialog();
     }
+
     if (user != null) {
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
       await firestore.collection('users').doc(user.uid).set({
         'uid': user.uid,
         'email': user.email,
         'last_login' : Timestamp.now(),
-        'created_time' : Timestamp.now()
+        'created_time' : Timestamp.now(),
       });
 
-      SnackBar snackBar = SnackBar(
-          content: Text('${user.email.toString()} đăng kí thành công'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context);
-      });
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: NotificationController.SIGN_UP_SUCCESSFULLY,
+            channelKey: NotificationController.BASIC_CHANNEL_KEY,
+            title:
+            "Đăng kí tài khoản thành công!",
+            body:
+            "Bạn hãy đăng nhập để cập nhật thông tin của mình nhé"),
+      );
+      _showSuccessDialog();
+      // Future.delayed(Duration(seconds: 2), () {
+      //   Navigator.pop(context);
+      // });
 
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
+
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //     content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
+      _showFailureDialog();
     }
   }
 

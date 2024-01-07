@@ -103,7 +103,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     void acceptNoti(model_user.User tutor, SubjectRequest subjectRequest) {
       AwesomeNotifications().createNotification(
         content: NotificationContent(
-            id:Random().nextInt(100),
+            id:NotificationController.ACCEPT_SCHEDULES_NOTI,
             channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
             title:
                 "Gia sư ${tutor.displayName ?? ''} đã đồng ý yêu cầu học của bạn!",
@@ -115,7 +115,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     void deniedNoti(model_user.User tutor, SubjectRequest subjectRequest) {
       AwesomeNotifications().createNotification(
         content: NotificationContent(
-            id: Random().nextInt(100),
+            id: NotificationController.DENIED_SCHEDULES_NOTI,
             channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
             title:
                 "Gia sư ${tutor.displayName ?? ''} đã từ chối yêu cầu học của bạn!",
@@ -124,24 +124,19 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
       );
     }
 
-    // firestoreService.listenSubjectRequestDeniedLearnerSide(() {
-    //   AwesomeNotifications().createNotification(
-    //       content: NotificationContent(
-    //           id: NotificationController.ACCEPT_SCHEDULES_NOTI,
-    //           channelKey: "basic_channel",
-    //           title: "Gia sư đã đồng ý yêu cầu học của bạn!",
-    //           body: "Yay! I have local notifications working now!"));
-    // }, () {
-    //   AwesomeNotifications().createNotification(
-    //       content: NotificationContent(
-    //           id: NotificationController.DENIED_SCHEDULES_NOTI,
-    //           channelKey: "basic_channel",
-    //           title: "Gia sư đã từ chối yêu cầu học của bạn!",
-    //           body: "Yay! I have local notifications working now!"));
-    // });
 
     firestoreService.listenSubjectRequestDeniedLearnerSide(acceptNoti, deniedNoti);
-
+    // firestoreService.listenNewClassLearnerSide((user, teachClass) {
+    //   AwesomeNotifications().createNotification(
+    //     content: NotificationContent(
+    //         id: NotificationController.DENIED_SCHEDULES_NOTI,
+    //         channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
+    //         title:
+    //         "${user.displayName ?? ''} vừa được thêm vào lớp học ${teachClass.subject??''} !",
+    //         body:
+    //         "Hãy vào xem ngay nào!!!"),
+    //   );
+    // });
     return SingleChildScrollView(
       child: Container(
         color: Theme.of(context).colorScheme.background,
