@@ -48,7 +48,7 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
           return;
         }
       }
-      if (dataScan['type'] == 'tutor') {
+     /*  if (dataScan['type'] == 'tutor') {
         var userFetch = await firestoreService.getUserById(dataScan['uid']);
         if (userFetch != null) {
           Navigator.push(
@@ -60,7 +60,7 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
           );
           return;
         }
-      }
+      } */
       if (dataScan['type'] == 'class') {
         var dataFetch = await firestoreService.getClassByIdLearner(dataScan['uid']);
         if (dataFetch != null) {

@@ -74,17 +74,17 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         return;
       }
     }
-    if (dataScan['type'] == 'learner') {
-      var userFetch = await firestoreService.getUserById(dataScan['uid']);
-      if (userFetch != null) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ShowInfoLearner(learner: userFetch)));
-        await this.controller!.pauseCamera();
-        return;
-      }
-    }
+    // if (dataScan['type'] == 'learner') {
+    //   var userFetch = await firestoreService.getUserById(dataScan['uid']);
+    //   if (userFetch != null) {
+    //     Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //             builder: (context) => ShowInfoLearner(learner: userFetch)));
+    //     await this.controller!.pauseCamera();
+    //     return;
+    //   }
+    // }
     
     if (dataScan['type'] == 'class') {
       var dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
