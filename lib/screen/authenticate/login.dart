@@ -1,4 +1,5 @@
 import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/screen/authenticate/forget_password.dart';
 import 'package:datn/screen/authenticate/sign_up.dart';
 import 'package:datn/screen/learner/dash_board_learner.dart';
@@ -55,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await firebaseAuthService.signInWithEmailAndPassword(email, password);
     if (isLoginOK == true) {
       SnackBar snackBar = const SnackBar(content: Text('Đăng nhập thành công'));
+      FirestoreService().updateLastLogin();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       if (widget.userType == UserType.learner) {
         Navigator.of(context).pushAndRemoveUntil(

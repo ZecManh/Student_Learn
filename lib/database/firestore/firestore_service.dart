@@ -259,7 +259,7 @@ class FirestoreService extends ChangeNotifier {
 
   Future<Map<SubjectRequest, user_model.User>>
       getLearnerInfoWithListSubjectRequest() async {
-    List<user_model.User> leaners = [];
+    List<user_model.User> learners = [];
     List<SubjectRequest> subjectRequests =
         await getAllSubjectRequestByIDTutorSide();
     Map<SubjectRequest, user_model.User> data = {};
@@ -773,9 +773,11 @@ class FirestoreService extends ChangeNotifier {
   }
 
   Future<void> listenSubjectRequestDeniedLearnerSide(
-      Function(user_model.User,SubjectRequest) showAcceptNotification,Function(user_model.User,SubjectRequest) showDeniedNotification) async {
+      Function(user_model.User, SubjectRequest) showAcceptNotification,
+      Function(user_model.User, SubjectRequest) showDeniedNotification) async {
     print("GO HERE");
-
+    user_model.User user =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
     firestore
         .collection("subject_requests")
         .where(
@@ -784,6 +786,11 @@ class FirestoreService extends ChangeNotifier {
         )
         .snapshots()
         .listen((event) async {
+      print("EVENT $event");
+      var eventDocs = event.docs.toString();
+      var docChange = event.docChanges.toString();
+      print("CURRENT DATA ${eventDocs}");
+      print("DOC CHANGE ${docChange}");
       for (var change in event.docChanges) {
         switch (change.type) {
           case DocumentChangeType.added:
@@ -793,17 +800,84 @@ class FirestoreService extends ChangeNotifier {
           case DocumentChangeType.modified:
             print("Modifiedddddddd SUBJECT REQUEST: ${change.doc.data()}");
             final subjectRequest = SubjectRequest.fromJson(change.doc.data());
-            if (subjectRequest.state ==SubjectRequestState.accepted.name){
-              user_model.User tutor = await  getUser(subjectRequest.tutorId!);
-              showAcceptNotification(tutor,subjectRequest);
-            }
-            else if(subjectRequest.state ==SubjectRequestState.denied.name){
-              user_model.User tutor = await  getUser(subjectRequest.tutorId!);
-              showDeniedNotification(tutor,subjectRequest);
+            if (subjectRequest.state == SubjectRequestState.accepted.name) {
+              user_model.User tutor = await getUser(subjectRequest.tutorId!);
+              showAcceptNotification(tutor, subjectRequest);
+            } else if (subjectRequest.state ==
+                SubjectRequestState.denied.name) {
+              user_model.User tutor = await getUser(subjectRequest.tutorId!);
+              showDeniedNotification(tutor, subjectRequest);
             }
             break;
           case DocumentChangeType.removed:
             print("Removed SUBJECT REQUEST: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
+  }
+
+  Future<void> listenNewClassLearnerSide(
+      Function(user_model.User, TeachClass) showNewClassNotification) async {
+    print("GO HERE");
+    user_model.User user =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
+
+    final listener = firestore
+        .collection("classes")
+        .where(
+          "learner_id",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .snapshots()
+        .listen(
+            (event) async {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("NEW CLASSES: ${change.doc.data()}");
+            print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
+            final teachClass = TeachClass.fromJson(change.doc.data());
+            user_model.User learner = await getUser(teachClass.learnerId!);
+            showNewClassNotification(learner, teachClass);
+
+            break;
+          case DocumentChangeType.modified:
+            print("Modifiedddddddd Class: ${change.doc.data()}");
+
+            break;
+          case DocumentChangeType.removed:
+            print("Removed Class: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
+  }
+
+  Future<void> listenNewClassTutorSide(
+      Function(user_model.User, TeachClass) showNewClassNotification) async {
+    firestore
+        .collection("classes")
+        .where(
+          "tutor_id",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .snapshots()
+        .listen((event) async {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("NEW CLASSES: ${change.doc.data()}");
+            final teachClass = TeachClass.fromJson(change.doc.data());
+            user_model.User tutor = await getUser(teachClass.tutorId!);
+            showNewClassNotification(tutor, teachClass);
+            break;
+          case DocumentChangeType.modified:
+            print("Modifiedddddddd Class: ${change.doc.data()}");
+
+            break;
+          case DocumentChangeType.removed:
+            print("Removed Class: ${change.doc.data()}");
             break;
         }
       }
@@ -815,5 +889,12 @@ class FirestoreService extends ChangeNotifier {
     final subjectRequestDoc =
         _firestore.collection("subject_requests").doc(subjectRequest.id);
     subjectRequestDoc.update({'state': 'denied'});
+  }
+
+  Future<void> updateLastLogin() async {
+    final userDoc = _firestore
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    userDoc.update({"last_login": Timestamp.now()});
   }
 }

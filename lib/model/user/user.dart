@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/user/noti.dart';
 
 class User {
   Address? address;
@@ -17,7 +18,7 @@ class User {
   String? experience;
   Timestamp? lastLogin;
   Timestamp? createdTime;
-
+  List<UserNotification>? userNotification = [];
   User(
       {this.address,
       this.born,
@@ -37,6 +38,7 @@ class User {
       this.createdTime});
 
   User.fromJson(Map<dynamic, dynamic> json) {
+
     address =
         json['address'] != null ? Address.fromJson(json['address']) : null;
     born = json['born'] != null ? (json['born']) : null;
@@ -62,8 +64,13 @@ class User {
     lastLogin = json['last_login'] != null ? (json['last_login']) : null;
     createdTime = json['created_time'] != null ? (json['created_time']) : null;
 
-    // print("JSON" + json.toString());
-    // print("TO STRING " + toString());
+    if (json['notifications'] != null) {
+      var jsonArray = json['notifications'] as List<dynamic>;
+      jsonArray.forEach((element) {
+        userNotification!.add(UserNotification.fromJson(element));
+      });
+    }
+    print("USER NOTIFICATION " + userNotification.toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -88,12 +95,19 @@ class User {
     data['experience'] = experience;
     data['last_login'] = lastLogin;
     data['created_time'] = createdTime;
+    if (userNotification != null) {
+      List<Map<String, dynamic>> listNotifications = [];
+      userNotification!.forEach((element) {
+        listNotifications.add(element.toJson());
+      });
+      data['notifications'] = listNotifications;
+    }
     return data;
   }
 
   @override
   String toString() {
-    return 'User{address: $address, born: $born, displayName: $displayName, education: $education, email: $email, gender: $gender, phone: $phone, photoUrl: $photoUrl, subjects: $subjects, teachAddress: $teachAddress, teachMethod: $teachMethod, uid: $uid, verify: $verify, experience: $experience, lastLogin: $lastLogin, createdTime: $createdTime}';
+    return 'User{address: $address, born: $born, displayName: $displayName, education: $education, email: $email, gender: $gender, phone: $phone, photoUrl: $photoUrl, subjects: $subjects, teachAddress: $teachAddress, teachMethod: $teachMethod, uid: $uid, verify: $verify, experience: $experience, lastLogin: $lastLogin, createdTime: $createdTime, userNotification: $userNotification}';
   }
 }
 
