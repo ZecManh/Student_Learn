@@ -25,10 +25,11 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
   List<LessonSchedules> lessonSchedules = [];
   late DateTime startDate;
   late DateTime endDate;
-  DateTime? _selectedDay =  DateTime.now();
+  DateTime? _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
   Map<DateTime, List> _eventsList = {};
+
   @override
   void initState() {
     super.initState();
@@ -51,14 +52,14 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     print("START TIME ${startDate.toString()}");
     print("END TIME ${endDate.toString()}");
     lessonSchedules.forEach((itemLesson) {
-      _eventsList.addAll({DateTime.fromMillisecondsSinceEpoch(itemLesson.startTime!.millisecondsSinceEpoch):['Thời gian điểm danh :  ${itemLesson.attendanceTime??''} Trạng thái : ${itemLesson.state??''}',]});
+      _eventsList.addAll({
+        DateTime.fromMillisecondsSinceEpoch(
+            itemLesson.startTime!.millisecondsSinceEpoch): [
+          'Thời gian điểm danh :  ${itemLesson.attendanceTime ?? ''} Trạng thái : ${itemLesson.state ?? ''}',
+        ]
+      });
     });
-
-
   }
-
-
-
 
   int countDayOnWeek(WeekSchedules? weekSchedules) {
     int count = 0;
@@ -87,9 +88,11 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     }
     return count;
   }
+
   int getHashCode(DateTime key) {
     return key.day * 1000000 + key.month * 10000 + key.year;
   }
+
   @override
   Widget build(BuildContext context) {
     final _events = LinkedHashMap<DateTime, List>(
@@ -100,19 +103,16 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
-    void _openModalQrClass(BuildContext context, dynamic classInfo) {
-    // return;
-    var info = {
-      "uid": classInfo["docId"],
-      "type": 'class'
-    };
 
-    String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return
-          Dialog(
+    void _openModalQrClass(BuildContext context, dynamic classInfo) {
+      // return;
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+
+      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
             child: Container(
               width: double.infinity,
               height: 300,
@@ -121,29 +121,26 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                 children: [
                   Expanded(
                     child: Center(
-                      child: QRCodeView(text : jsonInfo),
+                      child: QRCodeView(text: jsonInfo),
                     ),
                   ),
                 ],
               ),
             ),
           );
-        // Container(
-        // child: ),);
-      },
-    );
-  }
-  void _openModalQrUser(BuildContext context, User user) {
-    var info = {
-      "uid": user.uid,
-      "type": 'learner'
-    };
-    String jsonInfo = user.uid != null ? jsonEncode(info) : "";
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return
-          Dialog(
+          // Container(
+          // child: ),);
+        },
+      );
+    }
+
+    void _openModalQrUser(BuildContext context, User user) {
+      var info = {"uid": user.uid, "type": 'learner'};
+      String jsonInfo = user.uid != null ? jsonEncode(info) : "";
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
             child: Container(
               width: double.infinity,
               height: 300,
@@ -152,18 +149,19 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                 children: [
                   Expanded(
                     child: Center(
-                      child: QRCodeView(text : jsonInfo),
+                      child: QRCodeView(text: jsonInfo),
                     ),
                   ),
                 ],
               ),
             ),
           );
-        // Container(
-        // child: ),);
-      },
-    );
-  }
+          // Container(
+          // child: ),);
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -196,17 +194,16 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                   IconButton(
+                  IconButton(
                     iconSize: 30,
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 10),
                     style: const ButtonStyle().copyWith(
                         backgroundColor: MaterialStatePropertyAll(
-                            Theme.of(context)
-                                .colorScheme
-                                .background)),
+                            Theme.of(context).colorScheme.background)),
                     onPressed: () {
-                      _openModalQrUser(context,((learnerInfo['learnerInfo']) as User));
+                      _openModalQrUser(
+                          context, ((learnerInfo['learnerInfo']) as User));
                     },
                     icon: const Icon(Icons.qr_code),
                   ),
@@ -229,7 +226,8 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                   ),
                   const SizedBox(
                     height: 20,
-                  ), Card(
+                  ),
+                  Card(
                     color: Theme.of(context).colorScheme.background,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -389,7 +387,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () {
-                                  _openModalQrClass(context,learnerInfo);
+                                  _openModalQrClass(context, learnerInfo);
                                 },
                                 icon: const Icon(Icons.qr_code),
                               ),
@@ -448,7 +446,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                       });
                       // getDaySchedules(selectedDay);
                     },
-                    eventLoader: (day){
+                    eventLoader: (day) {
                       return getEventForDay(day);
                     },
                   ),
@@ -456,9 +454,15 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                     shrinkWrap: true,
                     children: getEventForDay(_selectedDay!)
                         .map((event) => ListTile(
-                      title: Text(event.toString()),
-                    ))
+                              title: Text(event.toString()),
+                            ))
                         .toList(),
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+
+                    },
+                    child: Text('Dừng lớp học'),
                   )
                 ],
               ),

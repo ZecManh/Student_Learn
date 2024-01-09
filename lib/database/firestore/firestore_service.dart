@@ -897,4 +897,11 @@ class FirestoreService extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid);
     userDoc.update({"last_login": Timestamp.now()});
   }
+
+  Future<void> cancelClassTutor(String classId) async {
+    firestore
+        .collection("classes")
+        .doc(classId)
+        .update({"state":ClassesState.canceledByTutor.name});
+  }
 }

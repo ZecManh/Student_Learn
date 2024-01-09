@@ -29,8 +29,8 @@ class TeachClass {
       this.address,
       this.createdTime,
       this.startTime,
-      this.endTime});
-
+      this.endTime,
+      });
   TeachClass.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     learnerId = json['learner_id'];
@@ -45,6 +45,8 @@ class TeachClass {
     createdTime = json['created_time'];
     startTime = json['start_time'];
     endTime = json['end_time'];
+
+    print(toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -62,6 +64,7 @@ class TeachClass {
     if (schedules != null) {
       data['schedules'] = schedules!.toJson();
     }
+
     return data;
   }
 
@@ -199,4 +202,5 @@ class TeachClass {
   String toString() {
     return 'TeachClass{id: $id, learnerId: $learnerId, tutorId: $tutorId, createdTime: $createdTime, startTime: $startTime, endTime: $endTime, teachMethod: $teachMethod, subject: $subject, schedules: $schedules, address: $address, state: $state}';
   }
+
 }

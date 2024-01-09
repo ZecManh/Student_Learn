@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/auth/firebase_auth_service.dart';
-import 'package:datn/model/user/noti.dart';
 import 'package:datn/model/user/user.dart';
 import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
