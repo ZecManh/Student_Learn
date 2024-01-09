@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../model/user/user.dart';
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/qr_code/components/qr_code_view.dart';
 import 'dart:convert';
-
+import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class ClassInfoTutorScreen extends StatefulWidget {
   const ClassInfoTutorScreen({super.key});
 
@@ -30,8 +33,21 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
   Map<DateTime, List> _eventsList = {};
-
+  Map<DateTime, Object> _eventsListState = {};
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirestoreService firestoreService = FirestoreService();
   @override
+  String getTimeHour(Timestamp? attendanceTime) {
+    if (attendanceTime == null) {
+      return '';
+    }
+    DateTime dateTimeFromTimestamp = attendanceTime.toDate();
+
+    String formattedTime = DateFormat.Hm().format(dateTimeFromTimestamp);
+    print("formattedTime   $formattedTime");
+    return formattedTime;
+  }
+
   void initState() {
     super.initState();
     learnerInfo = Provider.of<Map<String, dynamic>>(context, listen: false);
@@ -53,14 +69,19 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     print("START TIME ${startDate.toString()}");
     print("END TIME ${endDate.toString()}");
     lessonSchedules.forEach((itemLesson) {
+      print("itemLesson $itemLesson");
+
       _eventsList.addAll({
         DateTime.fromMillisecondsSinceEpoch(
-            itemLesson.startTime!.millisecondsSinceEpoch): [
-          'Thời gian điểm danh :  ${itemLesson.attendanceTime ?? ''} Trạng thái : ${itemLesson.state ?? ''}',
-        ]
+            itemLesson.startTime!.millisecondsSinceEpoch): ['Thời gian điểm danh :  ${itemLesson.attendanceTime != null ? getTimeHour(itemLesson.attendanceTime) : ''}'],
+      });
+      _eventsListState.addAll({
+        DateTime.fromMillisecondsSinceEpoch(
+            itemLesson.startTime!.millisecondsSinceEpoch): itemLesson,
       });
     });
   }
+
 
   int countDayOnWeek(WeekSchedules? weekSchedules) {
     int count = 0;
@@ -100,10 +121,22 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       equals: isSameDay,
       hashCode: getHashCode,
     )..addAll(_eventsList);
+    final _eventsState = LinkedHashMap<DateTime, Object>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_eventsListState);
 
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
+
+    Object getEventStateForDay(DateTime day) {
+      return _eventsState[day] ?? {};
+    }
+
+    firestoreService.listenChangeInfoClass(learnerInfo['docId'],(dynamic value){
+      print("value :   $value");
+    });
 
     void _openModalQrClass(BuildContext context, dynamic classInfo) {
       // return;
@@ -190,12 +223,32 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       );
     }
 
-    dynamic _renderAction(BuildContext context,dynamic classInfo) {
-      print(lessonSchedules[0].startTime);
-      var obj = {};
+    void _openModalOff(BuildContext context, dynamic classInfo) {
       var info = {"uid": classInfo["docId"], "type": 'class'};
+      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      _openModalActionQrClass(context,jsonInfo);
+    }
+    dynamic _renderAction(BuildContext context,dynamic classInfo) {
+      print(lessonSchedules);
+      print("classInfo : $classInfo");
+      print("getEventStateForDay(_selectedDay!) : ${getEventStateForDay(_selectedDay!)}");
+      var objState = getEventStateForDay(_selectedDay!) as dynamic;
+      
+      print("objState.state == 'progress' ${objState.state}");
+      var obj = {};
+      DateTime currentDateTime = DateTime.now();
+      Timestamp timestamp = Timestamp.fromDate(currentDateTime);
 
-      // if (classInfo["state"] == 'open') {
+      Map<String, dynamic> timestampJson = {
+        'seconds': timestamp.seconds,
+        'nanoseconds': timestamp.nanoseconds,
+      };
+
+      String timestampJsonString = jsonEncode(timestampJson);
+
+      print(timestampJsonString);
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+      info["timeCheck"] = timestampJsonString ;
         obj['text'] = 'Bắt đầu học';
         info['state'] = 'progress';
         print(info);
@@ -203,31 +256,27 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         obj['action'] = () => {
           _openModalActionQrClass(context,jsonInfo)
         };
-      // }
-      if (classInfo["state"] == 'progress') {
+      if (objState.state == 'progress') {
         obj['text'] = 'Đang học';
-        info['state'] = 'open';
+        info['state'] = 'done';
         String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
         obj['action'] = () => {
           _openModalActionQrClass(context,jsonInfo)
         };
       }
-      // if (classInfo["state"] == 'done') {
-      //   obj['text'] = 'Đã học xong';
-      //   info['state'] = 'open';
-      //   String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-      //   obj['action'] = () => {
-      //     _openModalActionQrClass(context,jsonInfo)
-      //   };
-      // }
-      if (classInfo["state"] == 'not-stydying') {
+      if (objState.state == 'done') {
+        obj['text'] = 'Đã học xong';
+        obj['action'] = () => {};
+      }
+      if (objState.state == 'not-stydying') {
         obj['text'] = 'Nghỉ học';
-        info['state'] = 'open';
-        String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+        info['state'] = 'not-stydying';
+        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
         obj['action'] = () => {
-          _openModalActionQrClass(context,jsonInfo)
+          // _openModalActionQrClass(context,jsonInfo)
         };
       }
+      print("obj === $obj");
       return obj;
     };
     return Scaffold(
@@ -251,11 +300,11 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                     height: 10,
                   ),
                   CircleAvatar(
-                      backgroundImage: (((learnerInfo['learnerInfo']) as User)
+                      backgroundImage: (((learnerInfo['learnerInfo']) as model_user.User)
                                   .photoUrl !=
                               null)
                           ? NetworkImage(
-                              ((learnerInfo['learnerInfo']) as User).photoUrl!)
+                              ((learnerInfo['learnerInfo']) as model_user.User).photoUrl!)
                           : const AssetImage('assets/bear.jpg')
                               as ImageProvider,
                       radius: 50),
@@ -271,7 +320,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                             Theme.of(context).colorScheme.background)),
                     onPressed: () {
                       _openModalQrUser(
-                          context, ((learnerInfo['learnerInfo']) as User));
+                          context, ((learnerInfo['learnerInfo'])));
                     },
                     icon: const Icon(Icons.qr_code),
                   ),
@@ -283,7 +332,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        (((learnerInfo['learnerInfo']) as User).displayName) ??
+                        (((learnerInfo['learnerInfo']) as model_user.User).displayName) ??
                             '',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -356,7 +405,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  (((learnerInfo['learnerInfo']) as User)
+                                  (((learnerInfo['learnerInfo']) as model_user.User)
                                           .phone) ??
                                       '',
                                   style: const TextStyle(fontSize: 16),
@@ -487,7 +536,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                   _renderAction(context,learnerInfo)['action']() ?? ()=> {};
                                 },
                               ),
-                              if (learnerInfo['state'] == 'open')
+                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open')
                                 OutlinedButton.icon(
                                   icon: Icon(
                                     Icons.qr_code,
@@ -506,7 +555,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                           .colorScheme
                                           .error),
                                   onPressed: () {
-                                    _openModalQrClass(context, learnerInfo);
+                                    _openModalOff(context, learnerInfo);
                                   },
                                 ),
                               // IconButton(

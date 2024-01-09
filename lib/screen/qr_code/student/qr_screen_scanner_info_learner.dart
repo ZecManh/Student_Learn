@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:datn/screen/learner/learning/class_info_learner.dart';
 import 'package:datn/model/user/teach_schedules.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/subject_request/schedules.dart';
 
 class DashBoardQrScannerLearner extends StatefulWidget {
   const DashBoardQrScannerLearner({super.key});
@@ -96,38 +97,62 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
           var lessonSchedules = dataFetch['teachClass'].schedules!.lessonSchedules as List<LessonSchedules>;
           print("lessonSchedules $lessonSchedules");
           if (lessonSchedules != null) {
+            var check = 0 as num;
             List<LessonSchedules> schedules = lessonSchedules.map((data) {
+              if (check > 0) {
+                return data;
+              }
               print(data.startTime);
+              Map<String, dynamic> timestampJson = jsonDecode(dataScan["timeCheck"]);
+              int seconds = timestampJson['seconds'];
+              int nanoseconds = timestampJson['nanoseconds'];
+              int microseconds = (seconds * 1000000) + (nanoseconds / 1000).round();
+              Timestamp getTimeCheck = Timestamp.fromMicrosecondsSinceEpoch(microseconds);
+
+              DateTime timestampCheck = DateTime.fromMillisecondsSinceEpoch(getTimeCheck.seconds * 1000);
               DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(data.startTime!.seconds * 1000);
               DateTime timestamp2 = DateTime.fromMillisecondsSinceEpoch(data.endTime!.seconds * 1000);
               var difference2 = timestamp.difference(DateTime.now());
-              var differenceEnd = timestamp.difference(DateTime.now());
+              var differenceEnd = timestamp2.difference(DateTime.now());
+              Duration timeCheck = timestampCheck.difference(DateTime.now());
               Duration difference = difference2;
               Duration differenceEndTime = differenceEnd;
-              print('ifference.inHours ${difference.inHours}');
-              if(difference.inHours > 0.5 && dataScan['state'] == 'progress') {
+              if (timeCheck.inHours > 0.5) {
+                return data;
+              }
+              print('difference   ${difference.inHours}');
+              print('differenceEndTime   ${differenceEndTime.inHours}');
+              if(difference.inHours > 0.5 && difference.inHours < 1 && dataScan['state'] == 'progress') {
                 Timestamp timestamp = Timestamp.fromDate(DateTime.now());
                 data.attendanceTime = timestamp;
                 data.state = 'progress';
+                check = check + 1;
                 return data;
               }
-              if(differenceEndTime.inHours > 0 && dataScan['state'] == 'open') {
+              if(differenceEndTime.inHours > 0 && dataScan['state'] == 'done') {
                 Timestamp timestamp = Timestamp.fromDate(DateTime.now());
                 data.attendanceTime = timestamp;
-                data.state = 'open';
+                data.state = 'done';
+                check = check + 1;
+                return data;
+              }
+              if(dataScan['state'] == 'not-stydying') {
+                data.attendanceTime = null;
+                data.state = 'not-stydying';
+                check = check + 1;
                 return data;
               }
               return data;
               // if (data[])
             }).toList();
-            Map<String, dynamic> newData = {
-              "week_schedules": dataFetch['teachClass'].schedules!.weekSchedules,
-              "lesson_schedules" : schedules
-            };
+            var newData = Schedules(
+                weekSchedules: dataFetch['teachClass'].schedules!.weekSchedules,
+                lessonSchedules : schedules
+            );
             print('newData $newData');
-           await firestoreService.updateStatusClass(dataScan['uid'],jsonEncode(newData));
+            await firestoreService.updateStatusClass(dataScan['uid'],newData.toJson());
+            dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
 
-            print("kkkkkkkkkkkk $schedules");
           }
         }
 

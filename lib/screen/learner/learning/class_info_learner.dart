@@ -1,6 +1,3 @@
-
-
-
 import 'dart:collection';
 import 'dart:convert';
 
@@ -10,8 +7,12 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../model/teach_classes/teach_class.dart';
 import '../../../model/user/teach_schedules.dart';
-import '../../../model/user/user.dart';
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/qr_code/components/qr_code_view.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassInfoLearnerScreen extends StatefulWidget {
   const ClassInfoLearnerScreen({super.key});
@@ -21,20 +22,37 @@ class ClassInfoLearnerScreen extends StatefulWidget {
     return _ClassInfoScreenState();
   }
 }
+
 int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
+
 class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
   Map<String, dynamic> tutorInfo = {};
   int lessonOnWeek = 0;
   List<LessonSchedules> lessonSchedules = [];
   late DateTime startDate;
   late DateTime endDate;
-  DateTime? _selectedDay =  DateTime.now();
+  DateTime? _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
   Map<DateTime, List> _eventsList = {};
+  Map<DateTime, Object> _eventsListState = {};
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirestoreService firestoreService = FirestoreService();
+
   @override
+  String getTimeHour(Timestamp? attendanceTime) {
+    if (attendanceTime == null) {
+      return '';
+    }
+    DateTime dateTimeFromTimestamp = attendanceTime.toDate();
+
+    String formattedTime = DateFormat.Hm().format(dateTimeFromTimestamp);
+    print("formattedTime   $formattedTime");
+    return formattedTime;
+  }
+
   void initState() {
     super.initState();
     tutorInfo = Provider.of<Map<String, dynamic>>(context, listen: false);
@@ -43,7 +61,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     lessonOnWeek = countDayOnWeek(weekSchedules);
     if ((tutorInfo['teachClass'] as TeachClass).schedules != null) {
       lessonSchedules =
-      (tutorInfo['teachClass'] as TeachClass).schedules!.lessonSchedules!;
+          (tutorInfo['teachClass'] as TeachClass).schedules!.lessonSchedules!;
     }
     startDate = DateTime.fromMillisecondsSinceEpoch(
         lessonSchedules[0].startTime!.millisecondsSinceEpoch);
@@ -56,7 +74,16 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     print("START TIME ${startDate.toString()}");
     print("END TIME ${endDate.toString()}");
     lessonSchedules.forEach((itemLesson) {
-      _eventsList.addAll({DateTime.fromMillisecondsSinceEpoch(itemLesson.startTime!.millisecondsSinceEpoch):['Thời gian điểm danh :  ${itemLesson.attendanceTime??''} Trạng thái : ${itemLesson.state??''}',]});
+      _eventsList.addAll({
+        DateTime.fromMillisecondsSinceEpoch(
+            itemLesson.startTime!.millisecondsSinceEpoch): [
+          'Thời gian điểm danh :  ${itemLesson.attendanceTime != null ? getTimeHour(itemLesson.attendanceTime) : ''}'
+        ],
+      });
+      _eventsListState.addAll({
+        DateTime.fromMillisecondsSinceEpoch(
+            itemLesson.startTime!.millisecondsSinceEpoch): itemLesson,
+      });
     });
   }
 
@@ -87,46 +114,41 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     }
     return count;
   }
-   void _openModalQrUser(BuildContext context, User user) {
-    var info = {
-      "uid": user.uid,
-      "type": 'tutor'
-    };
+
+  void _openModalQrUser(BuildContext context, User user) {
+    var info = {"uid": user.uid, "type": 'tutor'};
     String jsonInfo = user.uid != null ? jsonEncode(info) : "";
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return
-          Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text : jsonInfo),
-                    ),
+        return Dialog(
+          child: Container(
+            width: double.infinity,
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: QRCodeView(text: jsonInfo),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
+          ),
+        );
         // Container(
         // child: ),);
       },
     );
   }
-   void _openModalQrClass(BuildContext context, dynamic classInfo) {
+
+  void _openModalQrClass(BuildContext context, dynamic classInfo) {
     print('classInfo');
     print(classInfo);
     print(classInfo["docId"]);
     // return;
-    var info = {
-      "uid": classInfo["docId"],
-      "type": 'class'
-    };
+    var info = {"uid": classInfo["docId"], "type": 'class'};
 
     String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
     print('jsonInfo');
@@ -134,23 +156,22 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return
-          Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text : jsonInfo),
-                    ),
+        return Dialog(
+          child: Container(
+            width: double.infinity,
+            height: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: QRCodeView(text: jsonInfo),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
+          ),
+        );
         // Container(
         // child: ),);
       },
@@ -163,10 +184,73 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
       equals: isSameDay,
       hashCode: getHashCode,
     )..addAll(_eventsList);
-
+    final _eventsState = LinkedHashMap<DateTime, Object>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_eventsListState);
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
+
+    Object getEventStateForDay(DateTime day) {
+      return _eventsState[day] ?? {};
+    }
+
+    firestoreService.listenChangeInfoClass(tutorInfo['docId'],(dynamic value){
+      print("value :   $value");
+    });
+
+    dynamic _renderAction(BuildContext context,dynamic classInfo) {
+      print(lessonSchedules);
+      print("classInfo : $classInfo");
+      print("getEventStateForDay(_selectedDay!) : ${getEventStateForDay(_selectedDay!)}");
+      var objState = getEventStateForDay(_selectedDay!) as dynamic;
+
+      print("objState.state == 'progress' ${objState.state}");
+      var obj = {};
+      DateTime currentDateTime = DateTime.now();
+      Timestamp timestamp = Timestamp.fromDate(currentDateTime);
+
+      Map<String, dynamic> timestampJson = {
+        'seconds': timestamp.seconds,
+        'nanoseconds': timestamp.nanoseconds,
+      };
+
+      String timestampJsonString = jsonEncode(timestampJson);
+
+      print(timestampJsonString);
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+      info["timeCheck"] = timestampJsonString ;
+      obj['text'] = 'Bắt đầu học';
+      info['state'] = 'progress';
+      print(info);
+      // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      obj['action'] = () => {
+        // _openModalActionQrClass(context,jsonInfo)
+      };
+      if (objState.state == 'progress') {
+        obj['text'] = 'Đang học';
+        info['state'] = 'done';
+        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+        obj['action'] = () => {
+          // _openModalActionQrClass(context,jsonInfo)
+        };
+      }
+      if (objState.state == 'done') {
+        obj['text'] = 'Đã học xong';
+        obj['action'] = () => {};
+      }
+      if (objState.state == 'not-stydying') {
+        obj['text'] = 'Nghỉ học';
+        info['state'] = 'not-stydying';
+        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+        obj['action'] = () => {
+          // _openModalActionQrClass(context,jsonInfo)
+        };
+      }
+      print("obj === $obj");
+      return obj;
+    };
 
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
@@ -185,15 +269,19 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   CircleAvatar(
-                      backgroundImage: (((tutorInfo['tutorInfo']) as User)
-                          .photoUrl !=
-                          null)
-                          ? NetworkImage(
-                          ((tutorInfo['tutorInfo']) as User).photoUrl!)
-                          : const AssetImage('assets/bear.jpg')
-                      as ImageProvider,
+                      backgroundImage:
+                          (((tutorInfo['tutorInfo']) as model_user.User)
+                                      .photoUrl !=
+                                  null)
+                              ? NetworkImage(
+                                  ((tutorInfo['tutorInfo']) as model_user.User)
+                                      .photoUrl!)
+                              : const AssetImage('assets/bear.jpg')
+                                  as ImageProvider,
                       radius: 50),
                   const SizedBox(
                     height: 20,
@@ -204,11 +292,9 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                         vertical: 10, horizontal: 10),
                     style: const ButtonStyle().copyWith(
                         backgroundColor: MaterialStatePropertyAll(
-                            Theme.of(context)
-                                .colorScheme
-                                .background)),
+                            Theme.of(context).colorScheme.background)),
                     onPressed: () {
-                      _openModalQrUser(context,((tutorInfo['tutorInfo']) as User));
+                      _openModalQrUser(context, (tutorInfo['tutorInfo']));
                     },
                     icon: const Icon(Icons.qr_code),
                   ),
@@ -220,7 +306,8 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        (((tutorInfo['tutorInfo']) as User).displayName) ??
+                        (((tutorInfo['tutorInfo']) as model_user.User)
+                                .displayName) ??
                             '',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -250,7 +337,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                               Expanded(
                                 child: Text(
                                   (((tutorInfo['teachClass']) as TeachClass)
-                                      .subject) ??
+                                          .subject) ??
                                       '',
                                   style: const TextStyle(fontSize: 16),
                                 ),
@@ -272,7 +359,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                               Expanded(
                                 child: Text(
                                   (((tutorInfo['teachClass']) as TeachClass)
-                                      .teachMethod) ??
+                                          .teachMethod) ??
                                       '',
                                   style: const TextStyle(fontSize: 16),
                                 ),
@@ -293,8 +380,8 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  (((tutorInfo['tutorInfo']) as User)
-                                      .phone) ??
+                                  (((tutorInfo['tutorInfo']) as model_user.User)
+                                          .phone) ??
                                       '',
                                   style: const TextStyle(fontSize: 16),
                                 ),
@@ -348,7 +435,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                 icon: Icon(
                                   Icons.edit_document,
                                   color:
-                                  Theme.of(context).colorScheme.onPrimary,
+                                      Theme.of(context).colorScheme.onPrimary,
                                 ),
                                 label: Text(
                                   'Xem kết quả',
@@ -359,7 +446,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                 ),
                                 style: OutlinedButton.styleFrom(
                                     backgroundColor:
-                                    Theme.of(context).colorScheme.primary),
+                                        Theme.of(context).colorScheme.primary),
                               )
                             ],
                           ),
@@ -370,7 +457,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                 icon: Icon(
                                   Icons.calendar_month,
                                   color:
-                                  Theme.of(context).colorScheme.onPrimary,
+                                      Theme.of(context).colorScheme.onPrimary,
                                 ),
                                 label: Text(
                                   'Lịch học',
@@ -381,9 +468,9 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                 ),
                                 style: OutlinedButton.styleFrom(
                                     backgroundColor:
-                                    Theme.of(context).colorScheme.primary),
+                                        Theme.of(context).colorScheme.primary),
                               ),
-                                IconButton(
+                              IconButton(
                                 iconSize: 30,
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 10),
@@ -393,7 +480,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () {
-                                  _openModalQrClass(context,tutorInfo);
+                                  _openModalQrClass(context, tutorInfo);
                                 },
                                 icon: const Icon(Icons.qr_code),
                               ),
@@ -402,6 +489,48 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                               ),
                             ],
                           ),
+                          Row(
+                            children: [
+                              OutlinedButton.icon(
+                                icon: Icon(
+                                  Icons.qr_code,
+                                  color:
+                                  Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                label: Text(
+                                  _renderAction(context,tutorInfo)['text'] ?? '',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                                onPressed: () {
+                                },
+                              ),
+                              // IconButton(
+                              //   iconSize: 30,
+                              //   padding: const EdgeInsets.symmetric(
+                              //       vertical: 10, horizontal: 10),
+                              //   style: const ButtonStyle().copyWith(
+                              //       backgroundColor: MaterialStatePropertyAll(
+                              //           Theme.of(context)
+                              //               .colorScheme
+                              //               .background)),
+                              //   onPressed: () {
+                              //     _openModalQrClass(context,learnerInfo);
+                              //   },
+                              //   icon: const Icon(Icons.qr_code),
+                              // ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+
                         ],
                       ),
                     ),
@@ -431,7 +560,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                       });
                       // getDaySchedules(selectedDay);
                     },
-                    eventLoader: (day){
+                    eventLoader: (day) {
                       return getEventForDay(day);
                     },
                   ),
@@ -439,8 +568,8 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                     shrinkWrap: true,
                     children: getEventForDay(_selectedDay!)
                         .map((event) => ListTile(
-                      title: Text(event.toString()),
-                    ))
+                              title: Text(event.toString()),
+                            ))
                         .toList(),
                   )
                 ],

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
@@ -754,12 +756,12 @@ class FirestoreService extends ChangeNotifier {
         });
   }
 
-  Future<void> listenChangeInfoClass(Function changeInfoClass) async {
-    user_model.User userInfo =
-    await getUser(FirebaseAuth.instance.currentUser!.uid);
+  Future<void> listenChangeInfoClass(String uid ,Function changeInfoClass) async {
+    print('listenChangeInfoClass');
     firestore
         .collection("classes")
-        .where(FieldPath.documentId)
+        .where(FieldPath.documentId,isEqualTo:
+    uid)
         .snapshots()
         .listen((event) {
       for (var change in event.docChanges) {
@@ -770,7 +772,7 @@ class FirestoreService extends ChangeNotifier {
             break;
           case DocumentChangeType.modified:
             print("Modified Info class: ${change.doc.data()}");
-            changeInfoClass();
+            changeInfoClass(change.doc.data());
             break;
           case DocumentChangeType.removed:
             print("Removed Info class: ${change.doc.data()}");
