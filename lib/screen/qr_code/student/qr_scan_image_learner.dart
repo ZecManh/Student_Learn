@@ -63,6 +63,18 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
       if (dataScan['type'] == 'class') {
         var dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
         if (dataFetch != null) {
+          if (dataScan['state']) {
+            if (dataFetch['teachClass'].schedules!.lessonSchedules) {
+             var lessonSchedules = dataFetch['teachClass'].schedules!.lessonSchedules as dynamic;
+             List<Map<String, dynamic>> schedules = lessonSchedules.map((data) => {
+               print(data['startTime'])
+               // if (data[])
+             }).toList();
+
+              // print("kkkkkkkkkkkk ${dataFetch['teachClass'].schedules!.lessonSchedules}");
+            }
+          }
+
           Navigator.push(context,
               MaterialPageRoute(builder: (context) {
                 return Provider(

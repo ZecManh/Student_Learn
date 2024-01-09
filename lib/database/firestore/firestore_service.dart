@@ -55,7 +55,8 @@ class FirestoreService extends ChangeNotifier {
       print('FIRESTORE UPLOAD' + error);
     });
   }
-
+  // jacksparrowdung@gmail.com
+  // vmhieu1402@gmail.com
   Future updateName(String displayName) async {
     await firestore
         .collection('users')
@@ -740,6 +741,45 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {}
     return classItem;
   }
+
+  Future updateStatusClass(String uid,dynamic schedules) async {
+    print('uid $uid');
+    print('schedules $schedules');
+    await firestore
+        .collection('classes')
+        .doc(uid)
+        .set({'schedules': schedules }, SetOptions(merge: true)).catchError(
+            (error) {
+          print('FIRESTORE UPLOAD schedules' + error);
+        });
+  }
+
+  Future<void> listenChangeInfoClass(Function changeInfoClass) async {
+    user_model.User userInfo =
+    await getUser(FirebaseAuth.instance.currentUser!.uid);
+    firestore
+        .collection("classes")
+        .where(FieldPath.documentId)
+        .snapshots()
+        .listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("new Info class: ${change.doc.data()}");
+
+            break;
+          case DocumentChangeType.modified:
+            print("Modified Info class: ${change.doc.data()}");
+            changeInfoClass();
+            break;
+          case DocumentChangeType.removed:
+            print("Removed Info class: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
+  }
+
 
   Future<void> listenNewSubjectRequest(Function showNotification) async {
     user_model.User userInfo =
