@@ -570,28 +570,28 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                   _renderAction(context,learnerInfo)['action']() ?? ()=> {};
                                 },
                               ),
-                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
-                                OutlinedButton.icon(
-                                  icon: Icon(
-                                    Icons.qr_code,
-                                    color:
-                                    Theme.of(context).colorScheme.onError,
-                                  ),
-                                  label: Text(
-                                    'Nghỉ học',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onError),
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                      backgroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .error),
-                                  onPressed: () {
-                                    _openModalOff(context, learnerInfo);
-                                  },
-                                ),
+                              // if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
+                              //   OutlinedButton.icon(
+                              //     icon: Icon(
+                              //       Icons.qr_code,
+                              //       color:
+                              //       Theme.of(context).colorScheme.onError,
+                              //     ),
+                              //     label: Text(
+                              //       'Nghỉ học',
+                              //       style: TextStyle(
+                              //           color: Theme.of(context)
+                              //               .colorScheme
+                              //               .onError),
+                              //     ),
+                              //     style: OutlinedButton.styleFrom(
+                              //         backgroundColor: Theme.of(context)
+                              //             .colorScheme
+                              //             .error),
+                              //     onPressed: () {
+                              //       _openModalOff(context, learnerInfo);
+                              //     },
+                              //   ),
                               // IconButton(
                               //   iconSize: 30,
                               //   padding: const EdgeInsets.symmetric(
