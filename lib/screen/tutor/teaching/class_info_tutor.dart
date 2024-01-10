@@ -136,6 +136,18 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
 
     firestoreService.listenChangeInfoClass(learnerInfo['docId'],(dynamic value){
       print("value :   $value");
+      lessonSchedules.forEach((itemLesson) {
+        print("itemLesson $itemLesson");
+
+        _eventsList.addAll({
+          DateTime.fromMillisecondsSinceEpoch(
+              itemLesson.startTime!.millisecondsSinceEpoch): ['Thời gian điểm danh :  ${itemLesson.attendanceTime != null ? getTimeHour(itemLesson.attendanceTime) : ''}'],
+        });
+        _eventsListState.addAll({
+          DateTime.fromMillisecondsSinceEpoch(
+              itemLesson.startTime!.millisecondsSinceEpoch): itemLesson,
+        });
+      });
     });
 
     void _openModalQrClass(BuildContext context, dynamic classInfo) {
@@ -246,9 +258,18 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
 
       String timestampJsonString = jsonEncode(timestampJson);
 
+
+      Timestamp timestampStart = objState.startTime;
+      Map<String, dynamic> startTimeJson = {
+        'seconds': timestampStart.seconds,
+        'nanoseconds': timestampStart.nanoseconds,
+      };
+
+      String startTimeJsonString = jsonEncode(startTimeJson);
       print(timestampJsonString);
       var info = {"uid": classInfo["docId"], "type": 'class'};
       info["timeCheck"] = timestampJsonString ;
+      info["startTime"] = startTimeJsonString ;
         obj['text'] = 'Bắt đầu học';
         info['state'] = 'progress';
         print(info);
@@ -549,7 +570,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                   _renderAction(context,learnerInfo)['action']() ?? ()=> {};
                                 },
                               ),
-                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open')
+                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
                                 OutlinedButton.icon(
                                   icon: Icon(
                                     Icons.qr_code,
