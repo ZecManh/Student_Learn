@@ -557,7 +557,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                   _renderAction(context,learnerInfo)['action']() ?? ()=> {};
                                 },
                               ),
-                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open')
+                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
                                 OutlinedButton.icon(
                                   icon: Icon(
                                     Icons.qr_code,
