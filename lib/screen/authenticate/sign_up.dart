@@ -106,12 +106,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (isExist == false) {
         await firebaseAuthService.createUserWithEmailAndPassword(
             email, password);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Đăng kí tài khoản thành công')));
         AwesomeNotifications().createNotification(
             content: NotificationContent(
                 id: NotificationController.SIGN_UP_SUCCESSFULLY,
                 channelKey: NotificationController.BASIC_CHANNEL_KEY,
                 title: "Đăng kí tài khoản thành công!",
                 body: "Bạn hãy đăng nhập để cập nhật thông tin của mình nhé"));
+        Navigator.pop(context);
       }else{
         _showFailureDialog();
       }
