@@ -470,19 +470,32 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                                     backgroundColor:
                                         Theme.of(context).colorScheme.primary),
                               ),
-                              IconButton(
-                                iconSize: 30,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                style: const ButtonStyle().copyWith(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background)),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              OutlinedButton.icon(
+                                icon: Icon(
+                                  Icons.qr_code,
+                                  color:
+                                      Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                label: Text(
+                                  'Thông tin lớp học',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary),
                                 onPressed: () {
                                   _openModalQrClass(context, tutorInfo);
                                 },
-                                icon: const Icon(Icons.qr_code),
                               ),
                               const SizedBox(
                                 height: 10,
