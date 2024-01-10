@@ -112,9 +112,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
 
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
-    // Cron().schedule(Schedule.parse('*/1 * * * *'), () async {
-    //   print('every 1 minutes');
-    // });
 
     firestoreService.listenNewSubjectRequest((){
       AwesomeNotifications().createNotification(
@@ -123,7 +120,7 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
               channelKey: "basic_channel",
               title: "Bạn có một lời mời dạy học mới!",
               body:
-              "Yay! I have local notifications working now!"));
+              "Vào xem ngay"));
 
     });
 
@@ -265,24 +262,6 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () async {
-                                  final cron = Cron();
-                                  cron.schedule(Schedule.parse('*/5 * * * * *'),
-                                      () {
-                                    print("every second");
-                                    // AwesomeNotifications().createNotification(
-                                    //     content: NotificationContent(id: Random().nextInt(100),
-                                    //         channelKey: "basic_channel",
-                                    //         title:"Hello World!",
-                                    //         body:"Yay! I have local notifications working now!"
-                                    //     ));
-                                  });
-                                  AwesomeNotifications().createNotification(
-                                      content: NotificationContent(
-                                          id: Random().nextInt(100),
-                                          channelKey: "basic_channel",
-                                          title: "Hello World!",
-                                          body:
-                                              "Yay! I have local notifications working now!"));
                                 },
                                 icon: const Icon(Icons.notifications),
                               ),

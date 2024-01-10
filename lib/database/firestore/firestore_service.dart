@@ -758,7 +758,6 @@ class FirestoreService extends ChangeNotifier {
           case DocumentChangeType.added:
             print("NEW SUBJECT REQUEST: ${change.doc.data()}");
             print("current uid ${FirebaseAuth.instance.currentUser!.uid}");
-
             showNotification();
             break;
           case DocumentChangeType.modified:
@@ -830,8 +829,7 @@ class FirestoreService extends ChangeNotifier {
           isEqualTo: FirebaseAuth.instance.currentUser!.uid,
         )
         .snapshots()
-        .listen(
-            (event) async {
+        .listen((event) async {
       for (var change in event.docChanges) {
         switch (change.type) {
           case DocumentChangeType.added:
@@ -902,6 +900,54 @@ class FirestoreService extends ChangeNotifier {
     firestore
         .collection("classes")
         .doc(classId)
-        .update({"state":ClassesState.canceledByTutor.name});
+        .update({"state": ClassesState.canceledByTutor.name});
   }
+
+  Future<void> listenRemoveClassLearnerSide(
+      Function(user_model.User, TeachClass) showRemoveClassNotification) async {
+    user_model.User user =
+        await getUser(FirebaseAuth.instance.currentUser!.uid);
+
+    final listener = firestore
+        .collection("classes")
+        .where(
+          "learner_id",
+          isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+        )
+        .snapshots()
+        .listen((event) async {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            break;
+          case DocumentChangeType.modified:
+            print("Modifiedddddddd Class: ${change.doc.data()}");
+            final teachClass = TeachClass.fromJson(change.doc.data());
+            if (teachClass.state == ClassesState.canceledByTutor.name) {
+              user_model.User tutor = await getUser(teachClass.tutorId!);
+              showRemoveClassNotification(tutor, teachClass);
+            }
+            break;
+          case DocumentChangeType.removed:
+            break;
+        }
+      }
+    });
+  }
+
+  static Future<bool> checkIfAccountExist(String email) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: email)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+
 }

@@ -1,9 +1,10 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/database/auth/firebase_auth_service.dart';
-import 'package:datn/model/user/user.dart';
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
@@ -97,44 +98,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String email = emailController.text;
     String password = passwordController.text;
     String passwordReassign = passwordReassignController.text;
-    User? user ;
-    if (email != '' && (password == passwordReassign)) {
-      user = await firebaseAuthService.createUserWithEmailAndPassword(
-          email, password);
-    }else{
+
+    if (email != '' && (password == passwordReassign) && password != '') {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      print("CHECK EMAIL VA MK THANH CONG");
+      bool isExist = await FirestoreService.checkIfAccountExist(email);
+      if (isExist == false) {
+        await firebaseAuthService.createUserWithEmailAndPassword(
+            email, password);
+        AwesomeNotifications().createNotification(
+            content: NotificationContent(
+                id: NotificationController.SIGN_UP_SUCCESSFULLY,
+                channelKey: NotificationController.BASIC_CHANNEL_KEY,
+                title: "Đăng kí tài khoản thành công!",
+                body: "Bạn hãy đăng nhập để cập nhật thông tin của mình nhé"));
+      }else{
+        _showFailureDialog();
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Vui lòng kiểm tra lại định dạng email và mật khẩu')));
       _showFailureDialog();
     }
 
-    if (user != null) {
-      final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-      await firestore.collection('users').doc(user.uid).set({
-        'uid': user.uid,
-        'email': user.email,
-        'last_login' : Timestamp.now(),
-        'created_time' : Timestamp.now(),
-      });
-
-      AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: NotificationController.SIGN_UP_SUCCESSFULLY,
-            channelKey: NotificationController.BASIC_CHANNEL_KEY,
-            title:
-            "Đăng kí tài khoản thành công!",
-            body:
-            "Bạn hãy đăng nhập để cập nhật thông tin của mình nhé"),
-      );
-      _showSuccessDialog();
-      // Future.delayed(Duration(seconds: 2), () {
-      //   Navigator.pop(context);
-      // });
-
+    bool isExist = await FirestoreService.checkIfAccountExist(email);
+    print("IS EXIST $isExist");
+    if (isExist) {
     } else {
-
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //     content: Text('Đăng kí không thành công,tài khoản đã được sử dụng')));
       _showFailureDialog();
     }
   }
@@ -249,7 +239,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                         onFail: () {
                           passwordReAssignValid = false;
-
                         },
                         controller: passwordReassignController)
                   ],

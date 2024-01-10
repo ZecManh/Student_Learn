@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
+import 'package:datn/model/teach_classes/teach_class.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
@@ -57,15 +58,15 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
     );
     setState(() {
       daySchedules = daySchedulesFetch;
-      // AwesomeNotifications().createNotification(
-      //   content: NotificationContent(
-      //     id: NotificationController.TODAY_SCHEDULES_NOTI,
-      //     channelKey: NotificationController.BASIC_CHANNEL_KEY,
-      //     title: "Hôm nay bạn có ${daySchedules.length} ca học !",
-      //     body: "",
-      //     autoDismissible: false,
-      //   ),
-      // );
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: NotificationController.TODAY_SCHEDULES_NOTI,
+          channelKey: NotificationController.BASIC_CHANNEL_KEY,
+          title: "Hôm nay bạn có ${daySchedules.length} ca học !",
+          body: "",
+          autoDismissible: false,
+        ),
+      );
     });
     print("TODAY SCHEDULES");
     daySchedules.forEach((element) {
@@ -112,31 +113,35 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
       );
     }
 
+    void classRemoveNoti(model_user.User tutor, TeachClass teachClass) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id:NotificationController.CLASS_REMOVE_NOTI,
+            channelKey: NotificationController.BASIC_CHANNEL_KEY,
+            title:
+            "Lớp học ${teachClass.subject ?? ''} đã kết thúc bởi gia sư của bạn !",
+           ),
+      );
+    }
+
     void deniedNoti(model_user.User tutor, SubjectRequest subjectRequest) {
       AwesomeNotifications().createNotification(
         content: NotificationContent(
             id: NotificationController.DENIED_SCHEDULES_NOTI,
-            channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
+            channelKey: NotificationController.BASIC_CHANNEL_KEY,
             title:
                 "Gia sư ${tutor.displayName ?? ''} đã từ chối yêu cầu học của bạn!",
             body:
                 "Môn học ${subjectRequest.subject ?? ''} - Phương thức ${subjectRequest.teachMethod} "),
       );
     }
-
-
     firestoreService.listenSubjectRequestDeniedLearnerSide(acceptNoti, deniedNoti);
-    // firestoreService.listenNewClassLearnerSide((user, teachClass) {
-    //   AwesomeNotifications().createNotification(
-    //     content: NotificationContent(
-    //         id: NotificationController.DENIED_SCHEDULES_NOTI,
-    //         channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY,
-    //         title:
-    //         "${user.displayName ?? ''} vừa được thêm vào lớp học ${teachClass.subject??''} !",
-    //         body:
-    //         "Hãy vào xem ngay nào!!!"),
-    //   );
-    // });
+    firestoreService.listenRemoveClassLearnerSide(classRemoveNoti);
+
+
+    //thong bao ca hoc moi
+    //thong bao lop da bi huy
+
     return SingleChildScrollView(
       child: Container(
         color: Theme.of(context).colorScheme.background,

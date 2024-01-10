@@ -16,9 +16,9 @@ Future main() async {
     null,
     [
       NotificationChannel(channelGroupKey: "basic_channel_group",
-          channelKey: NotificationController.BASIC_CHANNEL_KEY, channelName: "Basic Channel", channelDescription: "Basic Notification"),
+          channelKey: NotificationController.BASIC_CHANNEL_KEY, channelName: "Basic Channel", channelDescription: "Basic Notification",importance:NotificationImportance.High ),
       NotificationChannel(channelGroupKey: "subject_channel_group",
-          channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY, channelName: "Subject Request Channel", channelDescription: "Subject Request Notification")
+          channelKey: NotificationController.SUBJECT_REQUEST_CHANNEL_KEY, channelName: "Subject Request Channel", channelDescription: "Subject Request Notification",importance:NotificationImportance.High)
     ],
     channelGroups:[
       NotificationChannelGroup(channelGroupKey: "basic_channel_group", channelGroupName: "Basic Group"),
