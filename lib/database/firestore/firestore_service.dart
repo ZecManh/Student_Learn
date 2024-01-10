@@ -756,6 +756,8 @@ class FirestoreService extends ChangeNotifier {
         });
   }
 
+
+
   Future<void> listenChangeInfoClass(String uid ,Function changeInfoClass) async {
     print('listenChangeInfoClass');
     firestore
@@ -772,6 +774,16 @@ class FirestoreService extends ChangeNotifier {
             break;
           case DocumentChangeType.modified:
             print("Modified Info class: ${change.doc.data()}");
+            // Map<String, dynamic> data =
+            // change.doc.data() as Map<String, dynamic>;
+            // // Map<String, dynamic> itemData = {};
+            // var teachClass = TeachClass.fromJson(data);
+            // user_model.User tutorInfo = await getUser(teachClass.tutorId!);
+            // classItem.addAll({
+            //   'docId': documentSnapshot.id,
+            //   'teachClass': teachClass,
+            //   'tutorInfo': tutorInfo
+            // });
             changeInfoClass(change.doc.data());
             break;
           case DocumentChangeType.removed:
