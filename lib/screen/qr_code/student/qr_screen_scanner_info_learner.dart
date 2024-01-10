@@ -65,6 +65,19 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     );
   }
 
+  Duration getTimeDuration(Map<String, dynamic> timestampJson) {
+    int seconds = timestampJson['seconds'];
+    int nanoseconds = timestampJson['nanoseconds'];
+    int microseconds = (seconds * 1000000) + (nanoseconds / 1000).round();
+    Timestamp getTimeCheck = Timestamp.fromMicrosecondsSinceEpoch(
+        microseconds);
+    DateTime timestampCheck = DateTime.fromMillisecondsSinceEpoch(
+        getTimeCheck.seconds * 1000);
+
+    Duration timeCheck = timestampCheck.difference(DateTime.now());
+    return timeCheck;
+  }
+
   void _initInfo(dynamic scanData) async {
     var dataScan = jsonDecode(scanData);
     if (dataScan['type'] == 'tutor') {
@@ -91,10 +104,12 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     // }
     
     if (dataScan['type'] == 'class') {
+      bool noPushRouter = false;
       var dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
       if (dataFetch != null) {
         if (dataScan['state'] != null) {
-          var lessonSchedules = dataFetch['teachClass'].schedules!.lessonSchedules as List<LessonSchedules>;
+          var lessonSchedules = dataFetch['teachClass'].schedules!
+              .lessonSchedules as List<LessonSchedules>;
           print("lessonSchedules $lessonSchedules");
           if (lessonSchedules != null) {
             var check = 0 as num;
@@ -103,60 +118,68 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
                 return data;
               }
               print(data.startTime);
-              Map<String, dynamic> timestampJson = jsonDecode(dataScan["timeCheck"]);
-              int seconds = timestampJson['seconds'];
-              int nanoseconds = timestampJson['nanoseconds'];
-              int microseconds = (seconds * 1000000) + (nanoseconds / 1000).round();
-              Timestamp getTimeCheck = Timestamp.fromMicrosecondsSinceEpoch(microseconds);
+              // check thoi gian tao qr
+              Map<String, dynamic> timestampJson = jsonDecode(
+                  dataScan["timeCheck"]);
+              Duration timeCheck = getTimeDuration(timestampJson);
+              print('timeCheck   ${timeCheck.inHours}');
 
-              DateTime timestampCheck = DateTime.fromMillisecondsSinceEpoch(getTimeCheck.seconds * 1000);
-              DateTime timestamp = DateTime.fromMillisecondsSinceEpoch(data.startTime!.seconds * 1000);
-              DateTime timestamp2 = DateTime.fromMillisecondsSinceEpoch(data.endTime!.seconds * 1000);
-              var difference2 = timestamp.difference(DateTime.now());
-              var differenceEnd = timestamp2.difference(DateTime.now());
-              Duration timeCheck = timestampCheck.difference(DateTime.now());
-              Duration difference = difference2;
-              Duration differenceEndTime = differenceEnd;
+              // thoi gian tao QR lon hon 30p thi QR vo hieu
               if (timeCheck.inHours > 0.5) {
+                noPushRouter = true;
                 return data;
               }
-              print('difference   ${difference.inHours}');
-              print('differenceEndTime   ${differenceEndTime.inHours}');
-              if(difference.inHours > 0.5 && difference.inHours < 1 && dataScan['state'] == 'progress') {
-                Timestamp timestamp = Timestamp.fromDate(DateTime.now());
-                data.attendanceTime = timestamp;
-                data.state = 'progress';
-                check = check + 1;
-                return data;
+              // ket thuc check
+
+              // check thoi gian bat dau
+
+              Map<String, dynamic> timestampStartJson = jsonDecode(
+                  dataScan["startTime"]);
+              Duration timeStartCheck = getTimeDuration(timestampJson);
+              print('timeStartCheck   ${timeStartCheck.inHours}');
+              if (timeStartCheck.inHours == 0) {
+                if (dataScan['state'] == 'progress') {
+                  Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+                  data.attendanceTime = timestamp;
+                  data.state = 'progress';
+                  check = check + 1;
+                  return data;
+                }
+                if (dataScan['state'] == 'done') {
+                  Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+                  data.attendanceTime = timestamp;
+                  data.state = 'done';
+                  check = check + 1;
+                  return data;
+                }
+                if (dataScan['state'] == 'not-stydying') {
+                  data.attendanceTime = null;
+                  data.state = 'not-stydying';
+                  check = check + 1;
+                  return data;
+                }
               }
-              if(differenceEndTime.inHours > 0 && dataScan['state'] == 'done') {
-                Timestamp timestamp = Timestamp.fromDate(DateTime.now());
-                data.attendanceTime = timestamp;
-                data.state = 'done';
-                check = check + 1;
-                return data;
-              }
-              if(dataScan['state'] == 'not-stydying') {
-                data.attendanceTime = null;
-                data.state = 'not-stydying';
-                check = check + 1;
-                return data;
-              }
+              // ket thuc check
               return data;
               // if (data[])
             }).toList();
             var newData = Schedules(
-                weekSchedules: dataFetch['teachClass'].schedules!.weekSchedules,
-                lessonSchedules : schedules
+                weekSchedules: dataFetch['teachClass'].schedules!
+                    .weekSchedules,
+                lessonSchedules: schedules
             );
             print('newData $newData');
-            await firestoreService.updateStatusClass(dataScan['uid'],newData.toJson());
-            dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
-
+            await firestoreService.updateStatusClass(
+                dataScan['uid'], newData.toJson());
+            dataFetch =
+            await firestoreService.getClassByIdTutor(dataScan['uid']);
           }
         }
+        if (noPushRouter) {
+          return;
+        }
 
-        print(dataFetch);
+        print("dataFetch");
         Navigator.push(context,
             MaterialPageRoute(builder: (context) {
               return Provider(
