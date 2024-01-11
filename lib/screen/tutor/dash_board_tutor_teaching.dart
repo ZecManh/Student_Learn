@@ -46,7 +46,31 @@ class _DashBoardTutorTeachingState extends State<DashBoardTutorTeaching> {
           ...teachingData.map((teachingDataItem) {
             return GestureDetector(
               onLongPress: () {
-                //show dialog để remove và edit gì đó
+                showDialog(context: context, builder: (context) {
+                  return  AlertDialog(
+                    title: const Text('Xác nhận dừng lớp'),
+                    content: const Text(
+                        'Bạn chắc chắn với muốn dừng lớp đang dạy?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () =>
+                            Navigator.pop(context, 'Cancel'),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                         var teachClass = (teachingDataItem['teachClass'] as TeachClass);
+                          firestoreService.cancelClassTutor(teachClass.id!);
+                          setState(() {
+                            teachingData.remove(teachingDataItem);
+                          });
+                          Navigator.pop(context, 'OK');
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                });
               },
               onTap: () {
                 Navigator.push(context,

@@ -230,6 +230,11 @@ class _UpdateInfoLearnerState extends State<UpdateInfoLearner> {
                                   Theme.of(context).colorScheme.background)),
                           onPressed: isEdit
                               ? () {
+                            if(dateController.text==null || dateController.text==''){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Hãy cập nhật ngày sinh")));
+                            }else{
+
+                            }
                                   firestoreService.updateInfo(
                                       nameController.text,
                                       phoneController.text,

@@ -372,7 +372,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                           Row(
                             children: [
                               const Text(
-                                'Số điện thoại người học :',
+                                'Số điện thoại người dạy :',
                                 style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(
@@ -414,7 +414,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                           const Row(
                             children: [
                               Text(
-                                'Lương/tháng :',
+                                'Học phí/giờ :',
                                 style: TextStyle(fontSize: 16),
                               ),
                               SizedBox(

@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/user/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 import 'package:flutter/material.dart';
-
 
 class FirebaseAuthService extends ChangeNotifier {
   final firebase_auth.FirebaseAuth _firebaseAuth =
@@ -29,8 +30,8 @@ class FirebaseAuthService extends ChangeNotifier {
         .authStateChanges()
         .map((user) => userFromFirebase(user));
   }
-  Future<bool> signInWithEmailAndPassword(
-      String email, String password) async {
+
+  Future<bool> signInWithEmailAndPassword(String email, String password) async {
     try {
       firebase_auth.UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
@@ -40,34 +41,44 @@ class FirebaseAuthService extends ChangeNotifier {
     }
   }
 
-  Future<User?> createUserWithEmailAndPassword(
-      String email, String password) async {
-    // firebase_auth.UserCredential userCredential = await _firebaseAuth
-    //     .createUserWithEmailAndPassword(email: email, password: password);
-    // return userFromFirebase(userCredential.user);
+  Future<bool> createUserWithEmailAndPassword(String email, String password,
+      ) async {
+    var user = User();
+    await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((userCredential) {
+          print("SIGNUP OK");
+          print("USER credential firestore ${userCredential.user}");
+          var user = User();
+          user.email = userCredential.user?.email;
+          user.uid = userCredential.user?.uid;
+          print("USER INFOOO");
+          print("email ${user.email}");
+          print("uid ${user.uid}");
 
-    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then(
-            (userCredential)  {
-             return userFromFirebase(userCredential.user);
-    }).catchError((error){
-      if (error.code == "auth/email-already-in-use") {
-        print("The email address is already in use");
-        return null;
-      } else if (error.code == "auth/invalid-email") {
-        print("The email address is not valid.");
-        return null;
+          FirebaseFirestore firestore = FirebaseFirestore.instance;
+          if(user.uid!=null){
+            print("uid khac null");
+          }
+          if(user.email!=null){
+            print("email khac null");
+          }
+          firestore.collection('users').doc(user.uid).set({
+            'uid': user.uid,
+            'email': email,
+            'last_login' : Timestamp.now(),
+            'created_time' : Timestamp.now(),
+          });
+          return true;
 
-      } else if (error.code == "auth/operation-not-allowed") {
-        print("Operation not allowed.");
-        return null;
-
-      } else if (error.code == "auth/weak-password") {
-        print("The password is too weak.");
-        return null;
-
-      }
+    }).catchError((err) {
+      print("SIGNUP ERRPR $err");
+      return false;
     });
-        
+    print("USER INFOOO BELOW");
+    print("email BELOW ${user.email}");
+    print("uid BELOW ${user.uid}");
+    return false;
   }
 
   Future<void> signOut() async {
@@ -81,6 +92,4 @@ class FirebaseAuthService extends ChangeNotifier {
             'Mail đã được gửi tới bạn,vui lòng kiểm tra email để tiến hành khôi phục mật khẩu')));
     Navigator.of(context).pop();
   }
-
-
 }

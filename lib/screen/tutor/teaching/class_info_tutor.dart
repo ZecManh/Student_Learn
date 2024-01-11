@@ -517,9 +517,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                     backgroundColor:
                                         Theme.of(context).colorScheme.primary),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
                             ],
                           ),
                           Row(
@@ -663,6 +660,12 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                               title: Text(event.toString()),
                             ))
                         .toList(),
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+
+                    },
+                    child: Text('Dừng lớp học'),
                   )
                 ],
               ),
