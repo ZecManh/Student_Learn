@@ -172,7 +172,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       );
     }
 
-    void _openModalQrUser(BuildContext context, User user) {
+    void _openModalQrUser(BuildContext context, dynamic user) {
       var info = {"uid": user.uid, "type": 'learner'};
       String jsonInfo = user.uid != null ? jsonEncode(info) : "";
       showDialog(
@@ -597,20 +597,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                               //       _openModalOff(context, learnerInfo);
                               //     },
                               //   ),
-                              // IconButton(
-                              //   iconSize: 30,
-                              //   padding: const EdgeInsets.symmetric(
-                              //       vertical: 10, horizontal: 10),
-                              //   style: const ButtonStyle().copyWith(
-                              //       backgroundColor: MaterialStatePropertyAll(
-                              //           Theme.of(context)
-                              //               .colorScheme
-                              //               .background)),
-                              //   onPressed: () {
-                              //     _openModalQrClass(context,learnerInfo);
-                              //   },
-                              //   icon: const Icon(Icons.qr_code),
-                              // ),
                               const SizedBox(
                                 height: 10,
                               ),
