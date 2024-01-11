@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:datn/database/auth/firebase_auth_service.dart';
+import 'package:datn/screen/qr_code/student/info_learner.dart';
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
 import 'package:images_picker/images_picker.dart';
@@ -11,6 +12,10 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'dart:convert';
 import 'package:datn/screen/learner/search_tutor/tutor_show_info.dart';
 import 'package:datn/screen/learner/learning/class_info_learner.dart';
+import 'package:datn/model/user/teach_schedules.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datn/model/subject_request/schedules.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QrScanImgLearner extends StatefulWidget {
   @override
@@ -20,6 +25,7 @@ class QrScanImgLearner extends StatefulWidget {
 class _QrScanImgLearnerState extends State<QrScanImgLearner> {
   String qrcode = '';
   FirebaseAuthService firebaseAuthService = FirebaseAuthService();
+
   @override
   void initState() {
     super.initState();
@@ -30,18 +36,25 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
     model_user.User user = Provider.of<model_user.User>(context);
     FirebaseAuth auth = FirebaseAuth.instance;
     FirestoreService firestoreService = FirestoreService();
+
+    Duration getTimeDuration(Map<String, dynamic> timestampJson) {
+      int seconds = timestampJson['seconds'];
+      int nanoseconds = timestampJson['nanoseconds'];
+      int microseconds = (seconds * 1000000) + (nanoseconds / 1000).round();
+      Timestamp getTimeCheck = Timestamp.fromMicrosecondsSinceEpoch(
+          microseconds);
+      DateTime timestampCheck = DateTime.fromMillisecondsSinceEpoch(
+          getTimeCheck.seconds * 1000);
+
+      Duration timeCheck = timestampCheck.difference(DateTime.now());
+      return timeCheck;
+    };
+
     void _initInfo(dynamic scanData) async {
       var dataScan = jsonDecode(scanData);
       if (dataScan['type'] == 'tutor') {
-        var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
         if (userFetch != null) {
-          // print(userFetch);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>
-          //             TuTorShowInfo(tutor: userFetch)));
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
@@ -52,9 +65,97 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
           return;
         }
       }
+      // if (dataScan['type'] == 'learner') {
+      //   var userFetch = await firestoreService.getUserById(dataScan['uid']);
+      //   if (userFetch != null) {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) {
+      //         return Provider.value(
+      //             value: user,
+      //             child: ShowInfoLearner(learner: userFetch));
+      //       }),
+      //     );
+      //     return;
+      //   }
+      // }
       if (dataScan['type'] == 'class') {
-        var dataFetch = await firestoreService.getClassById(dataScan['uid']);
+        bool noPushRouter = false;
+        var dataFetch = await firestoreService.getClassByIdTutor(
+            dataScan['uid']);
         if (dataFetch != null) {
+          if (dataScan['state'] != null) {
+            var lessonSchedules = dataFetch['teachClass'].schedules!
+                .lessonSchedules as List<LessonSchedules>;
+            print("lessonSchedules $lessonSchedules");
+            if (lessonSchedules != null) {
+              var check = 0 as num;
+              List<LessonSchedules> schedules = lessonSchedules.map((data) {
+                if (check > 0) {
+                  return data;
+                }
+                print(data.startTime);
+                // check thoi gian tao qr
+                Map<String, dynamic> timestampJson = jsonDecode(
+                    dataScan["timeCheck"]);
+                Duration timeCheck = getTimeDuration(timestampJson);
+                print('timeCheck   ${timeCheck.inHours}');
+
+                // thoi gian tao QR lon hon 30p thi QR vo hieu
+                if (timeCheck.inHours > 0.5) {
+                  noPushRouter = true;
+                  return data;
+                }
+                // ket thuc check
+
+                // check thoi gian bat dau
+
+                Map<String, dynamic> timestampStartJson = jsonDecode(
+                    dataScan["startTime"]);
+                Duration timeStartCheck = getTimeDuration(timestampJson);
+                print('timeStartCheck   ${timeStartCheck.inHours}');
+                if (timeStartCheck.inHours == 0) {
+                  if (dataScan['state'] == 'progress') {
+                    Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+                    data.attendanceTime = timestamp;
+                    data.state = 'progress';
+                    check = check + 1;
+                    return data;
+                  }
+                  if (dataScan['state'] == 'done') {
+                    Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+                    data.attendanceTime = timestamp;
+                    data.state = 'done';
+                    check = check + 1;
+                    return data;
+                  }
+                  if (dataScan['state'] == 'not-stydying') {
+                    data.attendanceTime = null;
+                    data.state = 'not-stydying';
+                    check = check + 1;
+                    return data;
+                  }
+                }
+                // ket thuc check
+                return data;
+                // if (data[])
+              }).toList();
+              var newData = Schedules(
+                  weekSchedules: dataFetch['teachClass'].schedules!
+                      .weekSchedules,
+                  lessonSchedules: schedules
+              );
+              print('newData $newData');
+              await firestoreService.updateStatusClass(
+                  dataScan['uid'], newData.toJson());
+              dataFetch =
+              await firestoreService.getClassByIdTutor(dataScan['uid']);
+            }
+          }
+          if (noPushRouter) {
+            return;
+          }
+          print("dataFetch $dataFetch");
           Navigator.push(context,
               MaterialPageRoute(builder: (context) {
                 return Provider(
@@ -94,14 +195,6 @@ class _QrScanImgLearnerState extends State<QrScanImgLearner> {
                   },
                 ),
               ),
-              // ElevatedButton(
-              //   child: Text('go scan page'),
-              //   onPressed: () {
-              //     Navigator.push(context, MaterialPageRoute(builder: (_) {
-              //       return InfoLearner();
-              //     }));
-              //   },
-              // ),
             ],
           ),
           // Text('${qrcode}'),

@@ -6,19 +6,19 @@ import '../../widget/mini_card.dart';
 import 'package:datn/screen/qr_code/components/qr_code_view.dart';
 import 'dart:convert';
 
-class learnerShowInfoLearner extends StatefulWidget {
-  learnerShowInfoLearner({super.key, required this.learner});
+class ShowInfoLearner extends StatefulWidget {
+  ShowInfoLearner({super.key, required this.learner});
 
   model_user.User learner;
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _learnerShowInfoLearnerState();
+    return _ShowInfoLearnerState();
   }
 }
 
-class _learnerShowInfoLearnerState extends State<learnerShowInfoLearner> {
+class _ShowInfoLearnerState extends State<ShowInfoLearner> {
   void _openModal(BuildContext context, model_user.User user) {
     var info = {"uid": user.uid, "type": 'learner'};
     String jsonInfo = user.uid != null ? jsonEncode(info) : "";

@@ -37,7 +37,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
     String jsonInfo = user.uid != null ? jsonEncode(info) : "";
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quét QR qua ảnh'),
+        title: const Text('Quét QR'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

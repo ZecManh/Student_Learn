@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:datn/model/teach_classes/teach_class.dart';
 import 'package:datn/model/user/teach_schedules.dart';
@@ -6,9 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../model/user/user.dart';
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/screen/qr_code/components/qr_code_view.dart';
 import 'dart:convert';
+import 'package:datn/database/firestore/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassInfoTutorScreen extends StatefulWidget {
   const ClassInfoTutorScreen({super.key});
@@ -29,8 +34,22 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
   Map<DateTime, List> _eventsList = {};
+  Map<DateTime, Object> _eventsListState = {};
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirestoreService firestoreService = FirestoreService();
 
   @override
+  String getTimeHour(Timestamp? attendanceTime) {
+    if (attendanceTime == null) {
+      return '';
+    }
+    DateTime dateTimeFromTimestamp = attendanceTime.toDate();
+
+    String formattedTime = DateFormat.Hm().format(dateTimeFromTimestamp);
+    print("formattedTime   $formattedTime");
+    return formattedTime;
+  }
+
   void initState() {
     super.initState();
     learnerInfo = Provider.of<Map<String, dynamic>>(context, listen: false);
@@ -49,14 +68,18 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
             .millisecondsSinceEpoch);
     _focusedDay = startDate;
     _selectedDay = startDate;
-    print("START TIME ${startDate.toString()}");
-    print("END TIME ${endDate.toString()}");
     lessonSchedules.forEach((itemLesson) {
+      print("itemLesson $itemLesson");
+
       _eventsList.addAll({
         DateTime.fromMillisecondsSinceEpoch(
             itemLesson.startTime!.millisecondsSinceEpoch): [
-          'Thời gian điểm danh :  ${itemLesson.attendanceTime ?? ''} Trạng thái : ${itemLesson.state ?? ''}',
-        ]
+          'Thời gian điểm danh :  ${itemLesson.attendanceTime != null ? getTimeHour(itemLesson.attendanceTime) : ''}'
+        ],
+      });
+      _eventsListState.addAll({
+        DateTime.fromMillisecondsSinceEpoch(
+            itemLesson.startTime!.millisecondsSinceEpoch): itemLesson,
       });
     });
   }
@@ -99,10 +122,25 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       equals: isSameDay,
       hashCode: getHashCode,
     )..addAll(_eventsList);
+    final _eventsState = LinkedHashMap<DateTime, Object>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_eventsListState);
 
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
+
+    Object getEventStateForDay(DateTime day) {
+      return _eventsState[day] ?? {};
+    }
+
+    firestoreService.listenChangeInfoClass(learnerInfo['docId'],
+        (dynamic value) {
+      print("value :   $value");
+      print("learnerInfo :   $learnerInfo");
+      print("learnerInfo :   ${value["schedules"].lessos_Schedules}");
+    });
 
     void _openModalQrClass(BuildContext context, dynamic classInfo) {
       // return;
@@ -134,7 +172,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       );
     }
 
-    void _openModalQrUser(BuildContext context, User user) {
+    void _openModalQrUser(BuildContext context, dynamic user) {
       var info = {"uid": user.uid, "type": 'learner'};
       String jsonInfo = user.uid != null ? jsonEncode(info) : "";
       showDialog(
@@ -162,6 +200,105 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       );
     }
 
+    void _openModalActionQrClass(BuildContext context, String jsonInfo) {
+      // return;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: QRCodeView(text: jsonInfo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          // Container(
+          // child: ),);
+        },
+      );
+    }
+
+    void _openModalOff(BuildContext context, dynamic classInfo) {
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      _openModalActionQrClass(context, jsonInfo);
+    }
+
+    String _getTimeNow() {
+      DateTime currentDateTime = DateTime.now();
+      Timestamp timestamp = Timestamp.fromDate(currentDateTime);
+
+      Map<String, dynamic> timestampJson = {
+        'seconds': timestamp.seconds,
+        'nanoseconds': timestamp.nanoseconds,
+      };
+
+      String timestampJsonString = jsonEncode(timestampJson);
+      return timestampJsonString;
+    }
+
+    dynamic _renderAction(BuildContext context, dynamic classInfo) {
+      print(lessonSchedules);
+      print("classInfo : $classInfo");
+      print(
+          "getEventStateForDay(_selectedDay!) : ${getEventStateForDay(_selectedDay!)}");
+      var objState = getEventStateForDay(_selectedDay!) as dynamic;
+
+      print("objState.state == 'progress' ${objState.state}");
+      var obj = {};
+
+      Timestamp timestampStart = objState.startTime;
+      Map<String, dynamic> startTimeJson = {
+        'seconds': timestampStart.seconds,
+        'nanoseconds': timestampStart.nanoseconds,
+      };
+
+      String startTimeJsonString = jsonEncode(startTimeJson);
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+      info["startTime"] = startTimeJsonString;
+      obj['text'] = 'Bắt đầu học';
+      info['state'] = 'progress';
+      print(info);
+      obj['action'] = () {
+        info["timeCheck"] = _getTimeNow();
+        String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+        _openModalActionQrClass(context, jsonInfo);
+      };
+      if (objState.state == 'progress') {
+        obj['text'] = 'Đang học';
+        info['state'] = 'done';
+        obj['action'] = () {
+          info["timeCheck"] = _getTimeNow();
+          String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+          _openModalActionQrClass(context, jsonInfo);
+        };
+      }
+      if (objState.state == 'done') {
+        obj['text'] = 'Đã học xong';
+        obj['action'] = () {};
+      }
+      if (objState.state == 'not-stydying') {
+        obj['text'] = 'Nghỉ học';
+        info['state'] = 'not-stydying';
+        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+        obj['action'] = () {
+          // _openModalActionQrClass(context,jsonInfo)
+        };
+      }
+      print("obj === $obj");
+      return obj;
+    }
+
+    ;
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -183,11 +320,13 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                     height: 10,
                   ),
                   CircleAvatar(
-                      backgroundImage: (((learnerInfo['learnerInfo']) as User)
+                      backgroundImage: (((learnerInfo['learnerInfo'])
+                                      as model_user.User)
                                   .photoUrl !=
                               null)
                           ? NetworkImage(
-                              ((learnerInfo['learnerInfo']) as User).photoUrl!)
+                              ((learnerInfo['learnerInfo']) as model_user.User)
+                                  .photoUrl!)
                           : const AssetImage('assets/bear.jpg')
                               as ImageProvider,
                       radius: 50),
@@ -202,8 +341,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                         backgroundColor: MaterialStatePropertyAll(
                             Theme.of(context).colorScheme.background)),
                     onPressed: () {
-                      _openModalQrUser(
-                          context, ((learnerInfo['learnerInfo']) as User));
+                      _openModalQrUser(context, ((learnerInfo['learnerInfo'])));
                     },
                     icon: const Icon(Icons.qr_code),
                   ),
@@ -215,7 +353,8 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        (((learnerInfo['learnerInfo']) as User).displayName) ??
+                        (((learnerInfo['learnerInfo']) as model_user.User)
+                                .displayName) ??
                             '',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -288,7 +427,8 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  (((learnerInfo['learnerInfo']) as User)
+                                  (((learnerInfo['learnerInfo'])
+                                              as model_user.User)
                                           .phone) ??
                                       '',
                                   style: const TextStyle(fontSize: 16),
@@ -377,20 +517,83 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                     backgroundColor:
                                         Theme.of(context).colorScheme.primary),
                               ),
-                              IconButton(
-                                iconSize: 30,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                style: const ButtonStyle().copyWith(
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              OutlinedButton.icon(
+                                icon: Icon(
+                                  Icons.qr_code,
+                                  color:
+                                      Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                label: Text(
+                                  'Thông tin lớp học',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary),
                                 onPressed: () {
                                   _openModalQrClass(context, learnerInfo);
                                 },
-                                icon: const Icon(Icons.qr_code),
                               ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              OutlinedButton.icon(
+                                icon: Icon(
+                                  Icons.qr_code,
+                                  color:
+                                      Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                label: Text(
+                                  _renderAction(context, learnerInfo)['text'] ??
+                                      '',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                                onPressed: () {
+                                  _renderAction(
+                                          context, learnerInfo)['action']() ??
+                                      () => {};
+                                },
+                              ),
+                              // if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
+                              //   OutlinedButton.icon(
+                              //     icon: Icon(
+                              //       Icons.qr_code,
+                              //       color:
+                              //       Theme.of(context).colorScheme.onError,
+                              //     ),
+                              //     label: Text(
+                              //       'Nghỉ học',
+                              //       style: TextStyle(
+                              //           color: Theme.of(context)
+                              //               .colorScheme
+                              //               .onError),
+                              //     ),
+                              //     style: OutlinedButton.styleFrom(
+                              //         backgroundColor: Theme.of(context)
+                              //             .colorScheme
+                              //             .error),
+                              //     onPressed: () {
+                              //       _openModalOff(context, learnerInfo);
+                              //     },
+                              //   ),
                               const SizedBox(
                                 height: 10,
                               ),

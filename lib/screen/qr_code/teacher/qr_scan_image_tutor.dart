@@ -35,26 +35,32 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
     void _initInfo(dynamic scanData) async {
       var dataScan = jsonDecode(scanData);
       if (dataScan['type'] == 'learner') {
-        var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
         if (userFetch != null) {
-          // print(userFetch);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>
-          //             TuTorShowInfo(tutor: userFetch)));
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
               return Provider.value(
                   value: user,
-                  child: learnerShowInfoLearner(learner: userFetch));
+                  child: ShowInfoLearner(learner: userFetch));
             }),
           );
           return;
         }
       }
+     /*  if (dataScan['type'] == 'tutor') {
+        var userFetch = await firestoreService.getUserById(dataScan['uid']);
+        if (userFetch != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Provider.value(
+                  value: user, child: TuTorShowInfo(tutor: userFetch));
+            }),
+          );
+          return;
+        }
+      } */
       if (dataScan['type'] == 'class') {
         var dataFetch = await firestoreService.getClassByIdLearner(dataScan['uid']);
         if (dataFetch != null) {
@@ -96,31 +102,13 @@ class _QrScanImgTutorState extends State<QrScanImgTutor> {
                   },
                 ),
               )
-              // ElevatedButton(
-              //   child: Text('go scan page'),
-              //   onPressed: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (_) {
-              //       return DashBoardQrGenerate();
-              //     }));
-              //   },
-              // ),
+            
             ],
           ),
-          Text('$qrcode'),
+        
         ],
       ),
     );
   }
 
-  // void navigateToNewPage() {
-  //   // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
-  //   // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => const TutorInfo(),
-  //     ),
-  //   );
-  // }
 }

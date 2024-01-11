@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datn/model/enum.dart';
 import 'package:datn/model/subject_request/schedules.dart';
@@ -55,7 +57,8 @@ class FirestoreService extends ChangeNotifier {
       print('FIRESTORE UPLOAD' + error);
     });
   }
-
+  // jacksparrowdung@gmail.com
+  // vmhieu1402@gmail.com
   Future updateName(String displayName) async {
     await firestore
         .collection('users')
@@ -454,7 +457,7 @@ class FirestoreService extends ChangeNotifier {
     return teachingData;
   }
 
-  Future<user_model.User?> getTutorById(String uid) async {
+  Future<user_model.User?> getUserById(String uid) async {
     user_model.User? user;
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -677,7 +680,7 @@ class FirestoreService extends ChangeNotifier {
     return hourCal + minuteCal;
   }
 
-  Future<Map<String, dynamic>> getClassById(String uid) async {
+  Future<Map<String, dynamic>> getClassByIdTutor(String uid) async {
     Map<String, dynamic> classItem = {};
     try {
       QuerySnapshot querySnapshot = await firestore
@@ -728,7 +731,7 @@ class FirestoreService extends ChangeNotifier {
             documentSnapshot.data() as Map<String, dynamic>;
         // Map<String, dynamic> itemData = {};
         var teachClass = TeachClass.fromJson(data);
-        user_model.User learnerInfo = await getUser(teachClass.tutorId!);
+        user_model.User learnerInfo= await getUser(teachClass.learnerId!);
         classItem.addAll({
           'docId': documentSnapshot.id,
           'teachClass': teachClass,
@@ -740,6 +743,57 @@ class FirestoreService extends ChangeNotifier {
     } catch (e) {}
     return classItem;
   }
+
+  Future updateStatusClass(String uid,dynamic schedules) async {
+    print('uid $uid');
+    print('schedules $schedules');
+    await firestore
+        .collection('classes')
+        .doc(uid)
+        .set({'schedules': schedules }, SetOptions(merge: true)).catchError(
+            (error) {
+          print('FIRESTORE UPLOAD schedules' + error);
+        });
+  }
+
+
+
+  Future<void> listenChangeInfoClass(String uid ,Function changeInfoClass) async {
+    print('listenChangeInfoClass');
+    firestore
+        .collection("classes")
+        .where(FieldPath.documentId,isEqualTo:
+    uid)
+        .snapshots()
+        .listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            print("new Info class: ${change.doc.data()}");
+
+            break;
+          case DocumentChangeType.modified:
+            print("Modified Info class: ${change.doc.data()}");
+            // Map<String, dynamic> data =
+            // change.doc.data() as Map<String, dynamic>;
+            // // Map<String, dynamic> itemData = {};
+            // var teachClass = TeachClass.fromJson(data);
+            // user_model.User tutorInfo = await getUser(teachClass.tutorId!);
+            // classItem.addAll({
+            //   'docId': documentSnapshot.id,
+            //   'teachClass': teachClass,
+            //   'tutorInfo': tutorInfo
+            // });
+            changeInfoClass(change.doc.data());
+            break;
+          case DocumentChangeType.removed:
+            print("Removed Info class: ${change.doc.data()}");
+            break;
+        }
+      }
+    });
+  }
+
 
   Future<void> listenNewSubjectRequest(Function showNotification) async {
     user_model.User userInfo =

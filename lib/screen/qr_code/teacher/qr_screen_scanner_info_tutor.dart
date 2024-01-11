@@ -40,7 +40,7 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Qr Scanner'),
+        title: Text('Quét Qr Qua Camera'),
       ),
       body: Column(
         children: <Widget>[
@@ -72,18 +72,31 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
   void _initInfo(dynamic scanData) async {
     var dataScan = jsonDecode(scanData);
     if (dataScan['type'] == 'learner') {
-      var userFetch = await firestoreService.getTutorById(dataScan['uid']);
+      var userFetch = await firestoreService.getUserById(dataScan['uid']);
       if (userFetch != null) {
         print(userFetch);
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    learnerShowInfoLearner(learner: userFetch)));
+                    ShowInfoLearner(learner: userFetch)));
         await this.controller!.pauseCamera();
         return;
       }
     }
+    //  if (dataScan['type'] == 'tutor') {
+    //   var userFetch = await firestoreService.getUserById(dataScan['uid']);
+    //   if (userFetch != null) {
+    //     print(userFetch);
+    //     Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //             builder: (context) =>
+    //                 TuTorShowInfo(tutor: userFetch)));
+    //     await this.controller!.pauseCamera();
+    //     return;
+    //   }
+    // }
     if (dataScan['type'] == 'class') {
       var dataFetch = await firestoreService.getClassByIdLearner(dataScan['uid']);
       if (dataFetch != null) {
@@ -110,16 +123,6 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
     });
   }
 
-  void navigateToNewPage() {
-    // Xử lý dữ liệu từ mã QR và chuyển hướng đến trang mới
-    // Ví dụ: chuyển hướng đến trang có tên là NewPage và truyền dữ liệu qua route
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const TutorInfo(),
-      ),
-    );
-  }
 
   @override
   void dispose() {
