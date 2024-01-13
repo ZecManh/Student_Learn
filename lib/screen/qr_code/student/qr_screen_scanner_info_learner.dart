@@ -65,7 +65,7 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     );
   }
 
-  Duration getTimeDuration(Map<String, dynamic> timestampJson) {
+  DateTime convertJsonTimeToDateTime(Map<String, dynamic> timestampJson) {
     int seconds = timestampJson['seconds'];
     int nanoseconds = timestampJson['nanoseconds'];
     int microseconds = (seconds * 1000000) + (nanoseconds / 1000).round();
@@ -73,10 +73,22 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         microseconds);
     DateTime timestampCheck = DateTime.fromMillisecondsSinceEpoch(
         getTimeCheck.seconds * 1000);
+    return timestampCheck;
+  }
 
-    Duration timeCheck = timestampCheck.difference(DateTime.now());
+  //  so sanh voi thoi gian hien tại
+  Duration getTimeDurationNow(Map<String, dynamic> timestampJson) {
+    DateTime timestampCheck = convertJsonTimeToDateTime(timestampJson);
+    Duration timeCheck = getTimeDuration(timestampCheck,DateTime.now());
     return timeCheck;
   }
+
+  // so sanh voi 2 khoang thoi gian khac nhau
+  Duration getTimeDuration(DateTime timeData, DateTime timeDataDuration) {
+    Duration timeCheck = timeData.difference(timeDataDuration);
+    return timeCheck;
+  }
+
 
   void _initInfo(dynamic scanData) async {
     var dataScan = jsonDecode(scanData);
@@ -102,7 +114,7 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     //     return;
     //   }
     // }
-    
+
     if (dataScan['type'] == 'class') {
       bool noPushRouter = false;
       var dataFetch = await firestoreService.getClassByIdTutor(dataScan['uid']);
@@ -117,11 +129,10 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
               if (check > 0) {
                 return data;
               }
-              print(data.startTime);
               // check thoi gian tao qr
               Map<String, dynamic> timestampJson = jsonDecode(
                   dataScan["timeCheck"]);
-              Duration timeCheck = getTimeDuration(timestampJson);
+              Duration timeCheck = getTimeDurationNow(timestampJson);
               print('timeCheck   ${timeCheck.inHours}');
 
               // thoi gian tao QR lon hon 30p thi QR vo hieu
@@ -133,9 +144,21 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
 
               // check thoi gian bat dau
 
+              // lay startTime trong qr code de so sanh voi startTime trong data
               Map<String, dynamic> timestampStartJson = jsonDecode(
                   dataScan["startTime"]);
-              Duration timeStartCheck = getTimeDuration(timestampJson);
+              DateTime DataStartJson = convertJsonTimeToDateTime(timestampStartJson) ;
+
+              print(data.startTime);
+              print(timestampStartJson);
+              // lay startTime trong data
+              Map<String, dynamic> dataStartTimeJson = {
+                'seconds': data.startTime!.seconds,
+                'nanoseconds': data.startTime!.nanoseconds,
+              };
+              DateTime dataStartTime = convertJsonTimeToDateTime(dataStartTimeJson) ;
+
+              Duration timeStartCheck = getTimeDuration(dataStartTime,DataStartJson);
               print('timeStartCheck   ${timeStartCheck.inHours}');
               if (timeStartCheck.inHours == 0) {
                 if (dataScan['state'] == 'progress') {
@@ -153,7 +176,8 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
                   return data;
                 }
                 if (dataScan['state'] == 'not-stydying') {
-                  data.attendanceTime = null;
+                  Timestamp timestamp = Timestamp.fromDate(DateTime.now());
+                  data.attendanceTime = timestamp;
                   data.state = 'not-stydying';
                   check = check + 1;
                   return data;

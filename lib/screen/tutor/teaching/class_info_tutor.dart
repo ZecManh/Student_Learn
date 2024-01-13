@@ -131,8 +131,8 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       return _events[day] ?? [];
     }
 
-    Object getEventStateForDay(DateTime day) {
-      return _eventsState[day] ?? {};
+    Object? getEventStateForDay(DateTime day) {
+      return _eventsState[day] != null ? _eventsState[day] : null;
     }
 
     firestoreService.listenChangeInfoClass(learnerInfo['docId'],
@@ -227,11 +227,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       );
     }
 
-    void _openModalOff(BuildContext context, dynamic classInfo) {
-      var info = {"uid": classInfo["docId"], "type": 'class'};
-      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-      _openModalActionQrClass(context, jsonInfo);
-    }
 
     String _getTimeNow() {
       DateTime currentDateTime = DateTime.now();
@@ -246,16 +241,40 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       return timestampJsonString;
     }
 
+    void _openModalOff(BuildContext context, dynamic classInfo) {
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+      var objState = getEventStateForDay(_selectedDay!) as dynamic;
+      var obj = {};
+      if (objState == null
+      ) {
+        return null;
+      }
+      Timestamp timestampStart = objState.startTime;
+      Map<String, dynamic> startTimeJson = {
+        'seconds': timestampStart.seconds,
+        'nanoseconds': timestampStart.nanoseconds,
+      };
+
+      String startTimeJsonString = jsonEncode(startTimeJson);
+      info["timeCheck"] = _getTimeNow();
+      info["startTime"] = startTimeJsonString;
+      info['state'] = 'not-stydying';
+      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      _openModalActionQrClass(context, jsonInfo);
+    }
+
     dynamic _renderAction(BuildContext context, dynamic classInfo) {
       print(lessonSchedules);
       print("classInfo : $classInfo");
-      print(
-          "getEventStateForDay(_selectedDay!) : ${getEventStateForDay(_selectedDay!)}");
       var objState = getEventStateForDay(_selectedDay!) as dynamic;
 
-      print("objState.state == 'progress' ${objState.state}");
-      var obj = {};
+      print("objState.state == 'progress' ${objState}");
 
+      var obj = {};
+      if (objState == null
+      ) {
+        return null;
+      }
       Timestamp timestampStart = objState.startTime;
       Map<String, dynamic> startTimeJson = {
         'seconds': timestampStart.seconds,
@@ -296,9 +315,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       }
       print("obj === $obj");
       return obj;
-    }
-
-    ;
+    };
     return Scaffold(
       appBar: AppBar(title: const Text("Thông tin lớp học")),
       body: SingleChildScrollView(
@@ -548,6 +565,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                           ),
                           Row(
                             children: [
+                              if (_renderAction(context, learnerInfo) != null)
                               OutlinedButton.icon(
                                 icon: Icon(
                                   Icons.qr_code,
@@ -572,28 +590,28 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                                       () => {};
                                 },
                               ),
-                              // if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
-                              //   OutlinedButton.icon(
-                              //     icon: Icon(
-                              //       Icons.qr_code,
-                              //       color:
-                              //       Theme.of(context).colorScheme.onError,
-                              //     ),
-                              //     label: Text(
-                              //       'Nghỉ học',
-                              //       style: TextStyle(
-                              //           color: Theme.of(context)
-                              //               .colorScheme
-                              //               .onError),
-                              //     ),
-                              //     style: OutlinedButton.styleFrom(
-                              //         backgroundColor: Theme.of(context)
-                              //             .colorScheme
-                              //             .error),
-                              //     onPressed: () {
-                              //       _openModalOff(context, learnerInfo);
-                              //     },
-                              //   ),
+                              if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
+                                OutlinedButton.icon(
+                                  icon: Icon(
+                                    Icons.qr_code,
+                                    color:
+                                    Theme.of(context).colorScheme.onError,
+                                  ),
+                                  label: Text(
+                                    'Nghỉ học',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onError),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .error),
+                                  onPressed: () {
+                                    _openModalOff(context, learnerInfo);
+                                  },
+                                ),
                               const SizedBox(
                                 height: 10,
                               ),
