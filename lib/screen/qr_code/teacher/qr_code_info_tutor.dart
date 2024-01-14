@@ -23,8 +23,6 @@ class QrCodeInfoTutor extends StatefulWidget {
 }
 
 class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
-  String QrCodeInfoTutor = '';
-
   @override
   void initState() {
     super.initState();
@@ -77,7 +75,7 @@ class _QrCodeInfoTutorState extends State<QrCodeInfoTutor> {
               )
             ],
           ),
-          Text('$QrCodeInfoTutor'),
+         
         ],
       ),
     );
