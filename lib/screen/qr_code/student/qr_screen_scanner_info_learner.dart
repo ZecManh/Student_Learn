@@ -175,10 +175,10 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
                   check = check + 1;
                   return data;
                 }
-                if (dataScan['state'] == 'not-stydying') {
+                if (dataScan['state'] == 'not-studying') {
                   Timestamp timestamp = Timestamp.fromDate(DateTime.now());
                   data.attendanceTime = timestamp;
-                  data.state = 'not-stydying';
+                  data.state = 'not-studying';
                   check = check + 1;
                   return data;
                 }

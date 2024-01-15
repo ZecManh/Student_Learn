@@ -242,9 +242,9 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
         obj['text'] = 'Đã học xong';
         obj['action'] = () {};
       }
-      if (objState.state == 'not-stydying') {
+      if (objState.state == 'not-studying') {
         obj['text'] = 'Nghỉ học';
-        info['state'] = 'not-stydying';
+        info['state'] = 'not-studying';
         // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
         obj['action'] = () {
           // _openModalActionQrClass(context,jsonInfo)
