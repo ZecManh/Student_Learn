@@ -76,14 +76,14 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
     return timestampCheck;
   }
 
-  //  so sanh voi thoi gian hien tại
+
   Duration getTimeDurationNow(Map<String, dynamic> timestampJson) {
     DateTime timestampCheck = convertJsonTimeToDateTime(timestampJson);
     Duration timeCheck = getTimeDuration(timestampCheck,DateTime.now());
     return timeCheck;
   }
 
-  // so sanh voi 2 khoang thoi gian khac nhau
+
   Duration getTimeDuration(DateTime timeData, DateTime timeDataDuration) {
     Duration timeCheck = timeData.difference(timeDataDuration);
     return timeCheck;
@@ -103,17 +103,6 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
         return;
       }
     }
-    // if (dataScan['type'] == 'learner') {
-    //   var userFetch = await firestoreService.getUserById(dataScan['uid']);
-    //   if (userFetch != null) {
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) => ShowInfoLearner(learner: userFetch)));
-    //     await this.controller!.pauseCamera();
-    //     return;
-    //   }
-    // }
 
     if (dataScan['type'] == 'class') {
       bool noPushRouter = false;
@@ -129,30 +118,25 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
               if (check > 0) {
                 return data;
               }
-              // check thoi gian tao qr
+
               Map<String, dynamic> timestampJson = jsonDecode(
                   dataScan["timeCheck"]);
               Duration timeCheck = getTimeDurationNow(timestampJson);
               print('timeCheck   ${timeCheck.inHours}');
 
-              // thoi gian tao QR lon hon 30p thi QR vo hieu
               if (timeCheck.inHours > 0.5) {
                 noPushRouter = true;
                 check = check + 1;
                 return data;
               }
-              // ket thuc check
-
-              // check thoi gian bat dau
-
-              // lay startTime trong qr code de so sanh voi startTime trong data
+ 
               Map<String, dynamic> timestampStartJson = jsonDecode(
                   dataScan["startTime"]);
               DateTime DataStartJson = convertJsonTimeToDateTime(timestampStartJson) ;
 
               print(data.startTime);
               print(timestampStartJson);
-              // lay startTime trong data
+              
               Map<String, dynamic> dataStartTimeJson = {
                 'seconds': data.startTime!.seconds,
                 'nanoseconds': data.startTime!.nanoseconds,
@@ -184,9 +168,7 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
                   return data;
                 }
               }
-              // ket thuc check
               return data;
-              // if (data[])
             }).toList();
             var newData = Schedules(
                 weekSchedules: dataFetch['teachClass'].schedules!

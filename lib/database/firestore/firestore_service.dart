@@ -461,14 +461,14 @@ class FirestoreService extends ChangeNotifier {
     user_model.User? user;
     try {
       QuerySnapshot querySnapshot = await firestore
-          .collection('users') // Thay thế bằng tên collection thực tế của bạn
+          .collection('users') 
           .where('uid',
               isEqualTo:
-                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+                  uid) 
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
-        // Tìm thấy item với uid cụ thể
+       
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
         Map<String, dynamic> data =
@@ -682,17 +682,17 @@ class FirestoreService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> getClassByIdTutor(String uid) async {
     Map<String, dynamic> classItem = {};
-    // CHECK
+  
     try {
       QuerySnapshot querySnapshot = await firestore
-          .collection('classes') // Thay thế bằng tên collection thực tế của bạn
+          .collection('classes') 
           .where(FieldPath.documentId,
               isEqualTo:
-                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+                  uid) 
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
-        // Tìm thấy item với uid cụ thể
+       
 
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
@@ -707,7 +707,7 @@ class FirestoreService extends ChangeNotifier {
           'tutorInfo': tutorInfo
         });
 
-        // classItem = user_model.User.fromJson(data);
+   
       }
     } catch (e) {}
     return classItem;
@@ -717,15 +717,14 @@ class FirestoreService extends ChangeNotifier {
     Map<String, dynamic> classItem = {};
     try {
       QuerySnapshot querySnapshot = await firestore
-          .collection('classes') // Thay thế bằng tên collection thực tế của bạn
+          .collection('classes') 
           .where(FieldPath.documentId,
               isEqualTo:
-                  uid) // Thay 'your_uid' bằng uid cụ thể của item bạn muốn truy cập
+                  uid) 
           .limit(1)
           .get();
       if (querySnapshot.size > 0) {
-        // Tìm thấy item với uid cụ thể
-
+     
         DocumentSnapshot documentSnapshot = querySnapshot.docs[0];
 
         Map<String, dynamic> data =
@@ -739,7 +738,7 @@ class FirestoreService extends ChangeNotifier {
           'learnerInfo': learnerInfo
         });
 
-        // classItem = user_model.User.fromJson(data);
+     
       }
     } catch (e) {}
     return classItem;

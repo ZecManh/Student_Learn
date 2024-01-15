@@ -137,8 +137,6 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
             ),
           ),
         );
-        // Container(
-        // child: ),);
       },
     );
   }
@@ -147,7 +145,6 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     print('classInfo');
     print(classInfo);
     print(classInfo["docId"]);
-    // return;
     var info = {"uid": classInfo["docId"], "type": 'class'};
 
     String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
@@ -172,8 +169,6 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
             ),
           ),
         );
-        // Container(
-        // child: ),);
       },
     );
   }
@@ -225,17 +220,11 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
       info['state'] = 'progress';
       print(info);
       obj['action'] = () {
-        // info["timeCheck"] = _getTimeNow();
-        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-        // _openModalActionQrClass(context, jsonInfo);
       };
       if (objState.state == 'progress') {
         obj['text'] = 'Đang học';
         info['state'] = 'done';
         obj['action'] = () {
-          // info["timeCheck"] = _getTimeNow();
-          // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-          // _openModalActionQrClass(context, jsonInfo);
         };
       }
       if (objState.state == 'done') {
@@ -245,9 +234,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
       if (objState.state == 'not-studying') {
         obj['text'] = 'Nghỉ học';
         info['state'] = 'not-studying';
-        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
         obj['action'] = () {
-          // _openModalActionQrClass(context,jsonInfo)
         };
       }
       print("obj === $obj");

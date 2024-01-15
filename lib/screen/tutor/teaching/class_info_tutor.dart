@@ -139,11 +139,9 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     firestoreService.listenChangeInfoClass(learnerInfo['docId'],
         (dynamic value) {
       setState(() {
-        // if (_currentDialog != null) {
-        // Đóng Dialog
+
         Navigator.of(context).pop();
-        // _currentDialog = null;
-        // }
+
         learnerInfo = value;
         if ((value['teachClass'] as TeachClass).schedules != null) {
           lessonSchedules =
@@ -167,7 +165,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     });
 
     void _openModalQrClass(BuildContext context, dynamic classInfo) {
-      // return;
       var info = {"uid": classInfo["docId"], "type": 'class'};
 
       String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
@@ -191,8 +188,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         context: context,
         builder: (BuildContext context) {
           return _currentDialog;
-          // Container(
-          // child: ),);
         },
       );
     }
@@ -220,14 +215,11 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         context: context,
         builder: (BuildContext context) {
           return _currentDialog;
-          // Container(
-          // child: ),);
         },
       );
     }
 
     void _openModalActionQrClass(BuildContext context, String jsonInfo) {
-      // return;
       _currentDialog = Dialog(
         child: Container(
           width: double.infinity,
@@ -248,8 +240,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         context: context,
         builder: (BuildContext context) {
           return _currentDialog;
-          // Container(
-          // child: ),);
         },
       );
     }
@@ -308,7 +298,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       String startTimeJsonString = jsonEncode(startTimeJson);
       var info = {"uid": classInfo["docId"], "type": 'class'};
       info["startTime"] = startTimeJsonString;
-      obj['text'] = 'Bắt đầu học';
+      obj['text'] = 'Bắt đầu dạy';
       info['state'] = 'progress';
       print(info);
       obj['action'] = () {
@@ -317,7 +307,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         _openModalActionQrClass(context, jsonInfo);
       };
       if (objState.state == 'progress') {
-        obj['text'] = 'Đang học';
+        obj['text'] = 'Đang dạy';
         info['state'] = 'done';
         obj['action'] = () {
           info["timeCheck"] = _getTimeNow();
@@ -326,15 +316,13 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         };
       }
       if (objState.state == 'done') {
-        obj['text'] = 'Đã học xong';
+        obj['text'] = 'Đã dạy xong';
         obj['action'] = () {};
       }
       if (objState.state == 'not-stydying') {
-        obj['text'] = 'Nghỉ học';
+        obj['text'] = 'Nghỉ dạy';
         info['state'] = 'not-stydying';
-        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
         obj['action'] = () {
-          // _openModalActionQrClass(context,jsonInfo)
         };
       }
       print("obj === $obj");
