@@ -50,6 +50,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     return formattedTime;
   }
 
+
   void initState() {
     super.initState();
     learnerInfo = Provider.of<Map<String, dynamic>>(context, listen: false);
@@ -127,6 +128,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       hashCode: getHashCode,
     )..addAll(_eventsListState);
 
+    Widget _currentDialog;
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
@@ -136,36 +138,62 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     }
 
     firestoreService.listenChangeInfoClass(learnerInfo['docId'],
-        (dynamic value) {
-      print("value :   $value");
-      print("learnerInfo :   $learnerInfo");
-      print("learnerInfo :   ${value["schedules"].lessos_Schedules}");
-    });
+            (dynamic value) {
+          setState(() {
+            // if (_currentDialog != null) {
+              // Đóng Dialog
+              Navigator.of(context).pop();
+              // _currentDialog = null;
+            // }
+          learnerInfo = value;
+          if ((value['teachClass'] as TeachClass).schedules != null) {
+            lessonSchedules =
+            (value['teachClass'] as TeachClass).schedules!.lessonSchedules!;
+          }
+          lessonSchedules.forEach((itemLesson) {
+            print("itemLesson $itemLesson");
+
+            _eventsList.addAll({
+              DateTime.fromMillisecondsSinceEpoch(
+                  itemLesson.startTime!.millisecondsSinceEpoch): [
+                'Thời gian điểm danh :  ${itemLesson.attendanceTime != null ? getTimeHour(itemLesson.attendanceTime) : ''}'
+              ],
+            });
+            _eventsListState.addAll({
+              DateTime.fromMillisecondsSinceEpoch(
+                  itemLesson.startTime!.millisecondsSinceEpoch): itemLesson,
+            });
+          });
+
+          });
+
+        });
 
     void _openModalQrClass(BuildContext context, dynamic classInfo) {
       // return;
       var info = {"uid": classInfo["docId"], "type": 'class'};
 
       String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      _currentDialog = Dialog(
+        child: Container(
+          width: double.infinity,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: QRCodeView(text: jsonInfo),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text: jsonInfo),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _currentDialog;
           // Container(
           // child: ),);
         },
@@ -175,25 +203,26 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     void _openModalQrUser(BuildContext context, dynamic user) {
       var info = {"uid": user.uid, "type": 'learner'};
       String jsonInfo = user.uid != null ? jsonEncode(info) : "";
+      _currentDialog = Dialog(
+        child: Container(
+          width: double.infinity,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: QRCodeView(text: jsonInfo),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text: jsonInfo),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _currentDialog;
           // Container(
           // child: ),);
         },
@@ -202,25 +231,26 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
 
     void _openModalActionQrClass(BuildContext context, String jsonInfo) {
       // return;
+      _currentDialog = Dialog(
+        child: Container(
+          width: double.infinity,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: QRCodeView(text: jsonInfo),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text: jsonInfo),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _currentDialog;
           // Container(
           // child: ),);
         },
