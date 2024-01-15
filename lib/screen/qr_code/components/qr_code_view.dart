@@ -26,8 +26,6 @@ class _QRCodeView extends State<QRCodeView> {
       RenderRepaintBoundary boundary =
           _qrkey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       var image = await boundary.toImage(pixelRatio: 3.0);
-      // final externalDir = await getGalleryPath();
-      //Drawing White Background because Qr Code is Black
       final whitePaint = Paint()..color = Colors.white;
       final recorder = PictureRecorder();
       final canvas = Canvas(recorder,
@@ -41,17 +39,13 @@ class _QRCodeView extends State<QRCodeView> {
       ByteData? byteData = await img.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-      //Check for duplicate file name to avoid Override
       String fileName = 'qr_code';
       int i = 1;
       while (await File('$externalDir/$fileName.png').exists()) {
         fileName = 'qr_code_$i';
         i++;
       }
-
-      // Check if Directory Path exists or not
       dirExists = await File(externalDir).exists();
-      //if not then create the path
       if (!dirExists) {
         await Directory(externalDir).create(recursive: true);
         dirExists = true;

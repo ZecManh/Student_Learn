@@ -137,8 +137,6 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
             ),
           ),
         );
-        // Container(
-        // child: ),);
       },
     );
   }
@@ -147,7 +145,6 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
     print('classInfo');
     print(classInfo);
     print(classInfo["docId"]);
-    // return;
     var info = {"uid": classInfo["docId"], "type": 'class'};
 
     String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
@@ -172,8 +169,6 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
             ),
           ),
         );
-        // Container(
-        // child: ),);
       },
     );
   }
@@ -192,60 +187,54 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
       return _events[day] ?? [];
     }
 
-    Object getEventStateForDay(DateTime day) {
-      return _eventsState[day] ?? {};
+    Object? getEventStateForDay(DateTime day) {
+      return _eventsState[day] != null ? _eventsState[day] : null;
     }
 
     firestoreService.listenChangeInfoClass(tutorInfo['docId'],(dynamic value){
       print("value :   $value");
     });
 
-    dynamic _renderAction(BuildContext context,dynamic classInfo) {
+    dynamic _renderAction(BuildContext context, dynamic classInfo) {
       print(lessonSchedules);
       print("classInfo : $classInfo");
-      print("getEventStateForDay(_selectedDay!) : ${getEventStateForDay(_selectedDay!)}");
       var objState = getEventStateForDay(_selectedDay!) as dynamic;
 
-      print("objState.state == 'progress' ${objState.state}");
-      var obj = {};
-      DateTime currentDateTime = DateTime.now();
-      Timestamp timestamp = Timestamp.fromDate(currentDateTime);
+      print("objState.state == 'progress' ${objState}");
 
-      Map<String, dynamic> timestampJson = {
-        'seconds': timestamp.seconds,
-        'nanoseconds': timestamp.nanoseconds,
+      var obj = {};
+      if (objState == null
+      ) {
+        return null;
+      }
+      Timestamp timestampStart = objState.startTime;
+      Map<String, dynamic> startTimeJson = {
+        'seconds': timestampStart.seconds,
+        'nanoseconds': timestampStart.nanoseconds,
       };
 
-      String timestampJsonString = jsonEncode(timestampJson);
-
-      print(timestampJsonString);
+      String startTimeJsonString = jsonEncode(startTimeJson);
       var info = {"uid": classInfo["docId"], "type": 'class'};
-      info["timeCheck"] = timestampJsonString ;
+      info["startTime"] = startTimeJsonString;
       obj['text'] = 'Bắt đầu học';
       info['state'] = 'progress';
       print(info);
-      // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-      obj['action'] = () => {
-        // _openModalActionQrClass(context,jsonInfo)
+      obj['action'] = () {
       };
       if (objState.state == 'progress') {
         obj['text'] = 'Đang học';
         info['state'] = 'done';
-        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-        obj['action'] = () => {
-          // _openModalActionQrClass(context,jsonInfo)
+        obj['action'] = () {
         };
       }
       if (objState.state == 'done') {
         obj['text'] = 'Đã học xong';
-        obj['action'] = () => {};
+        obj['action'] = () {};
       }
-      if (objState.state == 'not-stydying') {
+      if (objState.state == 'not-studying') {
         obj['text'] = 'Nghỉ học';
-        info['state'] = 'not-stydying';
-        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-        obj['action'] = () => {
-          // _openModalActionQrClass(context,jsonInfo)
+        info['state'] = 'not-studying';
+        obj['action'] = () {
         };
       }
       print("obj === $obj");
@@ -504,6 +493,7 @@ class _ClassInfoScreenState extends State<ClassInfoLearnerScreen> {
                           ),
                           Row(
                             children: [
+                              if (_renderAction(context, tutorInfo) != null)
                               OutlinedButton.icon(
                                 icon: Icon(
                                   Icons.qr_code,

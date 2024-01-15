@@ -13,7 +13,6 @@ class ShowInfoLearner extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ShowInfoLearnerState();
   }
 }
@@ -41,8 +40,6 @@ class _ShowInfoLearnerState extends State<ShowInfoLearner> {
             ),
           ),
         );
-        // Container(
-        // child: ),);
       },
     );
   }
@@ -166,7 +163,6 @@ class _ShowInfoLearnerState extends State<ShowInfoLearner> {
               ),
               color: Theme.of(context).colorScheme.background,
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(
                     height: 20,
@@ -183,7 +179,6 @@ class _ShowInfoLearnerState extends State<ShowInfoLearner> {
               ),
               color: Theme.of(context).colorScheme.background,
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(
                     height: 20,

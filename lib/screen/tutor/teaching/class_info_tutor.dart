@@ -127,47 +127,67 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       hashCode: getHashCode,
     )..addAll(_eventsListState);
 
+    Widget _currentDialog;
     List getEventForDay(DateTime day) {
       return _events[day] ?? [];
     }
 
-    Object getEventStateForDay(DateTime day) {
-      return _eventsState[day] ?? {};
+    Object? getEventStateForDay(DateTime day) {
+      return _eventsState[day] != null ? _eventsState[day] : null;
     }
 
     firestoreService.listenChangeInfoClass(learnerInfo['docId'],
         (dynamic value) {
-      print("value :   $value");
-      print("learnerInfo :   $learnerInfo");
-      print("learnerInfo :   ${value["schedules"].lessos_Schedules}");
+      setState(() {
+
+        Navigator.of(context).pop();
+
+        learnerInfo = value;
+        if ((value['teachClass'] as TeachClass).schedules != null) {
+          lessonSchedules =
+              (value['teachClass'] as TeachClass).schedules!.lessonSchedules!;
+        }
+        lessonSchedules.forEach((itemLesson) {
+          print("itemLesson $itemLesson");
+
+          _eventsList.addAll({
+            DateTime.fromMillisecondsSinceEpoch(
+                itemLesson.startTime!.millisecondsSinceEpoch): [
+              'Thời gian điểm danh :  ${itemLesson.attendanceTime != null ? getTimeHour(itemLesson.attendanceTime) : ''}'
+            ],
+          });
+          _eventsListState.addAll({
+            DateTime.fromMillisecondsSinceEpoch(
+                itemLesson.startTime!.millisecondsSinceEpoch): itemLesson,
+          });
+        });
+      });
     });
 
     void _openModalQrClass(BuildContext context, dynamic classInfo) {
-      // return;
       var info = {"uid": classInfo["docId"], "type": 'class'};
 
       String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      _currentDialog = Dialog(
+        child: Container(
+          width: double.infinity,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: QRCodeView(text: jsonInfo),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text: jsonInfo),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-          // Container(
-          // child: ),);
+          return _currentDialog;
         },
       );
     }
@@ -175,62 +195,53 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     void _openModalQrUser(BuildContext context, dynamic user) {
       var info = {"uid": user.uid, "type": 'learner'};
       String jsonInfo = user.uid != null ? jsonEncode(info) : "";
+      _currentDialog = Dialog(
+        child: Container(
+          width: double.infinity,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: QRCodeView(text: jsonInfo),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text: jsonInfo),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-          // Container(
-          // child: ),);
+          return _currentDialog;
         },
       );
     }
 
     void _openModalActionQrClass(BuildContext context, String jsonInfo) {
-      // return;
+      _currentDialog = Dialog(
+        child: Container(
+          width: double.infinity,
+          height: 300,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: QRCodeView(text: jsonInfo),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: QRCodeView(text: jsonInfo),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-          // Container(
-          // child: ),);
+          return _currentDialog;
         },
       );
-    }
-
-    void _openModalOff(BuildContext context, dynamic classInfo) {
-      var info = {"uid": classInfo["docId"], "type": 'class'};
-      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
-      _openModalActionQrClass(context, jsonInfo);
     }
 
     String _getTimeNow() {
@@ -246,16 +257,38 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       return timestampJsonString;
     }
 
+    void _openModalOff(BuildContext context, dynamic classInfo) {
+      var info = {"uid": classInfo["docId"], "type": 'class'};
+      var objState = getEventStateForDay(_selectedDay!) as dynamic;
+      var obj = {};
+      if (objState == null) {
+        return null;
+      }
+      Timestamp timestampStart = objState.startTime;
+      Map<String, dynamic> startTimeJson = {
+        'seconds': timestampStart.seconds,
+        'nanoseconds': timestampStart.nanoseconds,
+      };
+
+      String startTimeJsonString = jsonEncode(startTimeJson);
+      info["timeCheck"] = _getTimeNow();
+      info["startTime"] = startTimeJsonString;
+      info['state'] = 'not-stydying';
+      String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
+      _openModalActionQrClass(context, jsonInfo);
+    }
+
     dynamic _renderAction(BuildContext context, dynamic classInfo) {
       print(lessonSchedules);
       print("classInfo : $classInfo");
-      print(
-          "getEventStateForDay(_selectedDay!) : ${getEventStateForDay(_selectedDay!)}");
       var objState = getEventStateForDay(_selectedDay!) as dynamic;
 
-      print("objState.state == 'progress' ${objState.state}");
-      var obj = {};
+      print("objState.state == 'progress' ${objState}");
 
+      var obj = {};
+      if (objState == null) {
+        return null;
+      }
       Timestamp timestampStart = objState.startTime;
       Map<String, dynamic> startTimeJson = {
         'seconds': timestampStart.seconds,
@@ -265,7 +298,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       String startTimeJsonString = jsonEncode(startTimeJson);
       var info = {"uid": classInfo["docId"], "type": 'class'};
       info["startTime"] = startTimeJsonString;
-      obj['text'] = 'Bắt đầu học';
+      obj['text'] = 'Bắt đầu dạy';
       info['state'] = 'progress';
       print(info);
       obj['action'] = () {
@@ -274,7 +307,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         _openModalActionQrClass(context, jsonInfo);
       };
       if (objState.state == 'progress') {
-        obj['text'] = 'Đang học';
+        obj['text'] = 'Đang dạy';
         info['state'] = 'done';
         obj['action'] = () {
           info["timeCheck"] = _getTimeNow();
@@ -283,15 +316,13 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         };
       }
       if (objState.state == 'done') {
-        obj['text'] = 'Đã học xong';
+        obj['text'] = 'Đã dạy xong';
         obj['action'] = () {};
       }
       if (objState.state == 'not-stydying') {
-        obj['text'] = 'Nghỉ học';
+        obj['text'] = 'Nghỉ dạy';
         info['state'] = 'not-stydying';
-        // String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
         obj['action'] = () {
-          // _openModalActionQrClass(context,jsonInfo)
         };
       }
       print("obj === $obj");
@@ -548,57 +579,73 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                           ),
                           Row(
                             children: [
-                              OutlinedButton.icon(
-                                icon: Icon(
-                                  Icons.qr_code,
-                                  color:
-                                      Theme.of(context).colorScheme.onSecondary,
-                                ),
-                                label: Text(
-                                  _renderAction(context, learnerInfo)['text'] ??
-                                      '',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                    backgroundColor: Theme.of(context)
+                              if (_renderAction(context, learnerInfo) != null)
+                                OutlinedButton.icon(
+                                  icon: Icon(
+                                    Icons.qr_code,
+                                    color: Theme.of(context)
                                         .colorScheme
-                                        .secondary),
-                                onPressed: () {
-                                  _renderAction(
-                                          context, learnerInfo)['action']() ??
-                                      () => {};
-                                },
-                              ),
-                              // if ((getEventStateForDay(_selectedDay!) as dynamic).state == 'open' || (getEventStateForDay(_selectedDay!) as dynamic).state == null)
-                              //   OutlinedButton.icon(
-                              //     icon: Icon(
-                              //       Icons.qr_code,
-                              //       color:
-                              //       Theme.of(context).colorScheme.onError,
-                              //     ),
-                              //     label: Text(
-                              //       'Nghỉ học',
-                              //       style: TextStyle(
-                              //           color: Theme.of(context)
-                              //               .colorScheme
-                              //               .onError),
-                              //     ),
-                              //     style: OutlinedButton.styleFrom(
-                              //         backgroundColor: Theme.of(context)
-                              //             .colorScheme
-                              //             .error),
-                              //     onPressed: () {
-                              //       _openModalOff(context, learnerInfo);
-                              //     },
-                              //   ),
+                                        .onSecondary,
+                                  ),
+                                  label: Text(
+                                    _renderAction(
+                                            context, learnerInfo)['text'] ??
+                                        '',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
+                                  onPressed: () {
+                                    _renderAction(
+                                            context, learnerInfo)['action']() ??
+                                        () => {};
+                                  },
+                                ),
                               const SizedBox(
                                 height: 10,
                               ),
                             ],
                           ),
+                          Row(
+                            children: [
+                              if ((getEventStateForDay(_selectedDay!)
+                                          as dynamic) !=
+                                      null &&
+                                  ((getEventStateForDay(_selectedDay!)
+                                                  as dynamic)
+                                              .state ==
+                                          'open' ||
+                                      (getEventStateForDay(_selectedDay!)
+                                                  as dynamic)
+                                              .state ==
+                                          null))
+                                OutlinedButton.icon(
+                                  icon: Icon(
+                                    Icons.qr_code,
+                                    color:
+                                        Theme.of(context).colorScheme.onError,
+                                  ),
+                                  label: Text(
+                                    'Nghỉ học',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onError),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.error),
+                                  onPressed: () {
+                                    _openModalOff(context, learnerInfo);
+                                  },
+                                ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -662,9 +709,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                         .toList(),
                   ),
                   OutlinedButton(
-                    onPressed: () {
-
-                    },
+                    onPressed: () {},
                     child: Text('Dừng lớp học'),
                   )
                 ],
