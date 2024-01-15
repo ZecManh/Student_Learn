@@ -626,13 +626,16 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                           Row(
                             children: [
                               if ((getEventStateForDay(_selectedDay!)
-                                              as dynamic)
-                                          .state ==
-                                      'open' ||
-                                  (getEventStateForDay(_selectedDay!)
-                                              as dynamic)
-                                          .state ==
-                                      null)
+                                          as dynamic) !=
+                                      null &&
+                                  ((getEventStateForDay(_selectedDay!)
+                                                  as dynamic)
+                                              .state ==
+                                          'open' ||
+                                      (getEventStateForDay(_selectedDay!)
+                                                  as dynamic)
+                                              .state ==
+                                          null))
                                 OutlinedButton.icon(
                                   icon: Icon(
                                     Icons.qr_code,
