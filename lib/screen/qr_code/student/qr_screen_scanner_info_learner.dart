@@ -138,6 +138,7 @@ class _DashBoardQrScannerLearnerState extends State<DashBoardQrScannerLearner> {
               // thoi gian tao QR lon hon 30p thi QR vo hieu
               if (timeCheck.inHours > 0.5) {
                 noPushRouter = true;
+                check = check + 1;
                 return data;
               }
               // ket thuc check
