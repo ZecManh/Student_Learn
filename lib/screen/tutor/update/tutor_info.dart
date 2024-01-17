@@ -543,10 +543,10 @@ class _TutorInfoState extends State<TutorInfo> with TickerProviderStateMixin {
             ),
           ),
            Center(
-            child: Text("It's rainy here")
+            child: Text("Chức năng đang trong quá trình phát triển")
           ),
           const Center(
-            child: Text("It's sunny here"),
+            child: Text("Chức năng đang trong quá trình phát triển"),
           ),
         ],
       ),
