@@ -1,24 +1,23 @@
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cron/cron.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/today_schedules.dart';
+import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/notification/notification_controller.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
+import 'package:datn/screen/face_recognition/camera_emotion.dart';
+import 'package:datn/screen/face_recognition/camera_page.dart';
 import 'package:datn/screen/qr_code/teacher/qr_code_info_tutor.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
-import 'package:dynamic_timeline/dynamic_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:datn/model/user/user.dart' as model_user;
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
-import '../../model/user/teach_schedules.dart';
 
 class DashBoardTutorMain extends StatefulWidget {
   const DashBoardTutorMain({super.key});
@@ -113,15 +112,13 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
     FirebaseAuth auth = firebaseAuthService.auth;
     FirestoreService firestoreService = Provider.of<FirestoreService>(context);
 
-    firestoreService.listenNewSubjectRequest((){
+    firestoreService.listenNewSubjectRequest(() {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
               id: NotificationController.NEW_SCHEDULES_NOTI,
               channelKey: "basic_channel",
               title: "Bạn có một lời mời dạy học mới!",
-              body:
-              "Vào xem ngay"));
-
+              body: "Vào xem ngay"));
     });
 
     return SingleChildScrollView(
@@ -245,10 +242,11 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const DashBoardFaceID();
-                                  }));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const FaceScanScreen(checkEmotion: true,)));
                                 },
                                 icon: const Icon(Icons.tag_faces_rounded),
                               ),
@@ -262,12 +260,18 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () async {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const FaceScanScreen(
+                                      checkEmotion: true,
+                                    );
+                                  }));
                                 },
                                 icon: const Icon(Icons.notifications),
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           )
                         ],

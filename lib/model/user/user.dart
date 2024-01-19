@@ -18,6 +18,7 @@ class User {
   Timestamp? lastLogin;
   Timestamp? createdTime;
   String? salary;
+  String? password;
 
   User(
       {this.address,
@@ -36,6 +37,7 @@ class User {
       this.experience,
       this.lastLogin,
       this.createdTime,
+      this.password,
       this.salary});
 
   User.fromJson(Map<dynamic, dynamic> json) {
@@ -50,6 +52,7 @@ class User {
     gender = json['gender'];
     phone = json['phone'];
     photoUrl = json['photo_url'];
+    password = json['password'];
     subjects =
         (json['subjects'] != null) ? json['subjects'].cast<String>() : null;
     teachAddress = (json['teach_address'] != null)
@@ -73,6 +76,7 @@ class User {
     }
     data['born'] = born;
     data['display_name'] = displayName;
+    data['password'] = password;
     if (education != null) {
       data['education'] = education!.toJson();
     }

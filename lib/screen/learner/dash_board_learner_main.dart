@@ -4,6 +4,8 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
 import 'package:datn/model/teach_classes/teach_class.dart';
+import 'package:datn/screen/face_recognition/camera_emotion.dart';
+import 'package:datn/screen/face_recognition/camera_page.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
 import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
@@ -263,7 +265,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return const DashBoardFaceID();
+                                    return const FaceScanScreen(checkEmotion: true,);
                                   }));
                                 },
                                 icon: const Icon(Icons.tag_faces_rounded),
@@ -282,7 +284,7 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           )
                         ],

@@ -66,6 +66,7 @@ class FirebaseAuthService extends ChangeNotifier {
           firestore.collection('users').doc(user.uid).set({
             'uid': user.uid,
             'email': email,
+            'password': password,
             'last_login' : Timestamp.now(),
             'created_time' : Timestamp.now(),
           });

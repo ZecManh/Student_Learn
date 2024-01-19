@@ -306,6 +306,20 @@ class FirestoreService extends ChangeNotifier {
     return users.first;
   }
 
+  Future<user_model.User> getUserByEmail(String email) async {
+    List<user_model.User> users = [];
+    QuerySnapshot querySnapshot = await firestore
+        .collection('users') // Replace with your actual collection name
+        .where('email', isEqualTo: email)
+        .get();
+    for (var docSnapshot in querySnapshot.docs) {
+      var json = docSnapshot.data() as Map<String, dynamic>;
+      var user = user_model.User.fromJson(json);
+      users.add(user);
+    }
+    return users.first;
+  }
+
   Future<void> addClass(SubjectRequest subjectRequest) async {
     // await _firestore
     //     .collection('classes')

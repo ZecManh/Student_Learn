@@ -4,10 +4,13 @@ import 'package:datn/screen/authenticate/forget_password.dart';
 import 'package:datn/screen/authenticate/sign_up.dart';
 import 'package:datn/screen/learner/dash_board_learner.dart';
 import 'package:datn/screen/tutor/dash_board_tutor.dart';
+import 'package:datn/utils/local_db.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
-import 'package:page_transition/page_transition.dart';
+
+import '../face_recognition/camera_page.dart';
+import '../face_recognition/login_page.dart';
 import 'choose_type.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -60,9 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       if (widget.userType == UserType.learner) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) {
-          return const DashBoardLearner();
-        }), (route) => false,);
+          MaterialPageRoute(builder: (context) {
+            return const DashBoardLearner();
+          }),
+          (route) => false,
+        );
       } else {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) {
@@ -70,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }), (route) => false);
       }
     } else {
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content:
@@ -92,6 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Center(
         child: Column(
           children: [
+            Row(
+              children: [Spacer()],
+            ),
             Image.asset('assets/ic_logo_remove_bg.png'),
             Text(
               widget.userType == UserType.tutor
@@ -192,6 +199,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        if (LocalDB.getUser().name != null)
+                          GestureDetector(
+                            child: const Text('Đăng nhập khuôn mặt'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => FaceScanScreen(
+                                            user: LocalDB.getUser(),
+                                            userType: widget.userType,
+                                          )));
+                            },
+                          ),
                         GestureDetector(
                           child: const Text('Đăng kí'),
                           onTap: () {

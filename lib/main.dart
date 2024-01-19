@@ -1,8 +1,11 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:camera/camera.dart';
 import 'package:datn/firebase_options.dart';
 import 'package:datn/notification/notification_controller.dart';
+import 'package:datn/screen/face_recognition/camera_page.dart';
 import 'package:datn/screen/tlu_tutor.dart';
+import 'package:datn/utils/local_db.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,10 @@ import 'package:hive_flutter/adapters.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  cameras = await availableCameras();
+  await Hive.initFlutter();
+  await HiveBoxes.initialize();
 
   await AwesomeNotifications().initialize(
     null,
