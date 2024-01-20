@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:camera/camera.dart';
 import 'package:datn/database/emotion-recognition/ai_face.service.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
@@ -7,12 +8,15 @@ import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:datn/screen/face_recognition/emotion_response.dart';
 import 'package:datn/screen/learner/dash_board_learner.dart';
 import 'package:datn/screen/tutor/dash_board_tutor.dart';
+import 'package:datn/utils/dialog_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../database/auth/firebase_auth_service.dart';
 import '../../model/face_recognition/user.dart';
+import '../../notification/notification_controller.dart';
 import '../widget/common_widgets.dart';
 import 'ml_service.dart';
 
@@ -96,15 +100,36 @@ class FaceScanScreenState extends State<FaceScanScreen> {
           facesDetected[0],
           widget.user != null,
           widget.user != null ? widget.user!.name! : controller.text);
-      if (widget.user == null) {
+      final checkEmotion = widget.checkEmotion ?? false;
+      if (widget.user == null && !checkEmotion) {
         // register case
-        Navigator.pop(context);
-        print("User registered successfully");
-      } else {
+        setState(() {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: NotificationController.FACE_DETIION,
+              channelKey: NotificationController.BASIC_CHANNEL_KEY,
+              title: "Đăng kí khuôn mặt thành công",
+              body: "",
+              autoDismissible: false,
+            ),
+          );
+          Navigator.of(context).pop();
+        });
+      } else if (!checkEmotion) {
         // login case
         if (user == null) {
-          Navigator.pop(context);
-          print("Unknown User");
+          setState(() {
+            AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                id: NotificationController.FACE_DETIION,
+                channelKey: NotificationController.BASIC_CHANNEL_KEY,
+                title: "Không tìm thấy user!",
+                body: "",
+                autoDismissible: false,
+              ),
+            );
+            Navigator.of(context).pop();
+          });
         } else {
           await loginFace(user.name, widget.userType);
         }
@@ -121,9 +146,18 @@ class FaceScanScreenState extends State<FaceScanScreen> {
     bool isLoginOK = await firebaseAuthService.signInWithEmailAndPassword(
         email, userLogin.password ?? '');
     if (isLoginOK == true) {
-      SnackBar snackBar = const SnackBar(content: Text('Đăng nhập thành công'));
+      setState(() {
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: NotificationController.FACE_DETIION,
+            channelKey: NotificationController.BASIC_CHANNEL_KEY,
+            title: "Đăng nhập thành công!",
+            body: "",
+            autoDismissible: false,
+          ),
+        );
+      });
       FirestoreService().updateLastLogin();
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       if (userType == UserType.learner) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) {
@@ -138,11 +172,18 @@ class FaceScanScreenState extends State<FaceScanScreen> {
         }), (route) => false);
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đăng nhập không thành công'),
-        ),
-      );
+      setState(() {
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: NotificationController.FACE_DETIION,
+            channelKey: NotificationController.BASIC_CHANNEL_KEY,
+            title: "Đăng nhập không thành công!",
+            body: "",
+            autoDismissible: false,
+          ),
+        );
+        Navigator.of(context).pop();
+      });
     }
   }
 
@@ -155,54 +196,83 @@ class FaceScanScreenState extends State<FaceScanScreen> {
       if (widget.checkEmotion ?? false) {
         EmotionResponse? emotionResponse =
             await AiFaceService.emotion(file: File(xFile.path));
-        showPopupEmotion(context, emotionResponse ?? EmotionResponse());
+        setState(() {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: NotificationController.FACE_DETIION,
+              channelKey: NotificationController.BASIC_CHANNEL_KEY,
+              title: "Dự đoán cảm xúc",
+              body: getEmotion(emotionResponse ?? EmotionResponse()),
+              autoDismissible: false,
+            ),
+          );
+          Navigator.of(context).pop();
+        });
         _cameraController.setFlashMode(FlashMode.off);
       }
     } else {
-      showDialog(
-          context: context,
-          builder: (context) =>
-              const AlertDialog(content: Text('No face detected!')));
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: NotificationController.FACE_DETIION,
+          channelKey: NotificationController.BASIC_CHANNEL_KEY,
+          title: "Không phát hiện được khuôn mặt",
+          body: "",
+          autoDismissible: false,
+        ),
+      );
     }
   }
 
-  void showPopupEmotion(
-      BuildContext context, EmotionResponse emotionResponse) async {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Trạng thái của cảm xúc của bạn'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(
-                  'Bình thường: ${getNumberEmotion(emotionResponse, 'neutral')}'),
-              Text('Vui vẻ: ${getNumberEmotion(emotionResponse, 'happy')}'),
-              Text('Sợ hãi: ${getNumberEmotion(emotionResponse, 'fear')}'),
-              Text('Buồn: ${getNumberEmotion(emotionResponse, 'sad')}'),
-              Text('Bất ngờ: ${getNumberEmotion(emotionResponse, 'happy')}'),
-            ],
-          ),
+  void showPopupEmotion(EmotionResponse emotionResponse) async {
+    Get.dialog(AlertDialog(
+      title: const Text('Trạng thái của cảm xúc của bạn'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            Text(
+                'Bình thường: ${getNumberEmotion(emotionResponse, 'neutral')}'),
+            Text('Vui vẻ: ${getNumberEmotion(emotionResponse, 'happy')}'),
+            Text('Sợ hãi: ${getNumberEmotion(emotionResponse, 'fear')}'),
+            Text('Buồn: ${getNumberEmotion(emotionResponse, 'sad')}'),
+            Text('Bất ngờ: ${getNumberEmotion(emotionResponse, 'surprise')}'),
+          ],
         ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Ok'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ), // user must tap button!
-      barrierDismissible: false,
-    );
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Ok'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    ));
   }
 
-  String getNumberEmotion(EmotionResponse emotionResponse, String type) {
-    return emotionResponse.data
-            ?.firstWhere((e) => e.label == type)
-            .score
-            .toString() ??
-        "";
+  double getNumberEmotion(EmotionResponse emotionResponse, String type) {
+    for (Emotion emotion in emotionResponse.data ?? []) {
+      if ((emotion.label ?? " ") == type) {
+        return emotion.score ?? 0;
+      }
+    }
+    return 0;
+  }
+
+  String getEmotion(EmotionResponse emotionResponse) {
+    double max = getNumberEmotion(emotionResponse, 'neutral');
+    if (getNumberEmotion(emotionResponse, 'happy') > max) {
+      return "Vui vẻ";
+    } else if (getNumberEmotion(emotionResponse, 'fear') > max) {
+      return "Sợ hãi";
+    } else if (getNumberEmotion(emotionResponse, 'sad') > max) {
+      return "Buồn";
+    } else if (getNumberEmotion(emotionResponse, 'surprise') > max) {
+      return "Bất ngờ";
+    } else if (getNumberEmotion(emotionResponse, 'angry') > max) {
+      return "Tức giận";
+    } else {
+      return 'Bình thường';
+    }
   }
 
   @override

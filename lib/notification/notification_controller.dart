@@ -10,6 +10,7 @@ class NotificationController{
   static int NEW_CLASS_NOTI = 5;
   static int SIGN_UP_SUCCESSFULLY = 6;
   static int CLASS_REMOVE_NOTI = 7;
+  static int FACE_DETIION = 8;
 
   /// Use this method to detect when a new notification or a schedule is created
   @pragma("vm:entry-point")
