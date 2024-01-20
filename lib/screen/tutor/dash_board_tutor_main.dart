@@ -5,12 +5,14 @@ import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/today_schedules.dart';
 import 'package:datn/model/user/user.dart' as model_user;
 import 'package:datn/notification/notification_controller.dart';
+import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/face_recognition/camera_emotion.dart';
 import 'package:datn/screen/face_recognition/camera_page.dart';
 import 'package:datn/screen/qr_code/teacher/qr_code_info_tutor.dart';
 import 'package:datn/screen/tutor/requests/subject_request_screen.dart';
 import 'package:datn/screen/tutor/update/tutor_info.dart';
+import 'package:datn/utils/local_db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -246,7 +248,9 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const FaceScanScreen(checkEmotion: true,)));
+                                              const FaceScanScreen(
+                                                checkEmotion: true,
+                                              )));
                                 },
                                 icon: const Icon(Icons.tag_faces_rounded),
                               ),
@@ -260,14 +264,16 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
                                             .colorScheme
                                             .background)),
                                 onPressed: () async {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const FaceScanScreen(
-                                      checkEmotion: true,
-                                    );
-                                  }));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FaceScanScreen(
+                                            user: LocalDB.getUser(),
+                                            userType: UserType.tutor,
+                                            checkShowInfo: true,
+                                          )));
                                 },
-                                icon: const Icon(Icons.notifications),
+                                icon: const Icon(Icons.person),
                               ),
                             ],
                           ),

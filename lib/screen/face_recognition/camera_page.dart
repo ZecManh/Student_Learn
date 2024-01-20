@@ -8,7 +8,6 @@ import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:datn/screen/face_recognition/emotion_response.dart';
 import 'package:datn/screen/learner/dash_board_learner.dart';
 import 'package:datn/screen/tutor/dash_board_tutor.dart';
-import 'package:datn/utils/dialog_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
@@ -27,9 +26,15 @@ class FaceScanScreen extends StatefulWidget {
   final String? username;
   final UserType? userType;
   final bool? checkEmotion;
+  final bool? checkShowInfo;
 
   const FaceScanScreen(
-      {super.key, this.user, this.username, this.userType, this.checkEmotion});
+      {super.key,
+      this.user,
+      this.username,
+      this.userType,
+      this.checkEmotion,
+      this.checkShowInfo});
 
   @override
   FaceScanScreenState createState() => FaceScanScreenState();
@@ -146,17 +151,48 @@ class FaceScanScreenState extends State<FaceScanScreen> {
     bool isLoginOK = await firebaseAuthService.signInWithEmailAndPassword(
         email, userLogin.password ?? '');
     if (isLoginOK == true) {
-      setState(() {
-        AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: NotificationController.FACE_DETIION,
-            channelKey: NotificationController.BASIC_CHANNEL_KEY,
-            title: "Đăng nhập thành công!",
-            body: "",
-            autoDismissible: false,
-          ),
-        );
-      });
+      final checkShow = widget.checkShowInfo ?? false;
+      if (userType == UserType.learner && checkShow) {
+        setState(() {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: NotificationController.FACE_DETIION,
+              channelKey: NotificationController.BASIC_CHANNEL_KEY,
+              title: "Thông tin người dùng!",
+              body:
+                  "Học viên: ${userLogin.displayName}, Trường: ${userLogin.education?.university ?? ''}, Ngành: ${userLogin.education?.major ?? ''}",
+              autoDismissible: false,
+            ),
+          );
+        });
+      } else if (checkShow) {
+        setState(() {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: NotificationController.FACE_DETIION,
+              channelKey: NotificationController.BASIC_CHANNEL_KEY,
+              title: "Thông tin người dùng!",
+              body:
+                  "Gia sư: ${userLogin.displayName}, Trường: ${userLogin.education?.university ?? ''}, Ngành: ${userLogin.education?.major ?? ''}",
+              autoDismissible: false,
+            ),
+          );
+        });
+      }else{
+        setState(() {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: NotificationController.FACE_DETIION,
+              channelKey: NotificationController.BASIC_CHANNEL_KEY,
+              title: "Đăng nhập thành công!",
+              body: "",
+              autoDismissible: false,
+            ),
+          );
+        });
+      }
+
+
       FirestoreService().updateLastLogin();
       if (userType == UserType.learner) {
         Navigator.of(context).pushAndRemoveUntil(

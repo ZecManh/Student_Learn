@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:datn/database/firestore/firestore_service.dart';
 import 'package:datn/model/subject_request/subject_request.dart';
 import 'package:datn/model/teach_classes/teach_class.dart';
+import 'package:datn/screen/authenticate/choose_type.dart';
 import 'package:datn/screen/face_recognition/camera_emotion.dart';
 import 'package:datn/screen/face_recognition/camera_page.dart';
 import 'package:datn/screen/learner/learner_update_info.dart';
@@ -11,6 +12,7 @@ import 'package:datn/screen/learner/search_tutor/find_tutor.dart';
 import 'package:datn/screen/face_detection/face_detection.dart';
 import 'package:datn/screen/learner/search_tutor/my_subject_request.dart';
 import 'package:datn/screen/qr_code/student/qr_code_info_learner.dart';
+import 'package:datn/utils/local_db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -279,8 +281,17 @@ class _DashBoardLearnerMainState extends State<DashBoardLearnerMain> {
                                         Theme.of(context)
                                             .colorScheme
                                             .background)),
-                                onPressed: () {},
-                                icon: const Icon(Icons.notifications),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FaceScanScreen(
+                                            user: LocalDB.getUser(),
+                                            userType: UserType.learner,
+                                            checkShowInfo: true,
+                                          )));
+                                },
+                                icon: const Icon(Icons.person),
                               ),
                             ],
                           ),
