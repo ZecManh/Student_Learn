@@ -48,8 +48,8 @@ class _FindTutorState extends State<FindTuTor> {
         .text; // Replace with the subject you want to search for
     print("SEARCH FOR $searchName $searchSubject");
     // Use regex to find a user with the specified name and subject
-    RegExp nameRegex = RegExp("^$searchName\$", caseSensitive: false);
-    RegExp subjectRegex = RegExp("^$searchSubject\$", caseSensitive: false);
+    RegExp nameRegex = RegExp("$searchName", caseSensitive: false);
+    RegExp subjectRegex = RegExp("$searchSubject", caseSensitive: false);
 
 
     List<model_user.User> result = [];
