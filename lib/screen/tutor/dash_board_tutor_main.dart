@@ -70,19 +70,19 @@ class _DashBoardTutorMainState extends State<DashBoardTutorMain> {
       );
     });
     print("TODAY SCHEDULES");
-    daySchedules.forEach((element) {
-      print("SCHEDULES " + element.toString());
-
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: Random().nextInt(100),
-            channelKey: NotificationController.BASIC_CHANNEL_KEY,
-            title: "Có lớp ${element.subject} chuẩn bị được bắt đầu ",
-            body: "",
-            autoDismissible: false,
-          ),
-          schedule: NotificationCalendar.fromDate(date: element.startTime));
-    });
+    // daySchedules.forEach((element) {
+    //   print("SCHEDULES " + element.toString());
+    //
+    //   AwesomeNotifications().createNotification(
+    //       content: NotificationContent(
+    //         id: Random().nextInt(100),
+    //         channelKey: NotificationController.BASIC_CHANNEL_KEY,
+    //         title: "Có lớp ${element.subject} chuẩn bị được bắt đầu ",
+    //         body: "",
+    //         autoDismissible: false,
+    //       ),
+    //       schedule: NotificationCalendar.fromDate(date: element.startTime));
+    // });
   }
 
   void getDaySchedules(DateTime day) async {
