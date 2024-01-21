@@ -139,7 +139,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
     firestoreService.listenChangeInfoClass(learnerInfo['docId'],
         (dynamic value) {
       setState(() {
-
         Navigator.of(context).pop();
 
         learnerInfo = value;
@@ -273,7 +272,7 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
       String startTimeJsonString = jsonEncode(startTimeJson);
       info["timeCheck"] = _getTimeNow();
       info["startTime"] = startTimeJsonString;
-      info['state'] = 'not-stydying';
+      info['state'] = 'not-studying';
       String jsonInfo = classInfo["docId"] != null ? jsonEncode(info) : "";
       _openModalActionQrClass(context, jsonInfo);
     }
@@ -319,11 +318,10 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
         obj['text'] = 'Đã dạy xong';
         obj['action'] = () {};
       }
-      if (objState.state == 'not-stydying') {
+      if (objState.state == 'not-studying') {
         obj['text'] = 'Nghỉ dạy';
-        info['state'] = 'not-stydying';
-        obj['action'] = () {
-        };
+        info['state'] = 'not-studying';
+        obj['action'] = () {};
       }
       print("obj === $obj");
       return obj;

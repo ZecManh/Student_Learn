@@ -54,14 +54,7 @@ class _DashBoardQrScannerTutorState extends State<DashBoardQrScannerTutor> {
           Expanded(
             flex: 2,
             child: Center(
-              child: (result != null)
-                  ? Column(
-                      children: [
-                        Padding(padding: EdgeInsets.all(10.0)),
-                        Text('${result!.code}'),
-                      ],
-                    )
-                  : const Text('Scan a code'),
+              child: Text('Scan a code'),
             ),
           )
         ],
