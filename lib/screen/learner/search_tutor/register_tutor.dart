@@ -1533,12 +1533,15 @@ class _RegisterTutorState extends State<RegisterTutor> {
 
                                       FirestoreService firestoreService =
                                           FirestoreService();
+                                      // var finalAddress =
+                                      //     (addressTextController.text != '')
+                                      //         ? addressTextController.text +
+                                      //             " , " +
+                                      //             (dropDownDistrict!.name ?? '')
+                                      //         : (dropDownDistrict!.name ?? '');
                                       var finalAddress =
                                           (addressTextController.text != '')
-                                              ? addressTextController.text +
-                                                  " , " +
-                                                  (dropDownDistrict!.name ?? '')
-                                              : (dropDownDistrict!.name ?? '');
+                                              ? addressTextController.text : '';
                                       var list = TeachClass.generateTimetable(
                                           startDate, endDate, weekSchedules);
                                       print("LESSON SCHEDULES");

@@ -40,8 +40,6 @@ class _FindTutorState extends State<FindTuTor> {
   }
 
   searchTutor() {
-
-
     String searchName =
         nameController.text; // Replace with the name you want to search for
     String searchSubject = subjectController
