@@ -708,10 +708,6 @@ class _ClassInfoTutorScreenState extends State<ClassInfoTutorScreen> {
                             ))
                         .toList(),
                   ),
-                  OutlinedButton(
-                    onPressed: () {},
-                    child: Text('Dừng lớp học'),
-                  )
                 ],
               ),
             ),
